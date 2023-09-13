@@ -6,16 +6,20 @@ export function populateToLocalStorage(): void {
   const questionsArray = data as QuestionObject[]
 
   if (typeof Storage !== "undefined") {
+
+    const areQuestionsPopulated = localStorage.getItem("questions_populated");     
+    if (areQuestionsPopulated) {
+      return
+    } 
+
     questionsArray.forEach((question: QuestionObject) => {
-      
       const existingQuestion = localStorage.getItem(`question_${question.id}`);      
       if (!existingQuestion) {
         localStorage.setItem(`question_${question.id}`, JSON.stringify(question));
-        console.log(`Question with ID ${question.id} added to local storage.`);
-      } else {
-        console.log(`Question with ID ${question.id} already exists in local storage.`);
-      }
+      } 
     })
+    
+    localStorage.setItem(`questions_populated`, JSON.stringify("true"));
   } else {
     console.log("Local storage is not supported by this browser.");
   }
@@ -29,7 +33,6 @@ export function fetchQuestionsFromLocalStorage(): QuestionObject[] {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
 
-    // Check if the key corresponds to a question
     if (key && key.startsWith("question_")) {
       const jsonString = localStorage.getItem(key);
 
