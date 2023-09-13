@@ -24,7 +24,7 @@ export default function QuestionTitle({ title, description, link }: IOwnProps): 
   return (
     <>
       <span className={styles.question_title} onClick={onOpen}>{title}</span>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Question Details</ModalHeader>
