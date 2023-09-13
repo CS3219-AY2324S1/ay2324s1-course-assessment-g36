@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Header from '@/components/Header/Header'
 
 import { Inter } from 'next/font/google'
-import QuestionsTable from '@/components/QuestionsTable/QuestionsTable'
+import QuestionsTable from '@/components/Questions/QuestionsTable/QuestionsTable'
 
 const inter = Inter({ subsets: ['latin'] })
 
