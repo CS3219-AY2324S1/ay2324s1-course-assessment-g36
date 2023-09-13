@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
   Stack,
   Input,
   Textarea,
@@ -10,9 +9,15 @@ import {
   Button,
   Radio,
   RadioGroup,
-  useToast
+  useToast,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box
 } from '@chakra-ui/react'
 import { QuestionObject } from '@/data/interface'
+import { validateForm } from '@/utils/validators'
 
 interface IOwnProps {
   onModalClose: () => void
@@ -22,9 +27,10 @@ interface IOwnProps {
 export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): JSX.Element {
 
   const [form, setFormData] = useState<QuestionObject>(
-    { id: 1225, title: "", complexity: "", description: "", categories: [], link: "" 
-  })
-
+    {
+      id: 1225, title: "", complexity: "", description: "", categories: [], link: ""
+    })
+  const [isFormError, setIsFormError] = useState<boolean>(false)
   const toast = useToast()
 
   const CATEGORIES_OPTIONS = [
@@ -42,15 +48,20 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
     }
   };
 
-  function isDuplicateTitleExist() {
-    return !!localStorage.getItem(form.title)
+  function isDisabled(): boolean {
+    return form.title === ""
+      || form.description === ""
+      || form.complexity === ""
+      || form.categories.length === 0
+      || form.link === ""
   }
 
-  function canSubmit() {
-    return isDuplicateTitleExist();
-  }
-
-  function handleSubmit() {
+  function handleSubmit(): void {
+    if (!validateForm(form)) {
+      setIsFormError(true)
+      return
+    }
+    setIsFormError(false)
     addQuestion(form)
     onModalClose();
     toast({
@@ -65,20 +76,49 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
   return (
     <Stack>
 
-      <FormControl isRequired isInvalid={isDuplicateTitleExist()}>
-        <Input value={form.title} placeholder="Title" onChange={(e) => handleChange(e, "title")} />
-        <FormErrorMessage>Question with this title already exists.</FormErrorMessage>
+      {isFormError && <>
+        <Alert status='error'>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Your form has some errors!</AlertTitle>
+            <AlertDescription>
+              Please ensure that there is no duplicate question title and your external link is working.
+            </AlertDescription>
+          </Box>
+        </Alert>
+      </>}
+
+      <FormControl isRequired>
+        <FormLabel>
+          Title
+        </FormLabel>
+        <Input value={form.title} placeholder="Number of Islands" onChange={(e) => handleChange(e, "title")} />
       </FormControl>
 
-      <Textarea value={form.description} placeholder="Description" onChange={(e) => handleChange(e, "description")} />
+      <FormControl isRequired>
+        <FormLabel>
+          Description
+        </FormLabel>
+        <Textarea value={form.description} placeholder="Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands." onChange={(e) => handleChange(e, "description")} />
+      </FormControl>
 
-      <Input value={form.link} placeholder="External link" onChange={(e) => handleChange(e, "link")} />
+      <FormControl isRequired>
+        <FormLabel>
+          External Link
+        </FormLabel>
+        <Input value={form.link} placeholder="https://leetcode.com/problems/number-of-islands/" onChange={(e) => handleChange(e, "link")} />
+      </FormControl>
 
-      <Select value={form.categories[0]} placeholder='Category' onChange={(e) => handleChange(e, "category")} >
-        {CATEGORIES_OPTIONS.map(category => <option key={category} value={category}>{category}</option>)}
-      </Select>
+      <FormControl isRequired>
+        <FormLabel>
+          Category
+        </FormLabel>
+        <Select value={form.categories[0]} placeholder='Category' onChange={(e) => handleChange(e, "category")} >
+          {CATEGORIES_OPTIONS.map(category => <option key={category} value={category}>{category}</option>)}
+        </Select>
+      </FormControl>
 
-      <FormControl>
+      <FormControl isRequired>
         <FormLabel>
           Complexity
         </FormLabel>
@@ -89,9 +129,9 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
             <Radio value='Hard' onChange={(e) => handleChange(e, "complexity")}>Hard</Radio>
           </Stack>
         </RadioGroup>
-        </FormControl>
+      </FormControl>
 
-      <Button colorScheme='blue' disabled={canSubmit()} onClick={handleSubmit}>Submit</Button>
+      <Button colorScheme='blue' isDisabled={isDisabled()} onClick={handleSubmit}>Submit</Button>
     </Stack>
   )
 
