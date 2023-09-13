@@ -8,21 +8,30 @@ import {
   TableContainer,
   Stack,
   Skeleton,
-  Button
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  useDisclosure
 } from '@chakra-ui/react'
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/data/interface';
 import styles from "./QuestionsTable.module.css"
-import { populateToLocalStorage, fetchQuestionsFromLocalStorage } from '@/utils/populateQuestions';
+import { populateInitialQuestionsToLocalStorage, fetchQuestionsFromLocalStorage } from '@/utils/populateQuestions';
 import QuestionForm from '../QuestionForm/QuestionForm';
 
 export default function QuestionsTable(): JSX.Element {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<QuestionObject[]>([])
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    populateToLocalStorage();
+    populateInitialQuestionsToLocalStorage();
     setQuestions(fetchQuestionsFromLocalStorage())
     setIsLoading(false)
   }, []);
@@ -77,8 +86,20 @@ export default function QuestionsTable(): JSX.Element {
       </Table>
     </TableContainer>
     <br />
-    <Button>+ Create Question</Button>
-    <QuestionForm />
-    <br />
+
+    <Button onClick={onOpen}>+ Create Question</Button>
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Submit a new question</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <QuestionForm />
+          </ModalBody>
+          <ModalFooter>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      
   </div>
 }

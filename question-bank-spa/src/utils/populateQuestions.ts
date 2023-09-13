@@ -1,7 +1,7 @@
 import data from "../data/questions.json"
 import { QuestionObject } from "@/data/interface"
 
-export function populateToLocalStorage(): void {
+export function populateInitialQuestionsToLocalStorage(): void {
 
   const questionsArray = data as QuestionObject[]
 
