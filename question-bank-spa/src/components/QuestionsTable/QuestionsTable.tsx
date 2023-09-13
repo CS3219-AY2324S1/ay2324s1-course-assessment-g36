@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Table,
   Thead,
@@ -5,13 +6,13 @@ import {
   Tr,
   Th,
   TableContainer,
+  Stack,
+  Skeleton
 } from '@chakra-ui/react'
-import { Stack, Skeleton } from '@chakra-ui/react'
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/data/interface';
-import { useState, useEffect } from 'react';
 import styles from "./QuestionsTable.module.css"
-import { populateToLocalStorage } from '@/utils/populateQuestions';
+import { populateToLocalStorage, fetchQuestionsFromLocalStorage } from '@/utils/populateQuestions';
 
 export default function QuestionsTable(): JSX.Element {
 
@@ -21,26 +22,7 @@ export default function QuestionsTable(): JSX.Element {
   useEffect(() => {
 
     populateToLocalStorage();
-
-    const questions: QuestionObject[] = [];
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-
-      // Check if the key corresponds to a question
-      if (key && key.startsWith("question_")) {
-        const jsonString = localStorage.getItem(key);
-
-        if (jsonString) {
-          const question: QuestionObject = JSON.parse(jsonString);
-          questions.push(question);
-        }
-      }
-    }
-
-    questions.sort((a, b) => a.id - b.id);
-
-    setQuestions(questions)
+    setQuestions(fetchQuestionsFromLocalStorage())
     setIsLoading(false)
 
   }, []);
@@ -73,7 +55,14 @@ export default function QuestionsTable(): JSX.Element {
         <Tbody>
           {
             questions.map(question => 
-              <QuestionRow title={question.title} categories={question.categories} complexity={question.complexity} />)
+              <QuestionRow 
+                key={question.id} 
+                title={question.title} 
+                categories={question.categories} 
+                complexity={question.complexity} 
+                description={question.description} 
+                link={question.link}
+              />)
           }
         </Tbody>
       </Table>

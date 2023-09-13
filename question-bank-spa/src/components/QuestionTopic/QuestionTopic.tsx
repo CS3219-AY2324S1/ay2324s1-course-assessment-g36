@@ -6,6 +6,6 @@ interface IOwnProps {
 
 export default function QuestionTopic({ categories }: IOwnProps): JSX.Element {
   return <Stack direction="row">
-    {categories.map(category => <Badge colorScheme='blackAlpha'>{category}</Badge>)}
+    {categories.map(category => <Badge key={category} colorScheme='blackAlpha'>{category}</Badge>)}
   </Stack>
 }

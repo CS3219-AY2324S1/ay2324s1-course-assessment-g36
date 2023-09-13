@@ -21,3 +21,26 @@ export function populateToLocalStorage(): void {
   }
 
 }
+
+export function fetchQuestionsFromLocalStorage(): QuestionObject[] {
+
+  const questions: QuestionObject[] = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+
+    // Check if the key corresponds to a question
+    if (key && key.startsWith("question_")) {
+      const jsonString = localStorage.getItem(key);
+
+      if (jsonString) {
+        const question: QuestionObject = JSON.parse(jsonString);
+        questions.push(question);
+      }
+    }
+  }
+
+  questions.sort((a, b) => a.id - b.id);
+
+  return questions;
+}
