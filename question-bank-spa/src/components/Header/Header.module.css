@@ -1,0 +1,27 @@
+.container_header {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav_links {
+  width: 20%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav_link {
+  display: block;
+  font-size: 1rem;
+  text-decoration: none;
+  color: #000;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.nav_link:hover,
+.nav_link:focus {
+  border-bottom: 2px solid rgb(128, 90, 213);
+}

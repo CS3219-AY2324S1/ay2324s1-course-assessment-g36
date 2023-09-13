@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import Header from '@/components/Header/Header'
+
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -13,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        Peerprep questions bank
+        <Header />
       </main>
     </>
   )
