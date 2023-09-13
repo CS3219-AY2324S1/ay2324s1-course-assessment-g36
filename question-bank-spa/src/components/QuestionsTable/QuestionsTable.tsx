@@ -27,6 +27,14 @@ export default function QuestionsTable(): JSX.Element {
 
   }, []);
 
+  function deleteQuestion(questionTitle: string) {
+    const questionKey = `question_${questionTitle}`
+    if (!localStorage.getItem(questionKey)) return
+    localStorage.removeItem(questionKey)
+    const filteredQuestions = questions.filter(question => question.title != questionTitle);
+    setQuestions(filteredQuestions)
+  }
+
   if (isLoading) {
     return <Stack>
       <Skeleton height='40px' />
@@ -50,6 +58,7 @@ export default function QuestionsTable(): JSX.Element {
             <Th>title</Th>
             <Th>complexity</Th>
             <Th>category</Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -62,6 +71,7 @@ export default function QuestionsTable(): JSX.Element {
                 complexity={question.complexity} 
                 description={question.description} 
                 link={question.link}
+                deleteQuestion={deleteQuestion}
               />)
           }
         </Tbody>

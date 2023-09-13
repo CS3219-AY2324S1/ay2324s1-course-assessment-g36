@@ -13,9 +13,9 @@ export function populateToLocalStorage(): void {
     } 
 
     questionsArray.forEach((question: QuestionObject) => {
-      const existingQuestion = localStorage.getItem(`question_${question.id}`);      
+      const existingQuestion = localStorage.getItem(`question_${question.title}`);      
       if (!existingQuestion) {
-        localStorage.setItem(`question_${question.id}`, JSON.stringify(question));
+        localStorage.setItem(`question_${question.title}`, JSON.stringify(question));
       } 
     })
     
