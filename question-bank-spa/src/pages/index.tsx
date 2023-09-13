@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Header from '@/components/Header/Header'
 
 import { Inter } from 'next/font/google'
+import { populateToLocalStorage } from '@/utils/populateQuestions'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,7 @@ export default function Home() {
       </Head>
       <main>
         <Header />
+        {populateToLocalStorage()}
       </main>
     </>
   )

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "title": "Reverse a String",
+    "categories": ["Strings", "Algorithms"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/reverse-string/",
+    "description": "question description"
+  },
+  {
+    "id": 2,
+    "title": "Linked List Cycle Detection",
+    "categories": ["Data Structures", "Algorithms"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/linked-list-cycle/",
+    "description": "question description"
+  },
+  {
+    "id": 3,
+    "title": "Roman to Integer",
+    "categories": ["Algorithms"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/roman-to-integer/",
+    "description": "question description"
+  },
+  {
+    "id": 4,
+    "title": "Add Binary",
+    "categories": ["Bit Manipulation", "Algorithms"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/add-binary/",
+    "description": "question description"
+  },
+  {
+    "id": 5,
+    "title": "Fibonacci Number",
+    "categories": ["Recursion", "Algorithms"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/fibonacci-number/",
+    "description": "question description"
+  },
+  {
+    "id": 6,
+    "title": "Implement Stack using Queues",
+    "categories": ["Data Structures"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/implement-stack-using-queues/",
+    "description": "question description"
+  },
+  {
+    "id": 7,
+    "title": "Combine Two Tables",
+    "categories": ["Databases"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/combine-two-tables/",
+    "description": "question description"
+  },
+  {
+    "id": 8,
+    "title": "Repeated DNA Sequences",
+    "categories": ["Algorithms", "Bit Manipulation"],
+    "complexity": "Medium",
+    "link": "https://leetcode.com/problems/repeated-dna-sequences/",
+    "description": "question description"
+  },
+  {
+    "id": 9,
+    "title": "Course Schedule",
+    "categories": ["Data Structures", "Medium"],
+    "complexity": "Medium",
+    "link": "https://leetcode.com/problems/course-schedule/",
+    "description": "question description"
+  },
+  {
+    "id": 10,
+    "title": "LRU Cache Design",
+    "categories": ["Data Structures"],
+    "complexity": "Medium",
+    "link": "https://leetcode.com/problems/lru-cache/",
+    "description": "question description"
+  }
+]
