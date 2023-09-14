@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Header from '@/components/Header/Header'
+import Layout from '@/components/Layout/Layout'
 import QuestionsTable from '@/components/Questions/QuestionsTable/QuestionsTable'
 
 export default function Home() {
@@ -12,8 +12,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Header />
-        <QuestionsTable />
+        <Layout>
+          <QuestionsTable />
+        </Layout>
       </main>
     </>
   )

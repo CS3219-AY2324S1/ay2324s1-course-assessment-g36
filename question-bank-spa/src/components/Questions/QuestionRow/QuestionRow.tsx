@@ -20,7 +20,7 @@ export default function QuestionRow({ question, deleteQuestion }: IOwnProps): JS
       <Td><QuestionTitle title={question.title} description={question.description} link={question.link} /></Td>
       <Td><QuestionComplexity complexity={question.complexity}/></Td>
       <Td><QuestionTopic categories={question.categories}/></Td>
-      <Td><Button size="xs" colorScheme="red" onClick={() => deleteQuestion(question.title)}>Delete</Button></Td>
+      <Td><Button size="xs" colorScheme="red" onClick={() => deleteQuestion(question.title)}>X</Button></Td>
     </Tr>
 
   )

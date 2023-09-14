@@ -7,14 +7,13 @@
 }
 
 .logo_title {
-  margin-left: 4em;
   font-size: 1.3rem;
   color: #2d6cdf;
   font-weight: 600;
 }
 
 .nav_links {
-  width: 35%;
+  width: 30%;
   display: flex;
   justify-content: space-evenly;
 }
@@ -30,4 +29,11 @@
 .nav_link:hover,
 .nav_link:focus {
   border-bottom: 2px solid #2d6cdf;
+}
+
+
+@media only screen and (max-width: 468px) {
+  .nav_links {
+    justify-content: space-around;
+  }
 }
