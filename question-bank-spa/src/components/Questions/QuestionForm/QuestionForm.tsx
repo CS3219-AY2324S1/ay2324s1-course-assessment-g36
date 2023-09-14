@@ -127,21 +127,21 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
             {CATEGORIES_OPTIONS
               .slice(0, 7)
               .map(category =>
-                <Checkbox value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
+                <Checkbox key={category} value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
               )}
           </Stack>
           <Stack spacing={5} direction='row'>
             {CATEGORIES_OPTIONS
               .slice(7, 12)
               .map(category =>
-                <Checkbox value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
+                <Checkbox key={category} value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
               )}
           </Stack>
           <Stack spacing={5} direction='row'>
             {CATEGORIES_OPTIONS
               .slice(12)
               .map(category =>
-                <Checkbox value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
+                <Checkbox key={category} value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
               )}
           </Stack>
         </CheckboxGroup>
