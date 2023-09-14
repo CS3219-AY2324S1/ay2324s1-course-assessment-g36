@@ -53,7 +53,7 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
   const CATEGORIES_OPTIONS = [
     'Array', 'String', 'Tree', 'Stack', 'Queue',
     'Matrix', 'Database', 'Hash Table', 'Linked List',
-    'Heap (Priority Queue)', 'Binary Search', 'Graph',
+    'Graph', 'Binary Search', 'Heap (Priority Queue)', 
     'Recursion', 'Greedy', 'Math', 'Backtracking', 'Dynamic Programming'
   ]
 
@@ -123,21 +123,21 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
           Category
         </FormLabel>
         <CheckboxGroup colorScheme='blue'>
-          <Stack spacing={5} direction='row'>
+          <Stack spacing={5} direction='row' wrap="wrap">
             {CATEGORIES_OPTIONS
               .slice(0, 7)
               .map(category =>
                 <Checkbox key={category} value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
               )}
           </Stack>
-          <Stack spacing={5} direction='row'>
+          <Stack spacing={5} direction='row' wrap="wrap">
             {CATEGORIES_OPTIONS
               .slice(7, 12)
               .map(category =>
                 <Checkbox key={category} value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
               )}
           </Stack>
-          <Stack spacing={5} direction='row'>
+          <Stack spacing={5} direction='row' wrap="wrap">
             {CATEGORIES_OPTIONS
               .slice(12)
               .map(category =>
