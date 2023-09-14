@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   FormControl,
   FormLabel,
   Stack,
   Input,
   Textarea,
-  Select,
   Button,
   Radio,
   RadioGroup,
@@ -14,7 +13,9 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  Box
+  Box,
+  Checkbox,
+  CheckboxGroup
 } from '@chakra-ui/react'
 import { QuestionObject } from '@/data/interface'
 import { validateForm } from '@/utils/validators'
@@ -28,25 +29,33 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
 
   const [form, setFormData] = useState<QuestionObject>(
     {
-      id: 1225, title: "", complexity: "", description: "", categories: [], link: ""
+      id: Math.floor(Math.random() * 500) + 50, title: "", complexity: "", description: "", categories: [], link: ""
     })
   const [isFormError, setIsFormError] = useState<boolean>(false)
   const toast = useToast()
 
-  const CATEGORIES_OPTIONS = [
-    'Array', 'Strings', 'Recursion', 'Dynamic Programming', 'Greedy',
-    'Backtracking', 'Graph', 'Linked List', 'Matrix', 'Tree',
-    'Heap (Priority Queue)', 'Stack', 'Queue', 'Database',
-    'Binary Search', 'Hash Table', 'Math'
-  ]
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, fieldName: string) => {
-    if (fieldName === "category") {
-      setFormData({ ...form, categories: [e.target.value] })
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
+    if (fieldName === "categories") {
+      handleCheckboxChange(e.target.value);
     } else {
       setFormData({ ...form, [fieldName]: e.target.value })
     }
   };
+
+  const handleCheckboxChange = (input: string) => {
+    if (form.categories.includes(input)) {
+      setFormData({ ...form, categories: form.categories.filter(item => item !== input) })
+    } else {
+      setFormData({ ...form, categories: [...form.categories, input] })
+    }
+  }
+
+  const CATEGORIES_OPTIONS = [
+    'Array', 'String', 'Tree', 'Stack', 'Queue',
+    'Matrix', 'Database', 'Hash Table', 'Linked List',
+    'Heap (Priority Queue)', 'Binary Search', 'Graph',
+    'Recursion', 'Greedy', 'Math', 'Backtracking', 'Dynamic Programming'
+  ]
 
   function isDisabled(): boolean {
     return form.title === ""
@@ -113,9 +122,29 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
         <FormLabel>
           Category
         </FormLabel>
-        <Select value={form.categories[0]} placeholder='Category' onChange={(e) => handleChange(e, "category")} >
-          {CATEGORIES_OPTIONS.map(category => <option key={category} value={category}>{category}</option>)}
-        </Select>
+        <CheckboxGroup colorScheme='blue'>
+          <Stack spacing={5} direction='row'>
+            {CATEGORIES_OPTIONS
+              .slice(0, 7)
+              .map(category =>
+                <Checkbox value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
+              )}
+          </Stack>
+          <Stack spacing={5} direction='row'>
+            {CATEGORIES_OPTIONS
+              .slice(7, 12)
+              .map(category =>
+                <Checkbox value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
+              )}
+          </Stack>
+          <Stack spacing={5} direction='row'>
+            {CATEGORIES_OPTIONS
+              .slice(12)
+              .map(category =>
+                <Checkbox value={category} onChange={(e) => handleChange(e, "categories")}>{category}</Checkbox>
+              )}
+          </Stack>
+        </CheckboxGroup>
       </FormControl>
 
       <FormControl isRequired>

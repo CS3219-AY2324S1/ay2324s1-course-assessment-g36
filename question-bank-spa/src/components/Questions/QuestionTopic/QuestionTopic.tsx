@@ -5,7 +5,7 @@ interface IOwnProps {
 }
 
 export default function QuestionTopic({ categories }: IOwnProps): JSX.Element {
-  return <Stack direction="row">
+  return <Stack direction="row" wrap="wrap">
     {categories.map(category => <Badge key={category} colorScheme='blackAlpha'>{category}</Badge>)}
   </Stack>
 }
