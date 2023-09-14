@@ -82,7 +82,7 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
           <Box>
             <AlertTitle>Your form has some errors!</AlertTitle>
             <AlertDescription>
-              Please ensure that there is no duplicate question title and your external link is working.
+              Please ensure that there is no duplicate question title and your external link is valid.
             </AlertDescription>
           </Box>
         </Alert>

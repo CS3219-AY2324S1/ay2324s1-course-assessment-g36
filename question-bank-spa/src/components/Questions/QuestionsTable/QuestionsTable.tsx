@@ -69,6 +69,7 @@ export default function QuestionsTable(): JSX.Element {
           {
             questions.map(question =>
               <QuestionRow
+                key={question.id}
                 question={question}
                 deleteQuestion={deleteQuestion}
               />)
