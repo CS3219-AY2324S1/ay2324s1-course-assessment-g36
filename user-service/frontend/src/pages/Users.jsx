@@ -10,13 +10,22 @@ const Users = () => {
             try {
                 const res = await axios.get("http://localhost:8000/users")
                 setUsers(res.data)
-                console.log(res)
             } catch (err) {
                 console.log(err)
             }
         }
         fetchAllUsers()
     }, [])
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete("http://localhost:8000/users/"+id)
+            window.location.reload()
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <div>
             <h1>PeerPrep users</h1>
@@ -25,8 +34,8 @@ const Users = () => {
                     <div className="user" key={user.id}>
                         <p>{user.id}</p>
                         <p>{user.email}</p>
-                        <button className='deleteButton'>Delete</button>
-                        <button className='updateButton'>Update</button>
+                        <button className='deleteButton' onClick={() => handleDelete(user.id)}>Delete</button>
+                        <button className='updateButton'><Link to={`/update/${user.id}`}>Update</Link></button>
                     </div>
                 ))}
             </div>

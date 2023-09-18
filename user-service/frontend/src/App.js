@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Users from './pages/Users';
 import Register from './pages/Register';
-import { Update } from './pages/Update';
+import Update from './pages/Update';
 import "./style.css"
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Users/>}/>
           <Route path="/register" element={<Register/>}/>
-          <Route path="/update" element={<Update/>}/>
+          <Route path="/update/:id" element={<Update/>}/>
         </Routes>
       </BrowserRouter>
     </div>

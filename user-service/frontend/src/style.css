@@ -31,3 +31,21 @@
     background-color: beige;
     cursor: pointer;
 }
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input {
+    width: 250px;
+    padding: 10px;
+    border: 1px solid;
+}
+
+.formButton {
+    padding: 10px;
+    background-color: lightblue;
+    color: white;
+}

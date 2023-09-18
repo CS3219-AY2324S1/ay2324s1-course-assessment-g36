@@ -29,7 +29,7 @@ const Register = () => {
       <h1>Register</h1>
       <input type="text" placeholder='email' onChange={handleChange} name="email"/>
       <input type="text" placeholder='password' onChange={handleChange} name="password"/>
-      <button onClick={handleClick}>Register</button>
+      <button className="formButton" onClick={handleClick}>Register</button>
     </div>
   )
 }

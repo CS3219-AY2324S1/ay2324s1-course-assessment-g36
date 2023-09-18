@@ -15,19 +15,8 @@ const db = mysql.createConnection({
 app.use(express.json());
 app.use(cors())
 
-app.get("/", (req, res)=>{
-    res.json("hi backend")
-})
-
-app.get("/users", (req,res)=>{
-    const query = "SELECT * FROM Users"
-    db.query(query, (err, data)=>{
-        if(err) return res.json(err)
-        return res.json(data)
-    })
-})
-
 // CRUD operations
+// CREATE
 app.post("/users", (req, res)=>{
     const query ="INSERT INTO Users (`email`,`password`) VALUES (?)"
     const values = [
@@ -38,6 +27,42 @@ app.post("/users", (req, res)=>{
     db.query(query, [values], (err, data)=>{
         if(err) return res.json(err)
         return res.json("user created successfully.")
+    })
+})
+
+// READ
+app.get("/users", (req,res)=>{
+    const query = "SELECT * FROM Users"
+    db.query(query, (err, data)=>{
+        if(err) return res.json(err)
+        return res.json(data)
+    })
+})
+
+// UPDATE
+app.put("/users/:id", (req, res) => {
+    const userId = req.params.id;
+    const q = "UPDATE Users SET `email`= ?, `password`= ? WHERE id = ?";
+  
+    const values = [
+      req.body.email,
+      req.body.password,
+    ];
+  
+    db.query(q, [...values,userId], (err, data) => {
+      if (err) return res.send(err);
+      return res.json(data);
+    });
+  });
+
+// DELETE
+app.delete("/users/:id", (req, res)=>{
+    const userId = req.params.id;
+    const query = 'DELETE FROM Users WHERE id = ?'
+
+    db.query(query, [userId], (err, data)=>{
+        if (err) return res.json(err);
+        return res.json("User deleted!")
     })
 })
 
