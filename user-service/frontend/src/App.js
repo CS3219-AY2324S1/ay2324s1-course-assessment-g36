@@ -5,8 +5,9 @@ import {
   Route,
 } from "react-router-dom";
 import Users from './pages/Users';
-import Add from './pages/Add';
+import Register from './pages/Register';
 import { Update } from './pages/Update';
+import "./style.css"
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Users/>}/>
-          <Route path="/add" element={<Add/>}/>
+          <Route path="/register" element={<Register/>}/>
           <Route path="/update" element={<Update/>}/>
         </Routes>
       </BrowserRouter>

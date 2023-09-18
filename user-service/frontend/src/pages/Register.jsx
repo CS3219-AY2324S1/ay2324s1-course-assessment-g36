@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Add = () => {
+const Register = () => {
   const[user, setUser]=useState({
     email:"",
     password:""
@@ -26,12 +26,12 @@ const Add = () => {
 
   return (
     <div className='form'>
-      <h1>Add new user</h1>
+      <h1>Register</h1>
       <input type="text" placeholder='email' onChange={handleChange} name="email"/>
       <input type="text" placeholder='password' onChange={handleChange} name="password"/>
-      <button onClick={handleClick}>Add</button>
+      <button onClick={handleClick}>Register</button>
     </div>
   )
 }
 
-export default Add
+export default Register

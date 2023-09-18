@@ -25,11 +25,13 @@ const Users = () => {
                     <div className="user" key={user.id}>
                         <p>{user.id}</p>
                         <p>{user.email}</p>
+                        <button className='deleteButton'>Delete</button>
+                        <button className='updateButton'>Update</button>
                     </div>
                 ))}
             </div>
             <button>
-                <Link to="/add">Add new user</Link>
+                <Link to="/register">Register now</Link>
             </button>
         </div>
     )
