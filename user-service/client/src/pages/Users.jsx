@@ -6,20 +6,15 @@ const Users = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const fetchAllUsers = async () => {
-            try {
-                const res = await axios.get("http://localhost:8000/users")
-                setUsers(res.data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        fetchAllUsers()
-    }, [])
+        axios.get("http://localhost:3001/users").then((res) => {
+            setUsers(res.data)
+            console.log("successful")
+        });
+    }, []);
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete("http://localhost:8000/users/"+id)
+            await axios.delete("http://localhost:3001/users/"+id)
             window.location.reload()
         } catch (err) {
             console.log(err)
@@ -30,12 +25,13 @@ const Users = () => {
         <div>
             <h1>PeerPrep users</h1>
             <div className='users'>
-                {users.map(user=>(
-                    <div className="user" key={user.id}>
-                        <p>{user.id}</p>
-                        <p>{user.email}</p>
-                        <button className='deleteButton' onClick={() => handleDelete(user.id)}>Delete</button>
-                        <button className='updateButton'><Link to={`/update/${user.id}`}>Update</Link></button>
+                {users.map((value, key)=>(
+                    <div className="user" key={value.UserId}>
+                        <p>{value.UserId}</p>
+                        <p>{value.Username}</p>
+                        <p>{value.Email}</p>
+                        <button className='deleteButton' onClick={() => handleDelete(value.UserId)}>Delete</button>
+                        <button className='updateButton'><Link to={`/update/${value.UserId}`}>Update</Link></button>
                     </div>
                 ))}
             </div>
