@@ -1,14 +1,13 @@
-import express from "express"
-import mysql from "mysql2"
-import cors from "cors"
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
+const db = require("./models");
 
-const db = mysql.createPool({
-    host:"localhost",
-    user:"root",
-    password:"",
-    database:"Users"
+db.sequelize.sync().then(() => {
+    app.listen(8000, () => {
+        console.log("server running on port 3001");
+    })
 })
 
 // allow users to send requests via json
@@ -64,8 +63,4 @@ app.delete("/users/:id", (req, res)=>{
         if (err) return res.json(err);
         return res.json("User deleted!")
     })
-})
-
-app.listen(8000, () => {
-    console.log("connected to backend!");
 })
