@@ -21,7 +21,8 @@ const Register = () => {
   })
 
   const onSubmit = (data) => {
-    axios.post("http://localhost:3001/users", data).then((res) => {
+    axios.post("http://localhost:3001/users/register", data).then((res) => {
+      console.log(res);
       navigate("/")
   });
   }
@@ -40,7 +41,7 @@ const Register = () => {
 
           <label>Password</label>
           <ErrorMessage name="Password" component="span"/>
-          <Field id="registerInput" name="Password"/>
+          <Field id="registerInput" name="Password" type="password"/>
           <button type="submit">register</button>
         </Form>
       </Formik>

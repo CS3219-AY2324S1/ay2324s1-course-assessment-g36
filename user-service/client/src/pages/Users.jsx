@@ -36,6 +36,7 @@ const Users = () => {
             </div>
             <button>
                 <Link to="/register">Register now</Link>
+                <Link to="/login">Login</Link>
             </button>
         </div>
     )

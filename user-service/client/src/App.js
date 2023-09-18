@@ -8,6 +8,7 @@ import Users from './pages/Users';
 import Register from './pages/Register';
 import Update from './pages/Update';
 import "./style.css"
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Users/>}/>
           <Route path="/register" element={<Register/>}/>
+          <Route path="/login" element={<Login/>}/>
           <Route path="/update/:id" element={<Update/>}/>
         </Routes>
       </BrowserRouter>
