@@ -20,7 +20,7 @@ const Update = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8000/users/${userId}`, user);
+      await axios.put(`http://localhost:3001/users/${userId}`, user);
       navigate("/");
     } catch (err) {
       console.log(err)

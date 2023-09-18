@@ -8,7 +8,6 @@ const Users = () => {
     useEffect(() => {
         axios.get("http://localhost:3001/users").then((res) => {
             setUsers(res.data)
-            console.log("successful")
         });
     }, []);
 

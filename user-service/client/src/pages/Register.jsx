@@ -1,35 +1,49 @@
-import React, {useState} from 'react'
+import React from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {Formik, Form, Field, ErrorMessage} from "formik";
+import * as Yup from 'yup'
+import "../style.css"
 
 const Register = () => {
-  const[user, setUser]=useState({
-    email:"",
-    password:""
-  });
-
   const navigate = useNavigate()
 
-  const handleChange= (e) => {
-    setUser(prev=>({...prev, [e.target.name]: e.target.value}));
+  const initialValues = {
+    Username: "",
+    Email: "",
+    Password: "",
   }
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:8000/users", user);
-      navigate("/");
-    } catch (err) {
-      console.log(err)
-    }
+  const validationSchema = Yup.object().shape({
+    Username: Yup.string().required(),
+    Email: Yup.string().required(),
+    Password: Yup.string().min(8).max(15).required(),
+  })
+
+  const onSubmit = (data) => {
+    axios.post("http://localhost:3001/users", data).then((res) => {
+      navigate("/")
+  });
   }
 
   return (
-    <div className='form'>
-      <h1>Register</h1>
-      <input type="text" placeholder='email' onChange={handleChange} name="email"/>
-      <input type="text" placeholder='password' onChange={handleChange} name="password"/>
-      <button className="formButton" onClick={handleClick}>Register</button>
+    <div className='register'>
+      <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+        <Form className='formContainer'>
+          <label>Username</label>
+          <ErrorMessage name="Username" component="span"/>
+          <Field id="registerInput" name="Username" placeholder="Bob"/>
+
+          <label>Email</label>
+          <ErrorMessage name="Email" component="span"/>
+          <Field id="registerInput" name="Email" placeholder="example@gmail.com"/>
+
+          <label>Password</label>
+          <ErrorMessage name="Password" component="span"/>
+          <Field id="registerInput" name="Password"/>
+          <button type="submit">register</button>
+        </Form>
+      </Formik>
     </div>
   )
 }
