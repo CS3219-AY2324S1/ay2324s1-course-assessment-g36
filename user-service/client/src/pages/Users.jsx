@@ -14,7 +14,7 @@ const Users = () => {
     const handleDelete = async (id) => {
         try {
             await axios.delete("http://localhost:3001/users/"+id)
-            window.location.reload()
+            setUsers((prevList) => prevList.filter(user => user.UserId !== id));
         } catch (err) {
             console.log(err)
         }
@@ -36,7 +36,7 @@ const Users = () => {
             </div>
             <button>
                 <Link to="/register">Register now</Link>
-                <Link to="/login">Login</Link>
+                {/* <Link to="/login">Login</Link> */}
             </button>
         </div>
     )

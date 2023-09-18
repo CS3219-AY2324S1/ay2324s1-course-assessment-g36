@@ -3,6 +3,8 @@ const router = express.Router();
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 
+
+// CREATE
 router.post("/register", async (req, res) => {
     const {Username, Email, Password } = req.body;  
     bcrypt.hash(Password, 10).then((hash) => {
@@ -32,6 +34,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
+// READ
 router.get("/", async (req, res) => {
     const userList = await Users.findAll();
     res.json(userList);
@@ -40,6 +43,26 @@ router.get("/", async (req, res) => {
 router.get("/:UserId", async (req, res)=> {
     const id = req.params.UserId
     const user = await Users.findByPk(id);
+    res.json(user);
+})
+
+// UPDATE
+router.put("/:UserId", async (req, res) => {
+    const { UserId } = req.params;
+    const { Email } = req.body;
+    const user = await Users.update({ Email: Email }, { where: { UserId: UserId } });
+    res.json(user);
+});
+
+
+// DELETE
+router.delete("/:UserId", async (req, res) => {
+    const id = req.params.UserId;
+    const user = await Users.destroy({
+        where: {
+            UserId: id,
+        }
+    })
     res.json(user);
 })
 
