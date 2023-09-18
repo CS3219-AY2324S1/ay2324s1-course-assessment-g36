@@ -1,17 +1,20 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 const Update = () => {
-  const[user, setUser]=useState({
-    email:"",
-    password:""
-  });
+  const[user, setUser]=useState({});
+
 
   const navigate = useNavigate()
-  const location = useLocation()
+  const { id } = useParams();
 
-  const userId = location.pathname.split("/")[2];
+  useEffect(() => {
+    axios.get(`http://localhost:3001/users/${id}`).then((res) => {
+        setUser(res.data);
+    });
+  });
+
 
   const handleChange= (e) => {
     setUser(prev=>({...prev, [e.target.name]: e.target.value}));
@@ -20,7 +23,7 @@ const Update = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3001/users/${userId}`, user);
+      await axios.put(`http://localhost:3001/users/${id}`, user);
       navigate("/");
     } catch (err) {
       console.log(err)
@@ -29,7 +32,8 @@ const Update = () => {
 
   return (
     <div className='form'>
-      <h1>Update User</h1>
+      <h1>Update {user.Username}</h1>
+      <input type="text" placeholder='email' onChange={handleChange} name="email"/>
       <input type="text" placeholder='email' onChange={handleChange} name="email"/>
       <input type="text" placeholder='password' onChange={handleChange} name="password"/>
       <button className="formButton" onClick={handleClick}>Update</button>

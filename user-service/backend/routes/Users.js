@@ -8,6 +8,12 @@ router.get("/", async (req, res) => {
     res.json(userList);
 })
 
+router.get("/:UserId", async (req, res)=> {
+    const id = req.params.UserId
+    const user = await Users.findByPk(id);
+    res.json(user);
+})
+
 router.post("/", async (req, res) => {
     const user = req.body;  
     await Users.create(user);
