@@ -3,7 +3,6 @@ const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 const { Op } = require('sequelize');
 
-// CREATE
 const addUser = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
@@ -61,21 +60,20 @@ const loginUser = async (req, res) => {
             return;
         } 
 
-        bcrypt.compare(password, user.password).then((match) => {
-            if (!match) {
-                res.status(401).send("Wrong password. Please try again!");
-                return;
-            }
+        const match = await bcrypt.compare(password, user.password);
 
-            res.status(200).send(user)
-        });
+        if (!match) {
+            res.status(401).send("Wrong password. Please try again!");
+            return;
+        }
+
+        res.status(200).send(user)
     } catch (err) {
         next(err);
     }
 
 }
 
-// READ
 const getAllUsers = async (req, res, next) => {
     try {
         const userList = await Users.findAll();
@@ -99,7 +97,6 @@ const getUserById = async (req, res, next) => {
     }
 }
 
-// UPDATE
 // TODO: update password
 const updateUser = async (req, res, next) => {
     try {
@@ -163,7 +160,6 @@ const updateUser = async (req, res, next) => {
 
 }
 
-// DELETE
 const deleteUser = async (req, res, next) => {
     try {
         const id = req.params.userId;
