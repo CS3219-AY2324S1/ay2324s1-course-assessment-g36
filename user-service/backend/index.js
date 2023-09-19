@@ -9,9 +9,9 @@ const db = require("./models");
 
 // Routers
 const userRouter = require("./routes/userRouter");
-// const {errorHandler} = require("./middleware/errorHandler");
+const {errorHandler} = require("./middleware/errorHandler");
 app.use("/users", userRouter);
-// app.use(errorHandler);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 

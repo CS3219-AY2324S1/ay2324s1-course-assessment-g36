@@ -8,22 +8,7 @@ const bcrypt = require("bcrypt");
 // CREATE
 userRouter.post("/register", userController.addUser);
 
-// userRouter.post("/login", async (req, res) => {
-//     const { email, Password } = req.body;
-//     const user = await Users.findOne({ where: { email: email } });
-
-//     if (!user) {
-//         res.json({ error: "User doesn't exist" });
-//     } else {
-//         bcrypt.compare(Password, user.Password).then((match) => {
-//             if (!match) {
-//                 res.json({ error: "Incorrect password!" });
-//             } else {
-//                 res.json("yay logged in");
-//             }
-//         });
-//     }
-// });
+userRouter.post("/login", userController.loginUser);
 
 // READ
 userRouter.get("/", userController.getAllUsers)
