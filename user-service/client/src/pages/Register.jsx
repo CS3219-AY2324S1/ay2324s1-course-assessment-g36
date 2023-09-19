@@ -11,13 +11,13 @@ const Register = () => {
   const initialValues = {
     username: "",
     email: "",
-    Password: "",
+    password: "",
   }
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required(),
     email: Yup.string().required(),
-    Password: Yup.string().min(8).max(15).required(),
+    password: Yup.string().min(8).max(15).required(),
   })
 
   const onSubmit = (data) => {
@@ -39,9 +39,9 @@ const Register = () => {
           <ErrorMessage name="email" component="span"/>
           <Field id="registerInput" name="email" placeholder="example@gmail.com"/>
 
-          <label>Password</label>
-          <ErrorMessage name="Password" component="span"/>
-          <Field id="registerInput" name="Password" type="password"/>
+          <label>password</label>
+          <ErrorMessage name="password" component="span"/>
+          <Field id="registerInput" name="password" type="password"/>
           <button type="submit">register</button>
         </Form>
       </Formik>
