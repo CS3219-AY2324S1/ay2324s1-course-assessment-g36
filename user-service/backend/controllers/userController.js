@@ -5,14 +5,14 @@ const bcrypt = require("bcrypt");
 
 // CREATE
 const addUser = async (req, res) => {
-    const {Username, Email, Password } = req.body;  
-    // if (!Username || !Email || !Password) {
+    const {username, email, Password } = req.body;  
+    // if (!username || !email || !Password) {
 
     // }
     bcrypt.hash(Password, 10).then((hash) => {
         const user = Users.create({
-            Username: Username,
-            Email: Email,
+            username: username,
+            email: email,
             Password: hash,
         })
         res.status(200).send(user);
@@ -27,25 +27,25 @@ const getAllUsers = async (req, res) => {
 }
 
 const getUserById = async (req, res) => {
-    const id = req.params.UserId
+    const id = req.params.userId
     const user = await Users.findByPk(id);
     res.status(200).send(user);
 }
 
 // UPDATE
-const updateUserEmail = async (req, res) => {
-    const { UserId } = req.params;
+const updateUseremail = async (req, res) => {
+    const { userId } = req.params;
     const { email } = req.body;
-    const user = await Users.update({ Email: email }, { where: { UserId: UserId} });
+    const user = await Users.update({ email: email }, { where: { userId: userId} });
     res.status(200).send(user);
 }
 
 // DELETE
 const deleteUser = async (req, res) => {
-    const id = req.params.UserId;
+    const id = req.params.userId;
     const user = await Users.destroy({
         where: {
-            UserId: id,
+            userId: id,
         }
     })
     res.status(200).send("User deleted")
@@ -55,6 +55,6 @@ module.exports = {
     addUser,
     getAllUsers,
     getUserById,
-    updateUserEmail,
+    updateUseremail,
     deleteUser
 }

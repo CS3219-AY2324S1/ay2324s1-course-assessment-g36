@@ -9,8 +9,8 @@ const bcrypt = require("bcrypt");
 userRouter.post("/register", userController.addUser);
 
 // userRouter.post("/login", async (req, res) => {
-//     const { Email, Password } = req.body;
-//     const user = await Users.findOne({ where: { Email: Email } });
+//     const { email, Password } = req.body;
+//     const user = await Users.findOne({ where: { email: email } });
 
 //     if (!user) {
 //         res.json({ error: "User doesn't exist" });
@@ -28,12 +28,12 @@ userRouter.post("/register", userController.addUser);
 // READ
 userRouter.get("/", userController.getAllUsers)
 
-userRouter.get("/:UserId", userController.getUserById)
+userRouter.get("/:userId", userController.getUserById)
 
 // UPDATE
-userRouter.put("/:UserId", userController.updateUserEmail);
+userRouter.put("/:userId", userController.updateUseremail);
 
 // DELETE
-userRouter.delete("/:UserId", userController.deleteUser);
+userRouter.delete("/:userId", userController.deleteUser);
 
 module.exports = userRouter;

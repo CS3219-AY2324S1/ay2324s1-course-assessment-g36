@@ -9,14 +9,14 @@ const Register = () => {
   const navigate = useNavigate()
 
   const initialValues = {
-    Username: "",
-    Email: "",
+    username: "",
+    email: "",
     Password: "",
   }
 
   const validationSchema = Yup.object().shape({
-    Username: Yup.string().required(),
-    Email: Yup.string().required(),
+    username: Yup.string().required(),
+    email: Yup.string().required(),
     Password: Yup.string().min(8).max(15).required(),
   })
 
@@ -31,13 +31,13 @@ const Register = () => {
     <div className='register'>
       <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
         <Form className='formContainer'>
-          <label>Username</label>
-          <ErrorMessage name="Username" component="span"/>
-          <Field id="registerInput" name="Username" placeholder="Bob"/>
+          <label>username</label>
+          <ErrorMessage name="username" component="span"/>
+          <Field id="registerInput" name="username" placeholder="Bob"/>
 
-          <label>Email</label>
-          <ErrorMessage name="Email" component="span"/>
-          <Field id="registerInput" name="Email" placeholder="example@gmail.com"/>
+          <label>email</label>
+          <ErrorMessage name="email" component="span"/>
+          <Field id="registerInput" name="email" placeholder="example@gmail.com"/>
 
           <label>Password</label>
           <ErrorMessage name="Password" component="span"/>

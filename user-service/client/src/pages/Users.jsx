@@ -14,7 +14,7 @@ const Users = () => {
     const handleDelete = async (id) => {
         try {
             await axios.delete("http://localhost:3001/users/"+id)
-            setUsers((prevList) => prevList.filter(user => user.UserId !== id));
+            setUsers((prevList) => prevList.filter(user => user.userId !== id));
         } catch (err) {
             console.log(err)
         }
@@ -25,12 +25,12 @@ const Users = () => {
             <h1>PeerPrep users</h1>
             <div className='users'>
                 {users.map((value, key)=>(
-                    <div className="user" key={value.UserId}>
-                        <p>{value.UserId}</p>
-                        <p>{value.Username}</p>
-                        <p>{value.Email}</p>
-                        <button className='deleteButton' onClick={() => handleDelete(value.UserId)}>Delete</button>
-                        <button className='updateButton'><Link to={`/update/${value.UserId}`}>Update</Link></button>
+                    <div className="user" key={value.userId}>
+                        <p>{value.userId}</p>
+                        <p>{value.username}</p>
+                        <p>{value.email}</p>
+                        <button className='deleteButton' onClick={() => handleDelete(value.userId)}>Delete</button>
+                        <button className='updateButton'><Link to={`/update/${value.userId}`}>Update</Link></button>
                     </div>
                 ))}
             </div>

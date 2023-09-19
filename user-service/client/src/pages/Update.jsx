@@ -21,7 +21,7 @@ const Update = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const email = user.Email;
+    const email = user.email;
     axios.put(`http://localhost:3001/users/${id}`, { email }).then((res) => {
         navigate("/");
     });
@@ -29,8 +29,8 @@ const Update = () => {
 
   return (
     <div className='form'>
-      <h1>Update {user.Username}</h1>
-      <input type="text" placeholder='email' onChange={handleChange} name="Email"/>
+      <h1>Update {user.username}</h1>
+      <input type="text" placeholder='email' onChange={handleChange} name="email"/>
       <button className="formButton" onClick={handleClick}>Update</button>
       <Link to="/">See all users</Link>
     </div>
