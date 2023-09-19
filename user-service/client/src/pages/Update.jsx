@@ -12,16 +12,17 @@ const Update = () => {
     axios.get(`http://localhost:3001/users/${id}`).then((res) => {
         setUser(res.data);
     });
-  }, []);
+  }, [id]);
 
 
   const handleChange= (e) => {
-    setUser(prev=>({...prev, [e.target.name]: e.target.value}));
+    setUser(prev=>({ ...prev, [e.target.name]: e.target.value }));
   }
 
   const handleClick = async (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:3001/users/${id}`).then((res) => {
+    const email = user.Email;
+    axios.put(`http://localhost:3001/users/${id}`, { email }).then((res) => {
         navigate("/");
     });
   }
@@ -29,7 +30,7 @@ const Update = () => {
   return (
     <div className='form'>
       <h1>Update {user.Username}</h1>
-      <input type="text" placeholder='email' onChange={handleChange} name="email"/>
+      <input type="text" placeholder='email' onChange={handleChange} name="Email"/>
       <button className="formButton" onClick={handleClick}>Update</button>
       <Link to="/">See all users</Link>
     </div>

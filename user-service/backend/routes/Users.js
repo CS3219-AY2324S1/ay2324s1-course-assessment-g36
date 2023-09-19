@@ -49,11 +49,10 @@ router.get("/:UserId", async (req, res)=> {
 // UPDATE
 router.put("/:UserId", async (req, res) => {
     const { UserId } = req.params;
-    const { Email } = req.body;
-    const user = await Users.update({ Email: Email }, { where: { UserId: UserId } });
+    const { email } = req.body;
+    const user = await Users.update({ Email: email }, { where: { UserId: UserId} });
     res.json(user);
 });
-
 
 // DELETE
 router.delete("/:UserId", async (req, res) => {
