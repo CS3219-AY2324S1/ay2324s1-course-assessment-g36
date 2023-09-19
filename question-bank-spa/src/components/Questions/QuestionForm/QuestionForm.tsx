@@ -29,7 +29,7 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
 
   const [form, setFormData] = useState<QuestionObject>(
     {
-      id: Math.floor(Math.random() * 500) + 50, title: "", complexity: "", description: "", categories: [], link: ""
+      id: Math.floor(Math.random() * 100) + 15, title: "", complexity: "", description: "", categories: [], link: ""
     })
   const [isFormError, setIsFormError] = useState<boolean>(false)
   const toast = useToast()

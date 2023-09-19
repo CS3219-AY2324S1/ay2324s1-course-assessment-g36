@@ -14,10 +14,9 @@ interface IOwnProps {
 }
 
 export default function QuestionRow({ question, deleteQuestion }: IOwnProps): JSX.Element {
-
   return (
     <Tr>
-      <Td><QuestionTitle title={question.title} description={question.description} link={question.link} /></Td>
+      <Td><QuestionTitle question={question} /></Td>
       <Td><QuestionComplexity complexity={question.complexity}/></Td>
       <Td><QuestionTopic categories={question.categories}/></Td>
       <Td><Button size="xs" colorScheme="red" onClick={() => deleteQuestion(question.title)}>X</Button></Td>

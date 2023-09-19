@@ -1,54 +1,28 @@
 import styles from "./QuestionTitle.module.css"
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-  Button,
-  Heading,
-  useDisclosure
-} from '@chakra-ui/react'
-import Link from "next/link"
+import { Tooltip, useDisclosure } from '@chakra-ui/react'
+import QuestionDetail from "../QuestionDetails/QuestionDetail"
+import { QuestionObject } from "@/data/interface"
 
 interface IOwnProps {
-  title: string
-  description: string
-  link: string
+  question: QuestionObject
 }
 
-export default function QuestionTitle({ title, description, link }: IOwnProps): JSX.Element {
+export default function QuestionTitle({ question }: IOwnProps): JSX.Element {
 
   function truncateTitle(): string {
-    if (title.length > 35) {
-      return title.slice(0, 35) + '...'
+    if (question.title.length > 35) {
+      return question.title.slice(0, 35) + '...'
     }
-    return title
+    return question.title
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
-      <span className={styles.question_title} onClick={onOpen}>{truncateTitle()}</span>
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Question Details</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Heading as='h2' size='md'>
-              {title}
-            </Heading>
-            <br/>
-            {description.split('\n').map(desc => <p key={desc}>{desc}<br /></p>)}
-          </ModalBody>
-          <ModalFooter>
-            <Link href={link}><Button colorScheme="green">Check out here</Button></Link>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <Tooltip hasArrow label="View question details" placement="left" aria-label="A tooltip to view question details">
+        <span className={styles.question_title} onClick={onOpen}>{truncateTitle()}</span>
+      </Tooltip>
+      <QuestionDetail question={question} isOpen={isOpen} onClose={onClose}/>
     </>
   )
 }
