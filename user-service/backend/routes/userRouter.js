@@ -34,6 +34,6 @@ userRouter.get("/:UserId", userController.getUserById)
 userRouter.put("/:UserId", userController.updateUserEmail);
 
 // DELETE
-userRouter.delete("/:UserId", userController.deleteUser)
+userRouter.delete("/:UserId", userController.deleteUser);
 
 module.exports = userRouter;

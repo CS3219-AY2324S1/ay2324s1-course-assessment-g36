@@ -1,10 +1,14 @@
 const express = require('express');
+// const {errorHandler} = require('../middleware/errorHandler');
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 
 // CREATE
 const addUser = async (req, res) => {
     const {Username, Email, Password } = req.body;  
+    // if (!Username || !Email || !Password) {
+
+    // }
     bcrypt.hash(Password, 10).then((hash) => {
         const user = Users.create({
             Username: Username,
@@ -13,6 +17,7 @@ const addUser = async (req, res) => {
         })
         res.status(200).send(user);
     })
+
 }
 
 // READ
