@@ -6,10 +6,10 @@ const { Op } = require('sequelize');
 // CREATE
 const addUser = async (req, res, next) => {
     try {
-        const { username, email, password, firstName, lastName } = req.body;
+        const { username, email, password } = req.body;
     
         // CHECK FOR MISSING FIELDS
-        if (!username || !email || !password || !firstName || !lastName) {
+        if (!username || !email || !password) {
             res.status(400).send("Missing field");
             return;
         }
@@ -34,9 +34,7 @@ const addUser = async (req, res, next) => {
         const user = await Users.create({
             username: username,
             email: email,
-            password: hash,
-            firstName: firstName,
-            lastName: lastName
+            password: hash
         });
     
         res.status(201).send(user);
@@ -61,16 +59,16 @@ const loginUser = async (req, res) => {
         if (!user) {
             res.status(404).send("User does not exist");
             return;
-        } else {
-            bcrypt.compare(password, user.password).then((match) => {
-                if (!match) {
-                    res.status(401).send("Wrong password. Please try again!");
-                    return;
-                } else {
-                    res.status(200).send(user)
-                }
-            });
-        }
+        } 
+
+        bcrypt.compare(password, user.password).then((match) => {
+            if (!match) {
+                res.status(401).send("Wrong password. Please try again!");
+                return;
+            }
+
+            res.status(200).send(user)
+        });
     } catch (err) {
         next(err);
     }
@@ -114,6 +112,7 @@ const updateUser = async (req, res, next) => {
 
         const { username, firstName, lastName, summary, education, work, github, website } = req.body;
 
+        // TODO: make this nicer?
         if (username && typeof username == 'string') {
             const existingUser = await Users.findOne({ where: { username: username }});
     
@@ -130,10 +129,6 @@ const updateUser = async (req, res, next) => {
 
         if (lastName && typeof lastName == 'string') {
             user.lastName = lastName;
-        }
-
-        if (summary && typeof summary == 'string') {
-            user.summary = summary;
         }
 
         if (summary && typeof summary == 'string') {
@@ -170,13 +165,19 @@ const updateUser = async (req, res, next) => {
 
 // DELETE
 const deleteUser = async (req, res, next) => {
-    const id = req.params.userId;
-    await Users.destroy({
-        where: {
-            userId: id,
+    try {
+        const id = req.params.userId;
+        const user = await Users.findByPk(id);
+        if (!user) {
+            res.status(404).send("User does not exist");
+            return;
         }
-    })
-    res.status(200).send("User deleted")
+        await Users.destroy({where: {userId: id}});
+        res.status(200).send("User deleted")
+    } catch (err) {
+        next(err);
+    }
+
 };
 
 module.exports = {
