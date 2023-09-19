@@ -29,7 +29,7 @@
    npm install
    ```
 
-2. If you have not set up the database previously, follow this section to set up the Users database before running the project.
+2. If you have not set up the database previously, follow [this section](#setting-up-mysql-database) to set up the Users database before running the project.
 
 3. Run the project with:
 
