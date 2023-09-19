@@ -16,7 +16,7 @@ userRouter.get("/", userController.getAllUsers)
 userRouter.get("/:userId", userController.getUserById)
 
 // UPDATE
-userRouter.put("/:userId", userController.updateUseremail);
+userRouter.put("/:userId", userController.updateUser);
 
 // DELETE
 userRouter.delete("/:userId", userController.deleteUser);
