@@ -1,8 +1,6 @@
 const express = require('express');
 const userController = require("../controllers/userController");
 const userRouter = express.Router();
-const { Users } = require('../models');
-const bcrypt = require("bcrypt");
 
 
 userRouter.post("/register", userController.addUser);

@@ -1,4 +1,3 @@
-const express = require('express');
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 const { Op } = require('sequelize');
@@ -7,13 +6,11 @@ const addUser = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
     
-        // CHECK FOR MISSING FIELDS
         if (!username || !email || !password) {
             res.status(400).send("Missing field");
             return;
         }
 
-        // CHECK FOR DUPLICATE USERS
         const count = await Users.count({
             where: {
               [Op.or]: [
@@ -47,7 +44,6 @@ const loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // CHECK FOR MISSING FIELDS
         if (!username || !password) {
             res.status(400).send("Missing field");
             return;
@@ -97,7 +93,6 @@ const getUserById = async (req, res, next) => {
     }
 }
 
-// TODO: update password
 const updateUser = async (req, res, next) => {
     try {
         const id = req.params.userId
@@ -107,7 +102,7 @@ const updateUser = async (req, res, next) => {
             return;
         }
 
-        const { username, firstName, lastName, summary, education, work, github, website } = req.body;
+        const { username, password, firstName, lastName, summary, education, work, github, website } = req.body;
 
         // TODO: make this nicer?
         if (username && typeof username == 'string') {
@@ -118,6 +113,11 @@ const updateUser = async (req, res, next) => {
                 return;
             }
             user.username = username;
+        }
+
+        if (password && typeof password == 'string') {
+            const hash = await bcrypt.hash(password, 10);
+            user.password = hash;
         }
 
         if (firstName && typeof firstName == 'string') {
@@ -138,10 +138,6 @@ const updateUser = async (req, res, next) => {
 
         if (work && typeof work == 'string') {
             user.work = work;
-        }
-
-        if (github && typeof github == 'string') {
-            user.github = github;
         }
 
         if (github && typeof github == 'string') {
@@ -169,7 +165,7 @@ const deleteUser = async (req, res, next) => {
             return;
         }
         await Users.destroy({where: {userId: id}});
-        res.status(200).send("User deleted")
+        res.sendStatus(204);
     } catch (err) {
         next(err);
     }
