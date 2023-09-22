@@ -26,3 +26,11 @@ export async function fetchUser(id: string): Promise<User> {
   const data = await response.json();
   return data;
 }
+
+export async function deleteUser(id: string): Promise<void> {
+  const deleteUserApi = `${USERS_API}/${id}`
+  const requestOptions = {
+    method: "DELETE"
+  };
+  await fetch(deleteUserApi, requestOptions)
+}

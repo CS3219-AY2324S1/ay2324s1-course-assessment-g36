@@ -4,7 +4,8 @@ import Layout from '@/components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { User } from "@/interfaces"
 import { fetchUser } from "@/utils/api"
-import { Heading, Stack, Text } from '@chakra-ui/react'
+import { Heading, Stack, Text, Button } from '@chakra-ui/react'
+import { deleteUser } from "@/utils/api"
 
 export default function ProfileDetail() {
 
@@ -39,6 +40,15 @@ export default function ProfileDetail() {
     fetchData(userId)
   }, [])
 
+  async function handleDelete() {
+    try {
+      await deleteUser(userId)
+      window.location.href = "/profiles";
+    } catch (error) {
+      console.log("Error deleting user")
+    }
+  }
+
   return (
     <>
       <Head>
@@ -57,6 +67,7 @@ export default function ProfileDetail() {
             <Text>Summary: { profileData.summary }</Text>
             <Text>GitHub link: { profileData.github } </Text>
             <Text>Contact: { profileData.email } </Text>
+            <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
           </Stack>
         </Layout>
       </main >
