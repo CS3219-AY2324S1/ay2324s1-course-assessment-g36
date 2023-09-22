@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   FormControl,
   FormLabel,
@@ -11,29 +11,37 @@ import {
 } from '@chakra-ui/react'
 import styles from "./RegistrationForm.module.css"
 import { UserForm } from '@/interfaces'
+import { createUser } from '@/utils/api'
 
 export default function RegistrationForm(): JSX.Element {
 
   const [show, setShow] = useState<boolean>(false)
-  const handlePasswordClick = () => setShow(!show)
-
+  const [loading, setIsLoading] = useState<boolean>(false)
   const [userForm, setUserForm] = useState<UserForm>({
     username: "",
     email: "",
     password: ""
   })
 
+  const handlePasswordClick = () => setShow(!show)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     setUserForm({ ...userForm, [fieldName]: e.target.value })
   };
 
+const handleSubmit = async (userForm: UserForm): Promise<void> => {
+    setIsLoading(true)
+    await createUser(userForm);
+    setIsLoading(false)
+    window.location.href = "/";
+  }
 
   function isDisabled(): boolean {
     return userForm.username == ""
       || userForm.email == ""
       || userForm.password == ""
+      || loading
   }
-
 
   return (
     <Stack className={styles.form_container} spacing='20px'>
@@ -72,7 +80,9 @@ export default function RegistrationForm(): JSX.Element {
         </InputGroup>
       </FormControl>
 
-      <Button colorScheme='blue' isDisabled={isDisabled()}>Create Account</Button>
+      <Button colorScheme='blue' isDisabled={isDisabled()} onClick={(e) => handleSubmit(userForm)}>
+        { loading ? "Loading..." : "Create Account" }
+      </Button>
     </Stack>
   )
 }
