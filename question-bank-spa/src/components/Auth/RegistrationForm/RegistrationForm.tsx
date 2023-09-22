@@ -33,7 +33,7 @@ const handleSubmit = async (userForm: UserForm): Promise<void> => {
     setIsLoading(true)
     await createUser(userForm);
     setIsLoading(false)
-    window.location.href = "/";
+    window.location.href = "/profiles";
   }
 
   function isDisabled(): boolean {

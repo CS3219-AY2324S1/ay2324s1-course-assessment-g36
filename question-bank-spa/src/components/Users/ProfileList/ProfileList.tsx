@@ -26,7 +26,7 @@ export default function ProfileList(): JSX.Element {
       <Stack spacing='16px'>
         <Heading as='h2' size='lg' textAlign='center'>User Profiles</Heading>
         <SimpleGrid spacing={6} templateColumns='repeat(auto-fill, minmax(300px, 1fr))'>
-          {users.map(user => <ProfileCard user={user} />)}
+          {users.map(user => <ProfileCard key={user.userId} user={user} />)}
         </SimpleGrid>
       </Stack>
     </>

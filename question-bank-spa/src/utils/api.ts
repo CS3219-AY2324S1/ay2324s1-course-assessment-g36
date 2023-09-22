@@ -1,7 +1,7 @@
 import { UserForm, User } from "@/interfaces";
 
 const CREATE_USER_API = 'http://localhost:3001/users/register'
-const GET_ALL_USERS_API = 'http://localhost:3001/users'
+const USERS_API = 'http://localhost:3001/users'
 
 export async function createUser(userForm: UserForm): Promise<void> {
   const requestOptions = {
@@ -15,7 +15,14 @@ export async function createUser(userForm: UserForm): Promise<void> {
 }
 
 export async function fetchAllUsers(): Promise<User[]> {
-  const response = await fetch(GET_ALL_USERS_API);
+  const response = await fetch(USERS_API);
+  const data = await response.json();
+  return data;
+}
+
+export async function fetchUser(id: string): Promise<User> {
+  const fetchSingleUserApi = `${USERS_API}/${id}`
+  const response = await fetch(fetchSingleUserApi);
   const data = await response.json();
   return data;
 }

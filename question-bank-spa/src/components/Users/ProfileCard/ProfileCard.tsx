@@ -6,19 +6,17 @@ import {
   CardFooter,
   Heading,
   Button,
-  Text,
-  LinkBox,
-  LinkOverlay
+  Text
 } from '@chakra-ui/react'
+import Link from "next/link"
 
 interface IOwnProps {
   user: User
 }
 
 export default function ProfileCard({ user }: IOwnProps): JSX.Element {
-
   return (
-    <Card>
+    <Card variant="filled">
       <CardHeader>
         <Heading size='md'>{user.username}</Heading>
       </CardHeader>
@@ -26,7 +24,9 @@ export default function ProfileCard({ user }: IOwnProps): JSX.Element {
         <Text>{user.email}</Text>
       </CardBody>
       <CardFooter>
-        <Button>View here</Button>
+        <Button variant='link' colorScheme="blue">
+          <Link href={`/profile/${user.userId}`}>View here</Link>
+        </Button>
       </CardFooter>
     </Card>
   )
