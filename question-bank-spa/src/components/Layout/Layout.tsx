@@ -2,7 +2,7 @@ import Header from "../Header/Header";
 import styles from "./Layout.module.css"
 
 interface IOwnProps {
-  children: JSX.Element
+  children: JSX.Element | JSX.Element[]
 }
 
 export default function Layout({ children }: IOwnProps): JSX.Element {

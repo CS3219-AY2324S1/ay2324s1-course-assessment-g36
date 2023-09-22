@@ -13,9 +13,9 @@
 }
 
 .nav_links {
-  width: 30%;
+  width: 40%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .nav_link {

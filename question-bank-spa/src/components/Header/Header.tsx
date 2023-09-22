@@ -8,6 +8,8 @@ export default function Header(): JSX.Element {
         <h3 className={styles.logo_title}>PeerPrep Question Bank</h3>
       </Link>
       <nav className={styles.nav_links}>
+        <Link href='/register' className={styles.nav_link}>Register</Link>
+        <Link href='/login' className={styles.nav_link}>Login</Link>
         <Link href='#' className={styles.nav_link}>Practice for interviews</Link>
       </nav>
     </header>
