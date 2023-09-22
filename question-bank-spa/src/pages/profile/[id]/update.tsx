@@ -10,16 +10,34 @@ import {
   InputGroup,
   InputRightElement,
   Button,
-  Container
+  Container,
+  useToast
 } from '@chakra-ui/react'
-import { UpdateUserProfileForm } from "@/interfaces"
-import { updateUser } from "@/utils/api"
+import { User, UpdateUserProfileForm } from "@/interfaces"
+import { fetchUser, updateUser } from "@/utils/api"
 import { useRouter } from 'next/router'
 
 export default function ProfileUpdate() {
 
   const [show, setShow] = useState<boolean>(false)
   const handlePasswordClick = () => setShow(!show)
+  const toast = useToast()
+
+  const [profileData, setProfileData] = useState<User>({
+    "userId": 0,
+    "email": "",
+    "username": "",
+    "password": "",
+    "firstName": "",
+    "lastName": "",
+    "summary": "",
+    "education": "",
+    "work": "",
+    "github": "",
+    "website": "",
+    "createdAt": "",
+    "updatedAt": ""
+  })
 
   const [userProfileData, setUserProfileData] = useState<UpdateUserProfileForm>({
     "username": "",
@@ -33,14 +51,40 @@ export default function ProfileUpdate() {
     "website": "",
   })
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+    setUserProfileData({ ...userProfileData, [fieldName]: e.target.value })
+  };
 
   const router = useRouter()
+  const userId = router.query.id as string
+
+  async function fetchData(id: string) {
+    try {
+      const results = await fetchUser(id);
+      setProfileData(results)
+    } catch (error) {
+      console.log("Error fetching users;")
+    }
+  }
 
   useEffect(() => {
-    const userId = router.query.id as string
-    console.log(userId)
-  }, [])
-  
+    fetchData(userId)
+  }, [userId])
+
+  async function handleSubmit() {
+    try {
+      await updateUser(userId, userProfileData)
+      toast({
+        position: 'top',
+        title: 'Profile updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+    } catch (error) {
+      console.log("Error updating profile")
+    }
+  }
 
   return (
     <>
@@ -61,13 +105,14 @@ export default function ProfileUpdate() {
                   <FormLabel>
                     First name
                   </FormLabel>
-                  <Input placeholder="Enter first name" />
+                  {/* TODO: fix bug where updated fields cannot be updated again */}
+                  <Input placeholder="Enter first name" value={profileData.firstName} onChange={e => handleChange(e, "firstName")}/>
                 </FormControl>
                 <FormControl>
                   <FormLabel>
                     Last name
                   </FormLabel>
-                  <Input placeholder="Enter last name" />
+                  <Input placeholder="Enter last name" value={profileData.lastName} onChange={e => handleChange(e, "lastName")}/>
                 </FormControl>
               </HStack>
 
@@ -75,7 +120,7 @@ export default function ProfileUpdate() {
                 <FormLabel>
                   Username
                 </FormLabel>
-                <Input placeholder="Enter username" />
+                <Input placeholder="Enter username" value={profileData.username} onChange={e => handleChange(e, "username")}/>
               </FormControl>
 
               <FormControl>
@@ -101,31 +146,31 @@ export default function ProfileUpdate() {
                 <FormLabel>
                   About you
                 </FormLabel>
-                <Input placeholder="Enter summary" />
+                <Input placeholder="Enter summary" value={profileData.summary} onChange={e => handleChange(e, "summary")}/>
               </FormControl>
 
               <FormControl>
                 <FormLabel>
                   Professional work
                 </FormLabel>
-                <Input placeholder="What is your professional job?" />
+                <Input placeholder="What is your professional job?" value={profileData.work} onChange={e => handleChange(e, "work")} />
               </FormControl>
 
               <FormControl>
                 <FormLabel>
                   GitHub profile
                 </FormLabel>
-                <Input placeholder="Enter GitHub link" />
+                <Input placeholder="Enter GitHub link" value={profileData.github} onChange={e => handleChange(e, "github")} />
               </FormControl>
 
               <FormControl>
                 <FormLabel>
                   Website
                 </FormLabel>
-                <Input placeholder="Enter website" />
+                <Input placeholder="Enter website" value={profileData.website} onChange={e => handleChange(e, "website")} />
               </FormControl>
 
-              <Button>Save</Button>
+              <Button onClick={handleSubmit}>Save</Button>
               <br />
 
             </Stack>
@@ -135,18 +180,4 @@ export default function ProfileUpdate() {
       </main>
     </>
   )
-}
-
-export async function getServerSideProps({ params }) {
-  const { slug } = params;
-
-  // Fetch data based on the dynamic slug value on the server
-  const response = await fetch(`/api/posts/${slug}`);
-  const postData = await response.json();
-
-  return {
-    props: {
-      postData,
-    },
-  };
 }

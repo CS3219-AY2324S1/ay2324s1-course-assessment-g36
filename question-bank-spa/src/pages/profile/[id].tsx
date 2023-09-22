@@ -6,6 +6,7 @@ import { User } from "@/interfaces"
 import { fetchUser } from "@/utils/api"
 import { Heading, HStack, Stack, Text, Button } from '@chakra-ui/react'
 import { deleteUser } from "@/utils/api"
+import Link from "next/link"
 
 export default function ProfileDetail() {
 
@@ -23,7 +24,7 @@ export default function ProfileDetail() {
     "website": "",
     "createdAt": "",
     "updatedAt": ""
-  },)
+  })
   const router = useRouter()
   const userId = router.query.id as string
 
@@ -71,7 +72,11 @@ export default function ProfileDetail() {
             <Text>Website: {profileData.website} </Text>
             <Text>Contact: {profileData.email} </Text>
             <HStack>
-              <Button colorScheme="teal">Update Profile</Button>
+              <Button colorScheme="teal">
+                <Link href={`/profile/${userId}/update`}>
+                  Update Profile
+                </Link>
+              </Button>
               <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
             </HStack>
           </Stack>
