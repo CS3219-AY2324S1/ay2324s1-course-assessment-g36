@@ -10,7 +10,7 @@ import {
   Heading,
 } from '@chakra-ui/react'
 import styles from "./RegistrationForm.module.css"
-import { UserForm } from '@/interfaces'
+import { User, UserForm } from '@/interfaces'
 import { createUser } from '@/utils/api'
 
 export default function RegistrationForm(): JSX.Element {
@@ -29,11 +29,14 @@ export default function RegistrationForm(): JSX.Element {
     setUserForm({ ...userForm, [fieldName]: e.target.value })
   };
 
-const handleSubmit = async (userForm: UserForm): Promise<void> => {
-    setIsLoading(true)
-    await createUser(userForm);
-    setIsLoading(false)
-    window.location.href = "/profiles";
+  const handleSubmit = async (userForm: UserForm): Promise<void> => {
+    try {
+      setIsLoading(true)
+      const user: User = await createUser(userForm)
+      window.location.href = `/profile/${user.userId}`
+    } catch (error) {
+      console.log("Error creating a new user")
+    }
   }
 
   function isDisabled(): boolean {
@@ -51,7 +54,7 @@ const handleSubmit = async (userForm: UserForm): Promise<void> => {
         <FormLabel>
           Username
         </FormLabel>
-        <Input placeholder="Enter username" value={userForm.username} onChange={e => handleChange(e, "username")}/>
+        <Input placeholder="Enter username" value={userForm.username} onChange={e => handleChange(e, "username")} />
       </FormControl>
 
       <FormControl isRequired>
@@ -81,7 +84,7 @@ const handleSubmit = async (userForm: UserForm): Promise<void> => {
       </FormControl>
 
       <Button colorScheme='blue' isDisabled={isDisabled()} onClick={(e) => handleSubmit(userForm)}>
-        { loading ? "Loading..." : "Create Account" }
+        {loading ? "Loading..." : "Create Account"}
       </Button>
     </Stack>
   )

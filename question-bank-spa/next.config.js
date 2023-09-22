@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   // Enable static export of HTML
-  output: 'export',
+  // output: 'export',
 }
 
 module.exports = nextConfig

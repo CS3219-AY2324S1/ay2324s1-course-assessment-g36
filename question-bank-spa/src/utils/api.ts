@@ -1,9 +1,9 @@
-import { UserForm, User } from "@/interfaces";
+import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
 
 const CREATE_USER_API = 'http://localhost:3001/users/register'
 const USERS_API = 'http://localhost:3001/users'
 
-export async function createUser(userForm: UserForm): Promise<void> {
+export async function createUser(userForm: UserForm): Promise<User> {
   const requestOptions = {
     method: "POST",
     headers: {
@@ -11,7 +11,21 @@ export async function createUser(userForm: UserForm): Promise<void> {
     },
     body: JSON.stringify(userForm)
   };
-  await fetch(CREATE_USER_API, requestOptions)
+  const response = await fetch(CREATE_USER_API, requestOptions)
+  const user = await response.json()
+  return user
+}
+
+export async function updateUser(id: string, updateUserForm: UpdateUserProfileForm): Promise<void> {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updateUserForm)
+  };
+  const updateUserApi = `${USERS_API}/${id}`
+  await fetch(updateUserApi, requestOptions)
 }
 
 export async function fetchAllUsers(): Promise<User[]> {

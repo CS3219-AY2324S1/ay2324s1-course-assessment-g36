@@ -4,7 +4,7 @@ import Layout from '@/components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { User } from "@/interfaces"
 import { fetchUser } from "@/utils/api"
-import { Heading, Stack, Text, Button } from '@chakra-ui/react'
+import { Heading, HStack, Stack, Text, Button } from '@chakra-ui/react'
 import { deleteUser } from "@/utils/api"
 
 export default function ProfileDetail() {
@@ -19,7 +19,7 @@ export default function ProfileDetail() {
     "summary": "",
     "education": "",
     "work": "",
-    "github": "No url added",
+    "github": "",
     "website": "",
     "createdAt": "",
     "updatedAt": ""
@@ -38,7 +38,7 @@ export default function ProfileDetail() {
 
   useEffect(() => {
     fetchData(userId)
-  }, [])
+  }, [userId])
 
   async function handleDelete() {
     try {
@@ -61,13 +61,19 @@ export default function ProfileDetail() {
         <Layout>
           <Stack>
             <Heading lineHeight='tall'>
-              Welcome to { profileData.username }'s profile
+              Welcome to {profileData.username}'s profile
             </Heading>
-            <Text>Education: { profileData.education }</Text>
-            <Text>Summary: { profileData.summary }</Text>
-            <Text>GitHub link: { profileData.github } </Text>
-            <Text>Contact: { profileData.email } </Text>
-            <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
+            <Text>Name: {`${profileData.firstName ?? ""} ${profileData.lastName ?? ""}`}</Text>
+            <Text>Education: {profileData.education}</Text>
+            <Text>About you: {profileData.summary}</Text>
+            <Text>Professional work: {profileData.work}</Text>
+            <Text>GitHub link: {profileData.github} </Text>
+            <Text>Website: {profileData.website} </Text>
+            <Text>Contact: {profileData.email} </Text>
+            <HStack>
+              <Button colorScheme="teal">Update Profile</Button>
+              <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
+            </HStack>
           </Stack>
         </Layout>
       </main >
