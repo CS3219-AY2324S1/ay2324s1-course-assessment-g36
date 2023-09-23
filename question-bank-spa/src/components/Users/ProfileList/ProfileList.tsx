@@ -24,16 +24,16 @@ export default function ProfileList(): JSX.Element {
     setIsLoading(false)
   }, []);
 
-  if (isLoading) {
-    return <SkeletonLoader />
-  }
-
   return (
-    <Stack spacing='16px'>
-      <Heading as='h2' size='lg' textAlign='center'>User Profiles</Heading>
-      <SimpleGrid spacing={6} templateColumns='repeat(auto-fill, minmax(300px, 1fr))'>
-        {users.map(user => <ProfileCard key={user.userId} user={user} />)}
-      </SimpleGrid>
-    </Stack>
+    <>
+      {isLoading
+        ? <SkeletonLoader />
+        : <Stack spacing='16px'>
+          <Heading as='h2' size='lg' textAlign='center'>User Profiles</Heading>
+          <SimpleGrid spacing={6} templateColumns='repeat(auto-fill, minmax(300px, 1fr))'>
+            {users.map(user => <ProfileCard key={user.userId} user={user} />)}
+          </SimpleGrid>
+        </Stack>}
+    </>
   )
 }
