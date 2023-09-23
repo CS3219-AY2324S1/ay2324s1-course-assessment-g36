@@ -18,13 +18,13 @@ export default function Header(): JSX.Element {
     <header className={styles.container_header}>
 
       <Link href="/">
-        <h3 className={styles.logo_title}>PeerPrep Question Bank</h3>
+        <h3 className={styles.logo_title}>PeerPrep</h3>
       </Link>
 
       {/* Desktop navbar */}
       <nav className={styles.nav_links}>
         <Link href='/register' className={styles.nav_link}>Register</Link>
-        <Link href='/#' className={styles.nav_link}>Login</Link>
+        <Link href='/' className={styles.nav_link}>Questions</Link>
         <Link href='/profiles' className={styles.nav_link}>View Profiles</Link>
         <Link href='#' className={styles.nav_link}>Practice for interviews</Link>
       </nav>
@@ -40,7 +40,7 @@ export default function Header(): JSX.Element {
           />
           <MenuList>
             <MenuItem onClick={() => router.push("/register")}>Register</MenuItem>
-            <MenuItem onClick={() => router.push("#")}>Login</MenuItem>
+            <MenuItem onClick={() => router.push("/")}>Questions</MenuItem>
             <MenuItem onClick={() => router.push("/profiles")}>View Profiles</MenuItem>
             <MenuItem onClick={() => router.push("#")}>Practice for interviews</MenuItem>
           </MenuList>
