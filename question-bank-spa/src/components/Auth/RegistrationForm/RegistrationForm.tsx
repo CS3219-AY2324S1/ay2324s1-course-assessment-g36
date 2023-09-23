@@ -16,7 +16,7 @@ import { createUser } from '@/utils/api'
 export default function RegistrationForm(): JSX.Element {
 
   const [show, setShow] = useState<boolean>(false)
-  const [loading, setIsLoading] = useState<boolean>(false)
+  const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false)
   const [userForm, setUserForm] = useState<UserForm>({
     username: "",
     email: "",
@@ -31,7 +31,7 @@ export default function RegistrationForm(): JSX.Element {
 
   const handleSubmit = async (userForm: UserForm): Promise<void> => {
     try {
-      setIsLoading(true)
+      setIsFormSubmitting(true)
       const user: User = await createUser(userForm)
       window.location.href = `/profile/${user.userId}`
     } catch (error) {
@@ -43,7 +43,7 @@ export default function RegistrationForm(): JSX.Element {
     return userForm.username == ""
       || userForm.email == ""
       || userForm.password == ""
-      || loading
+      || isFormSubmitting
   }
 
   return (
@@ -84,7 +84,7 @@ export default function RegistrationForm(): JSX.Element {
       </FormControl>
 
       <Button colorScheme='blue' isDisabled={isDisabled()} onClick={(e) => handleSubmit(userForm)}>
-        {loading ? "Loading..." : "Create Account"}
+        {isFormSubmitting ? "Creating..." : "Create Account"}
       </Button>
     </Stack>
   )

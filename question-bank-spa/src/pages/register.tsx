@@ -13,7 +13,6 @@ export default function Registration() {
       </Head>
       <main>
         <Layout>
-          {/* <TestApi /> */}
           <RegistrationForm />
         </Layout>
       </main>
