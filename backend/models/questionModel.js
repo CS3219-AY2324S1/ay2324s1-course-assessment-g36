@@ -1,8 +1,15 @@
-import mongoose, {Schema} from "mongoose";
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const questionSchema = new Schema ({
-    id: Number,
-    title: String,
+    id: {
+        type: Number,
+        unique: true,
+    },
+    title: {
+        type: String,
+        unique: true,
+    },
     categories: [String],
     complexity: String,
     link: String,
@@ -11,4 +18,4 @@ const questionSchema = new Schema ({
 
 const Question = mongoose.models.Question || mongoose.model("Question", questionSchema)
 
-export default Question;
+module.exports = Question;
