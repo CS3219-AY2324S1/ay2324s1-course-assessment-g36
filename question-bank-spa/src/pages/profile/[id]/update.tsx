@@ -150,6 +150,13 @@ export default function ProfileUpdate() {
 
                   <FormControl>
                     <FormLabel>
+                      Education
+                    </FormLabel>
+                    <Input placeholder="What is your highest educational qualification?" value={userProfileData.education} onChange={e => handleChange(e, "education")} />
+                  </FormControl>
+                  
+                  <FormControl>
+                    <FormLabel>
                       Professional work
                     </FormLabel>
                     <Input placeholder="What is your professional job?" value={userProfileData.work} onChange={e => handleChange(e, "work")} />
