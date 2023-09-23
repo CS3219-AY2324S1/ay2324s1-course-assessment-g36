@@ -6,14 +6,13 @@ import {
   Tr,
   Th,
   TableContainer,
-  Stack,
-  Skeleton,
 } from '@chakra-ui/react'
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/data/interface';
 import styles from "./QuestionsTable.module.css"
 import { populateInitialQuestionsToLocalStorage, fetchQuestionsFromLocalStorage } from '@/utils/populateQuestions';
 import AddQuestion from '../QuestionForm/AddQuestion';
+import SkeletonLoader from '@/components/Loader/SkeletonLoader';
 
 export default function QuestionsTable(): JSX.Element {
 
@@ -40,18 +39,7 @@ export default function QuestionsTable(): JSX.Element {
   }
 
   if (isLoading) {
-    return <Stack>
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-      <Skeleton height='40px' />
-    </Stack>
+    return <SkeletonLoader />
   }
 
   return <div className={styles.table_container}>

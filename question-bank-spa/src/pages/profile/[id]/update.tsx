@@ -13,31 +13,19 @@ import {
   Container,
   useToast
 } from '@chakra-ui/react'
-import { User, UpdateUserProfileForm } from "@/interfaces"
+import { UpdateUserProfileForm } from "@/interfaces"
 import { fetchUser, updateUser } from "@/utils/api"
 import { useRouter } from 'next/router'
+import SkeletonLoader from "@/components/Loader/SkeletonLoader"
 
 export default function ProfileUpdate() {
 
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [show, setShow] = useState<boolean>(false)
   const handlePasswordClick = () => setShow(!show)
+  const router = useRouter()
+  const userId = router.query.id as string
   const toast = useToast()
-
-  const [profileData, setProfileData] = useState<User>({
-    "userId": 0,
-    "email": "",
-    "username": "",
-    "password": "",
-    "firstName": "",
-    "lastName": "",
-    "summary": "",
-    "education": "",
-    "work": "",
-    "github": "",
-    "website": "",
-    "createdAt": "",
-    "updatedAt": ""
-  })
 
   const [userProfileData, setUserProfileData] = useState<UpdateUserProfileForm>({
     "username": "",
@@ -48,28 +36,32 @@ export default function ProfileUpdate() {
     "education": "",
     "work": "",
     "github": "",
-    "website": "",
+    "website": ""
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     setUserProfileData({ ...userProfileData, [fieldName]: e.target.value })
   };
 
-  const router = useRouter()
-  const userId = router.query.id as string
-
   async function fetchData(id: string) {
     try {
       const results = await fetchUser(id);
-      setProfileData(results)
+      const currProfileData = {
+        username: results.username,
+        password: results.password,
+        firstName: results.firstName,
+        lastName: results.lastName,
+        summary: results.summary,
+        education: results.education,
+        work: results.work,
+        github: results.github,
+        website: results.website,
+      }
+      setUserProfileData(currProfileData)
     } catch (error) {
       console.log("Error fetching users;")
     }
   }
-
-  useEffect(() => {
-    fetchData(userId)
-  }, [userId])
 
   async function handleSubmit() {
     try {
@@ -86,6 +78,11 @@ export default function ProfileUpdate() {
     }
   }
 
+  useEffect(() => {
+    fetchData(userId)
+    setIsLoading(false)
+  }, [userId])
+
   return (
     <>
       <Head>
@@ -97,84 +94,89 @@ export default function ProfileUpdate() {
       <main>
         <Layout>
 
-          <Container maxW='2xl'>
-            <Stack>
+          {isLoading
+            ? <SkeletonLoader />
+            : (
+              <Container maxW='2xl'>
+                <Stack>
 
-              <HStack>
-                <FormControl>
-                  <FormLabel>
-                    First name
-                  </FormLabel>
-                  {/* TODO: fix bug where updated fields cannot be updated again */}
-                  <Input placeholder="Enter first name" value={profileData.firstName} onChange={e => handleChange(e, "firstName")}/>
-                </FormControl>
-                <FormControl>
-                  <FormLabel>
-                    Last name
-                  </FormLabel>
-                  <Input placeholder="Enter last name" value={profileData.lastName} onChange={e => handleChange(e, "lastName")}/>
-                </FormControl>
-              </HStack>
+                  <HStack>
+                    <FormControl>
+                      <FormLabel>
+                        First name
+                      </FormLabel>
+                      <Input placeholder="Enter first name" value={userProfileData.firstName} onChange={e => handleChange(e, "firstName")} />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>
+                        Last name
+                      </FormLabel>
+                      <Input placeholder="Enter last name" value={userProfileData.lastName} onChange={e => handleChange(e, "lastName")} />
+                    </FormControl>
+                  </HStack>
 
-              <FormControl>
-                <FormLabel>
-                  Username
-                </FormLabel>
-                <Input placeholder="Enter username" value={profileData.username} onChange={e => handleChange(e, "username")}/>
-              </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      Username
+                    </FormLabel>
+                    <Input placeholder="Enter username" value={userProfileData.username} onChange={e => handleChange(e, "username")} />
+                  </FormControl>
 
-              <FormControl>
-                <FormLabel>
-                  Password
-                </FormLabel>
-                <InputGroup size='md'>
-                  <Input
-                    pr='4.5rem'
-                    type={show ? 'text' : 'password'}
-                    placeholder='Enter password'
-                    
-                  />
-                  <InputRightElement width='4.5rem'>
-                    <Button h='1.75rem' size='sm' onClick={handlePasswordClick}>
-                      {show ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      Password
+                    </FormLabel>
+                    <InputGroup size='md'>
+                      <Input
+                        pr='4.5rem'
+                        type={show ? 'text' : 'password'}
+                        placeholder='Enter password'
 
-              <FormControl>
-                <FormLabel>
-                  About you
-                </FormLabel>
-                <Input placeholder="Enter summary" value={profileData.summary} onChange={e => handleChange(e, "summary")}/>
-              </FormControl>
+                      />
+                      <InputRightElement width='4.5rem'>
+                        <Button h='1.75rem' size='sm' onClick={handlePasswordClick}>
+                          {show ? 'Hide' : 'Show'}
+                        </Button>
+                      </InputRightElement>
+                    </InputGroup>
+                  </FormControl>
 
-              <FormControl>
-                <FormLabel>
-                  Professional work
-                </FormLabel>
-                <Input placeholder="What is your professional job?" value={profileData.work} onChange={e => handleChange(e, "work")} />
-              </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      About you
+                    </FormLabel>
+                    <Input placeholder="Enter summary" value={userProfileData.summary} onChange={e => handleChange(e, "summary")} />
+                  </FormControl>
 
-              <FormControl>
-                <FormLabel>
-                  GitHub profile
-                </FormLabel>
-                <Input placeholder="Enter GitHub link" value={profileData.github} onChange={e => handleChange(e, "github")} />
-              </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      Professional work
+                    </FormLabel>
+                    <Input placeholder="What is your professional job?" value={userProfileData.work} onChange={e => handleChange(e, "work")} />
+                  </FormControl>
 
-              <FormControl>
-                <FormLabel>
-                  Website
-                </FormLabel>
-                <Input placeholder="Enter website" value={profileData.website} onChange={e => handleChange(e, "website")} />
-              </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      GitHub profile
+                    </FormLabel>
+                    <Input placeholder="Enter GitHub link" value={userProfileData.github} onChange={e => handleChange(e, "github")} />
+                  </FormControl>
 
-              <Button onClick={handleSubmit}>Save</Button>
-              <br />
+                  <FormControl>
+                    <FormLabel>
+                      Website
+                    </FormLabel>
+                    <Input placeholder="Enter website" value={userProfileData.website} onChange={e => handleChange(e, "website")} />
+                  </FormControl>
 
-            </Stack>
-          </Container>
+                  <Button onClick={handleSubmit}>Save</Button>
+                  <br />
+
+                </Stack>
+              </Container>
+
+            )
+          }
 
         </Layout>
       </main>
