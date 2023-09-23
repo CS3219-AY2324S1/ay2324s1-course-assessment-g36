@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const Question = require("../models/questionModel");
+const Questions = require("../models/questionModel");
 const ObjectId = mongoose.Types.ObjectId;
 
 const addQuestion = async(req, res, next) => {
@@ -11,7 +11,7 @@ const addQuestion = async(req, res, next) => {
             return;
         }
 
-        const existingQuestion = await Question.findOne({
+        const existingQuestion = await Questions.findOne({
             $or: [
               { id: id }, 
               { title: title },
@@ -23,7 +23,7 @@ const addQuestion = async(req, res, next) => {
             return;
         }
 
-        const question = await Question.create({
+        const question = await Questions.create({
             id: id,
             title: title,
             description: description,
@@ -40,7 +40,7 @@ const addQuestion = async(req, res, next) => {
 
 const getAllQuestions = async(req, res, next) => {
     try {
-        const questionList = await Question.find();
+        const questionList = await Questions.find();
         res.status(200).send(questionList);
     } catch (err) {
         next(err);
@@ -49,9 +49,75 @@ const getAllQuestions = async(req, res, next) => {
 
 const getQuestionById = async(req, res, next) => {
     try {
-        const questionId = req.params.questionId;
-        const questionList = await Question.findOne({ id: questionId});
-        res.status(200).send(questionList);
+        const id = req.params.questionId;
+        const question = await Questions.findOne({ id: id});
+        if (!quesiton) {
+            res.status(404).send("Question does not exist")
+            return;
+        }
+        res.status(200).send(question);
+    } catch (err) {
+        next(err);
+    }
+}
+
+const updateQuestion = async(req, res, next) => {
+    try {
+        const id = req.params.questionId;
+        const question = await Questions.findOne({id: id});
+
+        if (!question) {
+            res.status(404).send("Question does not exist")
+            return;
+        }
+
+        const { title, description, link, categories, complexity } = req.body;
+
+        if (title && typeof title == 'string') {
+            const existingQuestion = await Questions.findOne({ title: title });
+    
+            if (existingQuestion && existingQuestion.id != id) {
+                res.status(400).send("Question already exists");
+                return;
+            }
+            question.title = title;
+        }
+
+        if (description && typeof description == 'string') {
+            question.description = description;
+        }
+
+        if (link && typeof link == 'string') {
+            question.link = link;
+        }
+
+        if (categories && Array.isArray(categories) && categories.every((item) => typeof item === 'string')) {
+            question.categories = categories;
+        }
+
+        if (complexity && typeof complexity == 'string') {
+            question.complexity = complexity;
+        }
+        
+        await question.save();
+        res.status(200).send(question);
+    } catch (err) {
+        next(err);
+    }
+}
+
+const deleteQuestion = async (req, res, next) => {
+    try {
+        const id = req.params.questionId;
+        const question = await Questions.findOne({id: id});
+
+        if (!question) {
+            res.status(404).send("Question does not exist")
+            return;
+        }
+
+        await Questions.deleteOne({id : id});
+        res.sendStatus(204);
     } catch (err) {
         next(err);
     }
@@ -61,6 +127,6 @@ module.exports = {
     addQuestion,
     getAllQuestions,
     getQuestionById,
-    // updateQuestion,
-    // deleteQuestion
+    updateQuestion,
+    deleteQuestion
 }

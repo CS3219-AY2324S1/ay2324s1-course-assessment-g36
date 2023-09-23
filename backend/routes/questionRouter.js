@@ -8,8 +8,8 @@ questionRouter.get("/", questionController.getAllQuestions);
 
 questionRouter.get("/:questionId", questionController.getQuestionById);
 
-// questionRouter.update("/:questionId", questionController.updateQuestion)
+questionRouter.put("/:questionId", questionController.updateQuestion)
 
-// questionRouter.delete("/:questionId", questionController.deleteQuestion);
+questionRouter.delete("/:questionId", questionController.deleteQuestion);
 
 module.exports = questionRouter;
