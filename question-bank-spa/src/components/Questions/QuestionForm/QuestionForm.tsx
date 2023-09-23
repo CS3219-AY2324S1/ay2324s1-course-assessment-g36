@@ -9,16 +9,12 @@ import {
   Radio,
   RadioGroup,
   useToast,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Box,
   Checkbox,
   CheckboxGroup
 } from '@chakra-ui/react'
 import { QuestionObject } from '@/data/interface'
 import { validateForm } from '@/utils/validators'
+import AlertBanner from '@/components/Feedback/AlertBanner'
 
 interface IOwnProps {
   onModalClose: () => void
@@ -86,15 +82,9 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
     <Stack>
 
       {isFormError && <>
-        <Alert status='error'>
-          <AlertIcon />
-          <Box>
-            <AlertTitle>Your form has some errors!</AlertTitle>
-            <AlertDescription>
-              Please ensure that there is no duplicate question title and your external link is valid.
-            </AlertDescription>
-          </Box>
-        </Alert>
+        <AlertBanner 
+          title="Your form has some errors"
+          message="Please ensure that there is no duplicate question title and your external link is valid." />
       </>}
 
       <FormControl isRequired>

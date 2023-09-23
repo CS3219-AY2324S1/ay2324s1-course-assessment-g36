@@ -12,6 +12,8 @@ import {
 import styles from "./RegistrationForm.module.css"
 import { User, UserForm } from '@/interfaces'
 import { createUser } from '@/utils/api'
+import AlertBanner from '@/components/Feedback/AlertBanner'
+import { validateEmail, validatePassword } from '@/utils/validators'
 
 export default function RegistrationForm(): JSX.Element {
 
@@ -22,6 +24,8 @@ export default function RegistrationForm(): JSX.Element {
     email: "",
     password: ""
   })
+  const [isValidEmail, setIsValidEmail] = useState<boolean>(true)
+  const [isValidPassword, setIsValidPassword] = useState<boolean>(true)
 
   const handlePasswordClick = () => setShow(!show)
 
@@ -29,7 +33,16 @@ export default function RegistrationForm(): JSX.Element {
     setUserForm({ ...userForm, [fieldName]: e.target.value })
   };
 
+  const validateForm = (): boolean => {
+    const validEmail = validateEmail(userForm.email)
+    const validPassword = validatePassword(userForm.password)
+    setIsValidEmail(validEmail)
+    setIsValidPassword(validPassword)
+    return validEmail && validPassword
+  } 
+
   const handleSubmit = async (userForm: UserForm): Promise<void> => {
+    if (!validateForm()) return
     try {
       setIsFormSubmitting(true)
       const user: User = await createUser(userForm)
@@ -43,12 +56,15 @@ export default function RegistrationForm(): JSX.Element {
     return userForm.username == ""
       || userForm.email == ""
       || userForm.password == ""
-      || isFormSubmitting
+      || isFormSubmitting 
   }
 
   return (
     <Stack className={styles.form_container} spacing='20px'>
       <Heading as='h2' size='xl' textAlign='center'>User Registration</Heading>
+
+      {!isValidEmail && <AlertBanner title="Email address is invalid." message="Please enter a valid email address in the format 'example@example.domain'."/>}
+      {!isValidPassword && <AlertBanner title="Password is too short." message="Please ensure that your password is at least 8 characters long."/>}
 
       <FormControl isRequired>
         <FormLabel>
