@@ -7,7 +7,7 @@ const addUser = async (req, res, next) => {
         const { username, email, password } = req.body;
     
         if (!username || !email || !password) {
-            res.status(400).send("Missing field");
+            res.status(400).json({error: "Missing field"});
             return;
         }
 
@@ -21,7 +21,7 @@ const addUser = async (req, res, next) => {
           });
 
         if (count !== 0) {
-            res.status(400).send("User already exists");
+            res.status(400).json({ error: "User already exists"});
             return;
         }
     
@@ -33,7 +33,7 @@ const addUser = async (req, res, next) => {
             password: hash
         });
     
-        res.status(201).send(user);
+        res.status(201).json({ res: user});
     } catch (err) {
         next(err);
     }
@@ -45,25 +45,25 @@ const loginUser = async (req, res) => {
         const { username, password } = req.body;
 
         if (!username || !password) {
-            res.status(400).send("Missing field");
+            res.status(400).json({error: "Missing field"});
             return;
         }
 
         const user = await Users.findOne({ where: { username: username } });
     
         if (!user) {
-            res.status(404).send("User does not exist");
+            res.status(404).json({error: "User does not exist"});
             return;
         } 
 
         const match = await bcrypt.compare(password, user.password);
 
         if (!match) {
-            res.status(401).send("Wrong password. Please try again!");
+            res.status(401).json({ error: "Wrong password. Please try again!"});
             return;
         }
 
-        res.status(200).send(user)
+        res.status(200).json({ res: user})
     } catch (err) {
         next(err);
     }
@@ -73,7 +73,7 @@ const loginUser = async (req, res) => {
 const getAllUsers = async (req, res, next) => {
     try {
         const userList = await Users.findAll();
-        res.status(200).send(userList);
+        res.status(200).json({ res: userList});
     } catch (err) {
         next(err);
     }
@@ -84,10 +84,10 @@ const getUserById = async (req, res, next) => {
         const id = req.params.userId
         const user = await Users.findByPk(id);
         if (!user) {
-            res.status(404).send("User does not exist");
+            res.status(404).json({error: "User does not exist"});
             return;
         }
-        res.status(200).send(user);
+        res.status(200).json({res: user});
     } catch (err) {
         next(err);
     }
@@ -98,7 +98,7 @@ const updateUser = async (req, res, next) => {
         const id = req.params.userId
         const user = await Users.findByPk(id);
         if (!user) {
-            res.status(404).send("User does not exist");
+            res.status(404).json({error: "User does not exist"});
             return;
         }
 
@@ -109,7 +109,7 @@ const updateUser = async (req, res, next) => {
             const existingUser = await Users.findOne({ where: { username: username }});
     
             if (existingUser && existingUser.userId != id) {
-                res.status(400).send("Username already taken");
+                res.status(400).json({ error: "Username already taken"});
                 return;
             }
             user.username = username;
@@ -149,7 +149,7 @@ const updateUser = async (req, res, next) => {
         }
 
         await user.save();
-        res.status(200).send(user);
+        res.status(200).json({res: user});
     } catch (err) {
         next(err);
     }
@@ -161,11 +161,11 @@ const deleteUser = async (req, res, next) => {
         const id = req.params.userId;
         const user = await Users.findByPk(id);
         if (!user) {
-            res.status(404).send("User does not exist");
+            res.status(404).json({error: "User does not exist"});
             return;
         }
         await Users.destroy({where: {userId: id}});
-        res.sendStatus(204);
+        res.sendStatus(200);
     } catch (err) {
         next(err);
     }
