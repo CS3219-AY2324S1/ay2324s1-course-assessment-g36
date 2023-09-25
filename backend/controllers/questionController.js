@@ -51,7 +51,7 @@ const getQuestionById = async(req, res, next) => {
     try {
         const id = req.params.questionId;
         const question = await Questions.findOne({ id: id});
-        if (!quesiton) {
+        if (!question) {
             res.status(404).send("Question does not exist")
             return;
         }
