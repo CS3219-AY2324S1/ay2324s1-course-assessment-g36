@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
-import RegistrationForm from '@/components/Auth/RegistrationForm/RegistrationForm'
+import RegistrationForm from '@/components/Users/Registration/RegistrationForm'
 
 export default function Registration() {
   return (
