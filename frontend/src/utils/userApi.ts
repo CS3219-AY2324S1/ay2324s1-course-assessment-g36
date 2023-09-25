@@ -37,7 +37,9 @@ export async function fetchAllUsers(): Promise<User[]> {
 export async function fetchUser(id: string): Promise<User> {
   const fetchSingleUserApi = `${USERS_API}/${id}`
   const response = await fetch(fetchSingleUserApi);
+  console.log(response)
   const data = await response.json();
+  console.log(data)
   return data;
 }
 

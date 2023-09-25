@@ -7,9 +7,12 @@ import { fetchUser } from "@/utils/userApi"
 import { Heading, HStack, Stack, Text, Button, useToast } from '@chakra-ui/react'
 import { deleteUser } from "@/utils/userApi"
 import Link from "next/link"
+import { Status } from "@/enums"
+import SkeletonLoader from "@/components/Loader/SkeletonLoader"
 
 export default function ProfileDetail() {
 
+  const [status, setStatus] = useState<Status>(Status.Loading)
   const [profileData, setProfileData] = useState<User>({
     "userId": 0,
     "email": "",
@@ -33,8 +36,10 @@ export default function ProfileDetail() {
     try {
       const results = await fetchUser(id);
       setProfileData(results)
+      setStatus(Status.Success)
     } catch (error) {
       console.log("Error fetching users;")
+      setStatus(Status.Error)
     }
   }
 
@@ -67,26 +72,41 @@ export default function ProfileDetail() {
       </Head>
       <main>
         <Layout>
-          <Stack>
-            <Heading lineHeight='tall'>
-              Welcome to {profileData.username}'s profile
-            </Heading>
-            <Text>Name: {`${profileData.firstName ?? ""} ${profileData.lastName ?? ""}`}</Text>
-            <Text>Education: {profileData.education}</Text>
-            <Text>About you: {profileData.summary}</Text>
-            <Text>Professional work: {profileData.work}</Text>
-            <Text>GitHub link: {profileData.github} </Text>
-            <Text>Website: {profileData.website} </Text>
-            <Text>Contact: {profileData.email} </Text>
-            <HStack>
-              <Link href={`/profile/${userId}/update`}>
-                <Button colorScheme="teal">
-                  Update Profile
-                </Button>
-              </Link>
-              <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
-            </HStack>
-          </Stack>
+
+          {status === Status.Loading ? <SkeletonLoader /> : <></>}
+
+          {status === Status.Error
+            ? <Stack>
+              <Text color='red'>Failed to load user profile.</Text>
+              <Text color='red'>Either the user does not exist or there is a server error.</Text>
+              <Text color='red'>Please try again later.</Text>
+            </Stack>
+            : <></>
+          }
+
+          {status === Status.Success
+            ? <Stack>
+              <Heading lineHeight='tall'>
+                Welcome to {profileData.username}'s profile
+              </Heading>
+              <Text>Name: {`${profileData.firstName ?? ""} ${profileData.lastName ?? ""}`}</Text>
+              <Text>Education: {profileData.education}</Text>
+              <Text>About you: {profileData.summary}</Text>
+              <Text>Professional work: {profileData.work}</Text>
+              <Text>GitHub link: {profileData.github} </Text>
+              <Text>Website: {profileData.website} </Text>
+              <Text>Contact: {profileData.email} </Text>
+              <HStack>
+                <Link href={`/profile/${userId}/update`}>
+                  <Button colorScheme="teal">
+                    Update Profile
+                  </Button>
+                </Link>
+                <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
+              </HStack>
+            </Stack>
+            : <></>}
+            
         </Layout>
       </main >
     </>
