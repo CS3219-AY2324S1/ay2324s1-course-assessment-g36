@@ -11,16 +11,18 @@ import {
   InputRightElement,
   Button,
   Container,
-  useToast
+  useToast,
+  Text
 } from '@chakra-ui/react'
 import { UpdateUserProfileForm } from "@/interfaces"
 import { fetchUser, updateUser } from "@/utils/userApi"
 import { useRouter } from 'next/router'
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
+import { Status } from "@/enums"
 
 export default function ProfileUpdate() {
 
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [status, setStatus] = useState<Status>(Status.Loading)
   const [show, setShow] = useState<boolean>(false)
   const handlePasswordClick = () => setShow(!show)
   const router = useRouter()
@@ -58,8 +60,9 @@ export default function ProfileUpdate() {
         website: results.website,
       }
       setUserProfileData(currProfileData)
+      setStatus(Status.Success)
     } catch (error) {
-      console.log("Error fetching users;")
+      setStatus(Status.Error)
     }
   }
 
@@ -74,13 +77,18 @@ export default function ProfileUpdate() {
         isClosable: true,
       })
     } catch (error) {
-      console.log("Error updating profile")
+      toast({
+        position: 'top',
+        title: 'Failed to update profile. Please try again later.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
     }
   }
 
   useEffect(() => {
     fetchData(userId)
-    setIsLoading(false)
   }, [userId])
 
   return (
@@ -94,96 +102,96 @@ export default function ProfileUpdate() {
       <main>
         <Layout>
 
-          {isLoading
-            ? <SkeletonLoader />
-            : (
-              <Container maxW='2xl'>
-                <Stack>
+          {status === Status.Loading ? <SkeletonLoader /> : <></>}
 
-                  <HStack>
-                    <FormControl>
-                      <FormLabel>
-                        First name
-                      </FormLabel>
-                      <Input placeholder="Enter first name" value={userProfileData.firstName} onChange={e => handleChange(e, "firstName")} />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>
-                        Last name
-                      </FormLabel>
-                      <Input placeholder="Enter last name" value={userProfileData.lastName} onChange={e => handleChange(e, "lastName")} />
-                    </FormControl>
-                  </HStack>
+          {status === Status.Error ? <Text color='red'>Failed to load user profile. Please try again later.</Text> : <></>}
 
+          {status === Status.Success
+            ? <Container maxW='2xl'>
+              <Stack>
+
+                <HStack>
                   <FormControl>
                     <FormLabel>
-                      Username
+                      First name
                     </FormLabel>
-                    <Input placeholder="Enter username" value={userProfileData.username} onChange={e => handleChange(e, "username")} />
+                    <Input placeholder="Enter first name" value={userProfileData.firstName} onChange={e => handleChange(e, "firstName")} />
                   </FormControl>
-
                   <FormControl>
                     <FormLabel>
-                      Password
+                      Last name
                     </FormLabel>
-                    <InputGroup size='md'>
-                      <Input
-                        pr='4.5rem'
-                        type={show ? 'text' : 'password'}
-                        placeholder='Enter password'
-
-                      />
-                      <InputRightElement width='4.5rem'>
-                        <Button h='1.75rem' size='sm' onClick={handlePasswordClick}>
-                          {show ? 'Hide' : 'Show'}
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
+                    <Input placeholder="Enter last name" value={userProfileData.lastName} onChange={e => handleChange(e, "lastName")} />
                   </FormControl>
+                </HStack>
 
-                  <FormControl>
-                    <FormLabel>
-                      About you
-                    </FormLabel>
-                    <Input placeholder="Enter summary" value={userProfileData.summary} onChange={e => handleChange(e, "summary")} />
-                  </FormControl>
+                <FormControl>
+                  <FormLabel>
+                    Username
+                  </FormLabel>
+                  <Input placeholder="Enter username" value={userProfileData.username} onChange={e => handleChange(e, "username")} />
+                </FormControl>
 
-                  <FormControl>
-                    <FormLabel>
-                      Education
-                    </FormLabel>
-                    <Input placeholder="What is your highest educational qualification?" value={userProfileData.education} onChange={e => handleChange(e, "education")} />
-                  </FormControl>
-                  
-                  <FormControl>
-                    <FormLabel>
-                      Professional work
-                    </FormLabel>
-                    <Input placeholder="What is your professional job?" value={userProfileData.work} onChange={e => handleChange(e, "work")} />
-                  </FormControl>
+                <FormControl>
+                  <FormLabel>
+                    Password
+                  </FormLabel>
+                  <InputGroup size='md'>
+                    <Input
+                      pr='4.5rem'
+                      type={show ? 'text' : 'password'}
+                      placeholder='Enter password'
 
-                  <FormControl>
-                    <FormLabel>
-                      GitHub profile
-                    </FormLabel>
-                    <Input placeholder="Enter GitHub link" value={userProfileData.github} onChange={e => handleChange(e, "github")} />
-                  </FormControl>
+                    />
+                    <InputRightElement width='4.5rem'>
+                      <Button h='1.75rem' size='sm' onClick={handlePasswordClick}>
+                        {show ? 'Hide' : 'Show'}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
 
-                  <FormControl>
-                    <FormLabel>
-                      Website
-                    </FormLabel>
-                    <Input placeholder="Enter website" value={userProfileData.website} onChange={e => handleChange(e, "website")} />
-                  </FormControl>
+                <FormControl>
+                  <FormLabel>
+                    About you
+                  </FormLabel>
+                  <Input placeholder="Enter summary" value={userProfileData.summary} onChange={e => handleChange(e, "summary")} />
+                </FormControl>
 
-                  <Button onClick={handleSubmit}>Save</Button>
-                  <br />
+                <FormControl>
+                  <FormLabel>
+                    Education
+                  </FormLabel>
+                  <Input placeholder="What is your highest educational qualification?" value={userProfileData.education} onChange={e => handleChange(e, "education")} />
+                </FormControl>
 
-                </Stack>
-              </Container>
+                <FormControl>
+                  <FormLabel>
+                    Professional work
+                  </FormLabel>
+                  <Input placeholder="What is your professional job?" value={userProfileData.work} onChange={e => handleChange(e, "work")} />
+                </FormControl>
 
-            )
-          }
+                <FormControl>
+                  <FormLabel>
+                    GitHub profile
+                  </FormLabel>
+                  <Input placeholder="Enter GitHub link" value={userProfileData.github} onChange={e => handleChange(e, "github")} />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>
+                    Website
+                  </FormLabel>
+                  <Input placeholder="Enter website" value={userProfileData.website} onChange={e => handleChange(e, "website")} />
+                </FormControl>
+
+                <Button onClick={handleSubmit}>Save</Button>
+                <br />
+
+              </Stack>
+            </Container>
+            : <></>}
 
         </Layout>
       </main>

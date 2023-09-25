@@ -4,12 +4,7 @@ import { User } from "@/interfaces";
 import ProfileCard from "../ProfileCard/ProfileCard";
 import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
-
-enum Status {
-  Error,
-  Loading,
-  Success
-}
+import { Status } from "@/enums";
 
 export default function ProfileList(): JSX.Element {
 
@@ -30,11 +25,11 @@ export default function ProfileList(): JSX.Element {
     fetchData();
   }, []);
 
-  if (status == Status.Loading) {
+  if (status === Status.Loading) {
     return <SkeletonLoader />
   }
 
-  if (status == Status.Error) {
+  if (status === Status.Error) {
     return <Text color='red'>Failed to load user profiles. Please try again later.</Text>
   }
 
