@@ -11,21 +11,21 @@ export async function addQuestion(newQuestion: QuestionObject): Promise<Question
     };
     const response = await fetch(QUESTIONS_API, requestOptions)
     const question = await response.json()
-    return question
+    return question.res
   }
 
 
 export async function fetchAllQuestions(): Promise<QuestionObject[]> {
     const response = await fetch(QUESTIONS_API);
     const data = await response.json();
-    return data;
+    return data.res;
 }
 
 export async function fetchQuestion(id: String): Promise<QuestionObject> {
     const fetchSingleQuestionApi = `${QUESTIONS_API}/${id}`
     const response = await fetch(fetchSingleQuestionApi);
     const data = await response.json();
-    return data;
+    return data.res;
   }
 
 export async function deleteQuestion(title: string): Promise<void> {
