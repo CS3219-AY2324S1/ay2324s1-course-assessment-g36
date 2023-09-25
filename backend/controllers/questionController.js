@@ -1,6 +1,4 @@
-const mongoose = require("mongoose")
 const Questions = require("../models/questionModel");
-const ObjectId = mongoose.Types.ObjectId;
 
 const addQuestion = async(req, res, next) => {
     try {

@@ -1,17 +1,13 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const express = require("express")
 const cors = require("cors");
-
+const connectToDb = require("./config/db")
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-dotenv.config();
-const URI = process.env.MONGODB_URI;
-mongoose.connect(URI);
+connectToDb();
 
 const questionRouter = require("./routes/questionRouter")
 app.use("/questions", questionRouter)

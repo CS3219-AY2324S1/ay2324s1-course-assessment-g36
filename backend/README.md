@@ -36,7 +36,13 @@ There are several ways to install MongoDB.
 
 2. If you have not set up the database previously, follow [this section](#setting-up-mysql-database) to set up the Questions database before running the project.
 
-3. Run the project with:
+3. If this is your first time and would like to populate the page with sample questions, run:
+
+   ```
+   npm run seed
+   ```
+
+4. Start the project with:
 
    ```
    npm start
