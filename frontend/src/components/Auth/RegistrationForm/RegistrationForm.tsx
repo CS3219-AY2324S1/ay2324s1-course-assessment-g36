@@ -8,6 +8,7 @@ import {
   InputRightElement,
   Button,
   Heading,
+  useToast
 } from '@chakra-ui/react'
 import styles from "./RegistrationForm.module.css"
 import { User, UserForm } from '@/interfaces'
@@ -26,6 +27,7 @@ export default function RegistrationForm(): JSX.Element {
   })
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true)
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true)
+  const toast = useToast()
 
   const handlePasswordClick = () => setShow(!show)
 
@@ -48,7 +50,14 @@ export default function RegistrationForm(): JSX.Element {
       const user: User = await createUser(userForm)
       window.location.href = `/profile/${user.userId}`
     } catch (error) {
-      console.log("Error creating a new user")
+      toast({
+        title: 'Failed to register. Please try again later.',
+        status: 'error',
+        duration: 3000,
+        position: 'top',
+        isClosable: true
+      })
+      setIsFormSubmitting(false)
     }
   }
 
