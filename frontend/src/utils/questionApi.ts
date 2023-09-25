@@ -1,5 +1,5 @@
 import { QuestionObject } from "@/data/interface"
-const QUESTIONS_API = 'http://localhost:3001/questions'
+const QUESTIONS_API = 'http://localhost:8000/questions'
 
 export async function addQuestion(newQuestion: QuestionObject): Promise<QuestionObject> {
     const requestOptions = {
