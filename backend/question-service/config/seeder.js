@@ -10,7 +10,7 @@ const seedQuestions = async () => {
         await Questions.insertMany(dummyQuestions);
         console.log("Successfully added questions.")
     } catch (error) {
-        console.log(error);
+        console.log("Error adding questions. Only run this command once.");
     }
 }
 
