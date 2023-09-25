@@ -165,7 +165,7 @@ const deleteUser = async (req, res, next) => {
             return;
         }
         await Users.destroy({where: {userId: id}});
-        res.sendStatus(200);
+        res.sendStatus(204);
     } catch (err) {
         next(err);
     }
