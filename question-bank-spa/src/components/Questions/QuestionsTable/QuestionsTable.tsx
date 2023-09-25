@@ -12,7 +12,7 @@ import {
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/data/interface';
 import styles from "./QuestionsTable.module.css"
-import { populateInitialQuestionsToLocalStorage, fetchQuestionsFromLocalStorage } from '@/utils/populateQuestions';
+import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/utils/questionApi';
 import AddQuestion from '../QuestionForm/AddQuestion';
 
 export default function QuestionsTable(): JSX.Element {
@@ -21,22 +21,36 @@ export default function QuestionsTable(): JSX.Element {
   const [questions, setQuestions] = useState<QuestionObject[]>([])
 
   useEffect(() => {
-    populateInitialQuestionsToLocalStorage();
-    setQuestions(fetchQuestionsFromLocalStorage())
+    fetchData()
     setIsLoading(false)
   }, []);
 
-  function addQuestion(newQuestion: QuestionObject) {
-    localStorage.setItem(`question_${newQuestion.title}`, JSON.stringify(newQuestion))
-    setQuestions([...questions, newQuestion])
+  async function fetchData() {
+    try {
+      const results = await fetchAllQuestions();
+      setQuestions(results);
+    } catch (error) {
+      console.log("Error fetching users")
+    }
   }
 
-  function deleteQuestion(questionTitle: string) {
-    const questionKey = `question_${questionTitle}`
-    if (!localStorage.getItem(questionKey)) return
-    localStorage.removeItem(questionKey)
-    const filteredQuestions = questions.filter(question => question.title != questionTitle);
-    setQuestions(filteredQuestions)
+  async function createQuestion(newQuestion: QuestionObject) {
+    try {
+      await addQuestion(newQuestion);
+      setQuestions([...questions, newQuestion])
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function removeQuestion(questionTitle: string) {
+    try {
+      await deleteQuestion(questionTitle);
+      const filteredQuestions = questions.filter(question => question.title != questionTitle);
+      setQuestions(filteredQuestions)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   if (isLoading) {
@@ -71,7 +85,7 @@ export default function QuestionsTable(): JSX.Element {
               <QuestionRow
                 key={question.id}
                 question={question}
-                deleteQuestion={deleteQuestion}
+                deleteQuestion={removeQuestion}
               />)
           }
         </Tbody>
@@ -79,7 +93,7 @@ export default function QuestionsTable(): JSX.Element {
     </TableContainer>
     <br />
 
-    <AddQuestion addQuestion={addQuestion} />
+    <AddQuestion addQuestion={createQuestion} />
 
   </div>
 }
