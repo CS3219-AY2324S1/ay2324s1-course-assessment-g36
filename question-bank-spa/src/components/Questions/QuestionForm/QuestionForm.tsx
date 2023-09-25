@@ -61,8 +61,10 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
       || form.link === ""
   }
 
-  function handleSubmit(): void {
-    if (!validateForm(form)) {
+  async function handleSubmit(): Promise<void> {
+    const isValid = await validateForm(form);
+    
+    if (!isValid) {
       setIsFormError(true)
       return
     }
