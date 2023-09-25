@@ -87,7 +87,7 @@ export default function ProfileDetail() {
           {status === Status.Success
             ? <Stack>
               <Heading lineHeight='tall'>
-                Welcome to {profileData.username}'s profile
+                Welcome to {profileData.username}&apos;s profile
               </Heading>
               <Text>Name: {`${profileData.firstName ?? ""} ${profileData.lastName ?? ""}`}</Text>
               <Text>Education: {profileData.education}</Text>
@@ -106,7 +106,7 @@ export default function ProfileDetail() {
               </HStack>
             </Stack>
             : <></>}
-            
+
         </Layout>
       </main >
     </>
