@@ -4,7 +4,7 @@ import Layout from '@/components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { User } from "@/interfaces"
 import { fetchUser } from "@/utils/userApi"
-import { Heading, HStack, Stack, Text, Button } from '@chakra-ui/react'
+import { Heading, HStack, Stack, Text, Button, useToast } from '@chakra-ui/react'
 import { deleteUser } from "@/utils/userApi"
 import Link from "next/link"
 
@@ -27,6 +27,7 @@ export default function ProfileDetail() {
   })
   const router = useRouter()
   const userId = router.query.id as string
+  const toast = useToast()
 
   async function fetchData(id: string) {
     try {
@@ -46,7 +47,13 @@ export default function ProfileDetail() {
       await deleteUser(userId)
       window.location.href = "/profiles";
     } catch (error) {
-      console.log("Error deleting user")
+      toast({
+        title: 'Failed to delete account. Please try again later.',
+        status: 'error',
+        duration: 3000,
+        position: 'top',
+        isClosable: true
+      })
     }
   }
 
