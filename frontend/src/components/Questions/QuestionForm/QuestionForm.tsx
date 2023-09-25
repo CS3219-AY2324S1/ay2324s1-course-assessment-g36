@@ -12,7 +12,7 @@ import {
   Checkbox,
   CheckboxGroup
 } from '@chakra-ui/react'
-import { QuestionObject } from '@/data/interface'
+import { QuestionObject } from '@/interfaces'
 import { validateForm } from '@/utils/validators'
 import AlertBanner from '@/components/Feedback/AlertBanner'
 

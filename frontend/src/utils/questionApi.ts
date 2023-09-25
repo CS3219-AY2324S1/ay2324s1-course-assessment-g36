@@ -1,4 +1,4 @@
-import { QuestionObject } from "@/data/interface"
+import { QuestionObject } from "@/interfaces"
 const QUESTIONS_API = 'http://localhost:3001/questions'
 
 export async function addQuestion(newQuestion: QuestionObject): Promise<QuestionObject> {

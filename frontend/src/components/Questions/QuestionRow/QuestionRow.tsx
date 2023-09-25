@@ -6,7 +6,7 @@ import {
 import QuestionTitle from '../QuestionTitle/QuestionTitle'
 import QuestionTopic from '../QuestionTopic/QuestionTopic'
 import QuestionComplexity from '../QuestionComplexity/QuestionComplexity'
-import { QuestionObject } from '@/data/interface'
+import { QuestionObject } from '@/interfaces'
 
 interface IOwnProps {
   question: QuestionObject

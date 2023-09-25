@@ -1,7 +1,7 @@
 import styles from "./QuestionTitle.module.css"
 import { Tooltip, useDisclosure } from '@chakra-ui/react'
 import QuestionDetail from "../QuestionDetails/QuestionDetail"
-import { QuestionObject } from "@/data/interface"
+import { QuestionObject } from "@/interfaces"
 
 interface IOwnProps {
   question: QuestionObject

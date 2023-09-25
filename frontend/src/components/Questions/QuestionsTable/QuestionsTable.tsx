@@ -8,7 +8,7 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import QuestionRow from '../QuestionRow/QuestionRow'
-import { QuestionObject } from '@/data/interface';
+import { QuestionObject } from '@/interfaces';
 import styles from "./QuestionsTable.module.css"
 import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/utils/questionApi';
 import AddQuestion from '../QuestionForm/AddQuestion';

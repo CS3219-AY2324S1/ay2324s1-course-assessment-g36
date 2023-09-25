@@ -1,3 +1,12 @@
+export interface QuestionObject {
+  id: number;
+  title: string;
+  categories: string[];
+  complexity: string;
+  link: string;
+  description: string;
+}
+
 export interface UserForm {
   username: string;
   email: string;

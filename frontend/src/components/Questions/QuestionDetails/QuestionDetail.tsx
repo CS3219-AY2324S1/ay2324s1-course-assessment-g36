@@ -1,4 +1,4 @@
-import { QuestionObject } from "@/data/interface"
+import { QuestionObject } from "@/interfaces"
 import {
   Modal,
   ModalOverlay,

@@ -10,7 +10,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import QuestionForm from './QuestionForm';
-import { QuestionObject } from '@/data/interface';
+import { QuestionObject } from '@/interfaces';
 
 interface IOwnProps {
   addQuestion: (newQuestion: QuestionObject) => void
