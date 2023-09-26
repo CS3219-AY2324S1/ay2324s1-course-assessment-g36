@@ -19,6 +19,7 @@ import { fetchUser, updateUser } from "@/utils/userApi"
 import { useRouter } from 'next/router'
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
 import { Status } from "@/enums"
+import { validatePassword } from "@/utils/validators"
 
 export default function ProfileUpdate() {
 
@@ -60,6 +61,17 @@ export default function ProfileUpdate() {
   }
 
   async function handleSubmit() {
+
+    if (!validatePassword(userProfileData.password)) {
+      toast({
+        position: 'top',
+        title: 'Please ensure password is at least 8 characters long.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+      return
+    }
 
     try {
       await updateUser(userId, userProfileData)
@@ -136,7 +148,8 @@ export default function ProfileUpdate() {
                       pr='4.5rem'
                       type={show ? 'text' : 'password'}
                       placeholder='Enter password'
-
+                      value={userProfileData.password}
+                      onChange={e => handleChange(e, "password")}
                     />
                     <InputRightElement width='4.5rem'>
                       <Button h='1.75rem' size='sm' onClick={handlePasswordClick}>
