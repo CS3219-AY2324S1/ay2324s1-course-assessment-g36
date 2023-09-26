@@ -42,10 +42,14 @@ export async function fetchUser(id: string): Promise<User> {
   return fetchDataOrThrowError(fetchUserApi)
 }
 
-export async function deleteUser(id: string): Promise<User> {
+export async function deleteUser(id: string): Promise<void> {
   const deleteUserApi = `${USERS_API}/${id}`
   const requestOptions = {
     method: "DELETE"
   };
-  return fetchDataOrThrowError(deleteUserApi, requestOptions)
+  const response = await fetch(deleteUserApi, requestOptions)
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.error)
+  }
 }

@@ -62,7 +62,7 @@ export default function ProfileUpdate() {
 
   async function handleSubmit() {
 
-    if (!validatePassword(userProfileData.password)) {
+    if (userProfileData.password.length > 0 && !validatePassword(userProfileData.password)) {
       toast({
         position: 'top',
         title: 'Please ensure password is at least 8 characters long.',
