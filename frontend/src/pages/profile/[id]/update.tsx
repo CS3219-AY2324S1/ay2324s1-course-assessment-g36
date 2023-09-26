@@ -85,7 +85,7 @@ export default function ProfileUpdate() {
     } catch (error: any) {
       toast({
         position: 'top',
-        title: `Error: ${error.message}`,
+        title: `${error.message}`,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -111,7 +111,7 @@ export default function ProfileUpdate() {
 
           {status === Status.Loading ? <SkeletonLoader /> : <></>}
 
-          {status === Status.Error ? <Text color='red'>Error: {error}</Text> : <></>}
+          {status === Status.Error ? <Text color='red'>{error}</Text> : <></>}
 
           {status === Status.Success
             ? <Container maxW='2xl'>

@@ -34,7 +34,7 @@ export default function ProfileList(): JSX.Element {
   }
 
   if (status === Status.Error) {
-    return <Text color='red'>Error: { error }</Text>
+    return <Text color='red'>{ error }</Text>
   }
 
   return (

@@ -79,7 +79,7 @@ export default function ProfileDetail() {
           {status === Status.Loading ? <SkeletonLoader /> : <></>}
 
           {status === Status.Error
-            ? <Text color='red'>Error: { error }</Text>
+            ? <Text color='red'>{ error }</Text>
             : <></>
           }
 
