@@ -13,6 +13,7 @@ import SkeletonLoader from "@/components/Loader/SkeletonLoader"
 export default function ProfileDetail() {
 
   const [status, setStatus] = useState<Status>(Status.Loading)
+  const [error, setError] = useState<string>("")
   const [profileData, setProfileData] = useState<User>({
     "userId": 0,
     "email": "",
@@ -33,14 +34,17 @@ export default function ProfileDetail() {
   const toast = useToast()
 
   async function fetchData(id: string) {
-    try {
-      const results = await fetchUser(id);
+
+    const results = await fetchUser(id);
+
+    if (typeof results === "string") {
+      setError(results)
+      setStatus(Status.Error)
+    } else {
       setProfileData(results)
       setStatus(Status.Success)
-    } catch (error) {
-      console.log("Error fetching users;")
-      setStatus(Status.Error)
     }
+
   }
 
   useEffect(() => {
@@ -76,11 +80,7 @@ export default function ProfileDetail() {
           {status === Status.Loading ? <SkeletonLoader /> : <></>}
 
           {status === Status.Error
-            ? <Stack>
-              <Text color='red'>Failed to load user profile.</Text>
-              <Text color='red'>Either the user does not exist or there is a server error.</Text>
-              <Text color='red'>Please try again later.</Text>
-            </Stack>
+            ? <Text color='red'>Error: { error }</Text>
             : <></>
           }
 

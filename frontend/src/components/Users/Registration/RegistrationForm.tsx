@@ -45,20 +45,23 @@ export default function RegistrationForm(): JSX.Element {
 
   const handleSubmit = async (userForm: UserForm): Promise<void> => {
     if (!validateForm()) return
-    try {
-      setIsFormSubmitting(true)
-      const user: User = await createUser(userForm)
-      window.location.href = `/profile/${user.userId}`
-    } catch (error) {
+    setIsFormSubmitting(true)
+
+    const results = await createUser(userForm)
+
+    if (typeof results === "string") {
       toast({
-        title: 'Failed to register. Please try again later.',
+        title: results,
         status: 'error',
         duration: 3000,
         position: 'top',
         isClosable: true
       })
       setIsFormSubmitting(false)
+    } else {
+      window.location.href = `/profile/${results.userId}`
     }
+    
   }
 
   function isDisabled(): boolean {

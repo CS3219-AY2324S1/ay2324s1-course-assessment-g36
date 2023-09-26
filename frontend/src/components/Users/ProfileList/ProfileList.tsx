@@ -10,15 +10,20 @@ export default function ProfileList(): JSX.Element {
 
   const [users, setUsers] = useState<User[]>([]);
   const [status, setStatus] = useState<Status>(Status.Loading);
+  const [error, setError] = useState<string>("")
 
   async function fetchData() {
-    try {
-      const results = await fetchAllUsers();
-      setUsers(results);
-      setStatus(Status.Success)
-    } catch (error) {
+
+    const results = await fetchAllUsers();
+
+    if (typeof results === "string") {
+      setError(results)
       setStatus(Status.Error)
+    } else {
+      setUsers(results)
+      setStatus(Status.Success)
     }
+
   }
 
   useEffect(() => {
@@ -30,7 +35,7 @@ export default function ProfileList(): JSX.Element {
   }
 
   if (status === Status.Error) {
-    return <Text color='red'>Failed to load user profiles. Please try again later.</Text>
+    return <Text color='red'>Error: { error }</Text>
   }
 
   return (

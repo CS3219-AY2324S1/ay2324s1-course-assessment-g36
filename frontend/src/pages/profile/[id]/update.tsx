@@ -23,6 +23,7 @@ import { Status } from "@/enums"
 export default function ProfileUpdate() {
 
   const [status, setStatus] = useState<Status>(Status.Loading)
+  const [error, setError] = useState<string>("")
   const [show, setShow] = useState<boolean>(false)
   const handlePasswordClick = () => setShow(!show)
   const router = useRouter()
@@ -46,45 +47,41 @@ export default function ProfileUpdate() {
   };
 
   async function fetchData(id: string) {
-    try {
-      const results = await fetchUser(id);
-      const currProfileData = {
-        username: results.username,
-        password: results.password,
-        firstName: results.firstName,
-        lastName: results.lastName,
-        summary: results.summary,
-        education: results.education,
-        work: results.work,
-        github: results.github,
-        website: results.website,
-      }
-      setUserProfileData(currProfileData)
-      setStatus(Status.Success)
-    } catch (error) {
+
+    const results = await fetchUser(id);
+
+    if (typeof results === "string") {
+      setError(results)
       setStatus(Status.Error)
+    } else {
+      setUserProfileData(results)
+      setStatus(Status.Success)
     }
+    
   }
 
   async function handleSubmit() {
-    try {
-      await updateUser(userId, userProfileData)
+
+    const results = await updateUser(userId, userProfileData)
+
+    if (typeof results === "string") {
       toast({
         position: 'top',
-        title: 'Profile updated',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (error) {
-      toast({
-        position: 'top',
-        title: 'Failed to update profile. Please try again later.',
+        title: `Error: ${results}`,
         status: 'error',
         duration: 5000,
         isClosable: true,
       })
+      return
     }
+
+    toast({
+      position: 'top',
+      title: 'Profile updated',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
   }
 
   useEffect(() => {
@@ -104,7 +101,7 @@ export default function ProfileUpdate() {
 
           {status === Status.Loading ? <SkeletonLoader /> : <></>}
 
-          {status === Status.Error ? <Text color='red'>Failed to load user profile. Please try again later.</Text> : <></>}
+          {status === Status.Error ? <Text color='red'>Error: { error }</Text> : <></>}
 
           {status === Status.Success
             ? <Container maxW='2xl'>
