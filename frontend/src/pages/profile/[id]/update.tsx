@@ -51,7 +51,7 @@ export default function ProfileUpdate() {
 
     try {
       const results = await fetchUser(id);
-      setUserProfileData(results)
+      setUserProfileData({...results, password: ""})
       setStatus(Status.Success)
     } catch (error: any) {
       setError(error.message)
