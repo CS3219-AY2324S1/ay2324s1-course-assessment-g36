@@ -48,40 +48,38 @@ export default function ProfileUpdate() {
 
   async function fetchData(id: string) {
 
-    const results = await fetchUser(id);
-
-    if (typeof results === "string") {
-      setError(results)
-      setStatus(Status.Error)
-    } else {
+    try {
+      const results = await fetchUser(id);
       setUserProfileData(results)
       setStatus(Status.Success)
+    } catch (error: any) {
+      setError(error.message)
+      setStatus(Status.Error)
     }
-    
+
   }
 
   async function handleSubmit() {
 
-    const results = await updateUser(userId, userProfileData)
-
-    if (typeof results === "string") {
+    try {
+      await updateUser(userId, userProfileData)
       toast({
         position: 'top',
-        title: `Error: ${results}`,
+        title: 'Profile updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+    } catch (error: any) {
+      toast({
+        position: 'top',
+        title: `Error: ${error.message}`,
         status: 'error',
         duration: 5000,
         isClosable: true,
       })
-      return
     }
 
-    toast({
-      position: 'top',
-      title: 'Profile updated',
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
-    })
   }
 
   useEffect(() => {
@@ -101,7 +99,7 @@ export default function ProfileUpdate() {
 
           {status === Status.Loading ? <SkeletonLoader /> : <></>}
 
-          {status === Status.Error ? <Text color='red'>Error: { error }</Text> : <></>}
+          {status === Status.Error ? <Text color='red'>Error: {error}</Text> : <></>}
 
           {status === Status.Success
             ? <Container maxW='2xl'>

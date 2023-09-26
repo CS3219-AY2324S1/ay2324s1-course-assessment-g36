@@ -14,14 +14,13 @@ export default function ProfileList(): JSX.Element {
 
   async function fetchData() {
 
-    const results = await fetchAllUsers();
-
-    if (typeof results === "string") {
-      setError(results)
-      setStatus(Status.Error)
-    } else {
+    try {
+      const results = await fetchAllUsers();
       setUsers(results)
       setStatus(Status.Success)
+    } catch (error: any) {
+      setError(error.message)
+      setStatus(Status.Error)
     }
 
   }

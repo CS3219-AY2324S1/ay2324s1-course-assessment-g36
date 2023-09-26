@@ -41,42 +41,41 @@ export default function RegistrationForm(): JSX.Element {
     setIsValidEmail(validEmail)
     setIsValidPassword(validPassword)
     return validEmail && validPassword
-  } 
+  }
 
   const handleSubmit = async (userForm: UserForm): Promise<void> => {
     if (!validateForm()) return
     setIsFormSubmitting(true)
 
-    const results = await createUser(userForm)
-
-    if (typeof results === "string") {
+    try {
+      const results: User = await createUser(userForm)
+      window.location.href = `/profile/${results.userId}`
+    } catch (error: any) {
       toast({
-        title: results,
+        title: error.message,
         status: 'error',
         duration: 3000,
         position: 'top',
         isClosable: true
       })
       setIsFormSubmitting(false)
-    } else {
-      window.location.href = `/profile/${results.userId}`
     }
-    
+
   }
 
   function isDisabled(): boolean {
     return userForm.username == ""
       || userForm.email == ""
       || userForm.password == ""
-      || isFormSubmitting 
+      || isFormSubmitting
   }
 
   return (
     <Stack className={styles.form_container} spacing='20px'>
       <Heading as='h2' size='xl' textAlign='center'>User Registration</Heading>
 
-      {!isValidEmail && <AlertBanner title="Email address is invalid." message="Please enter a valid email address in the format 'example@example.domain'."/>}
-      {!isValidPassword && <AlertBanner title="Password is too short." message="Please ensure that your password is at least 8 characters long."/>}
+      {!isValidEmail && <AlertBanner title="Email address is invalid." message="Please enter a valid email address in the format 'example@example.domain'." />}
+      {!isValidPassword && <AlertBanner title="Password is too short." message="Please ensure that your password is at least 8 characters long." />}
 
       <FormControl isRequired>
         <FormLabel>

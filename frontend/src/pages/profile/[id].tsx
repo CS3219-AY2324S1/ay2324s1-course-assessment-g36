@@ -35,14 +35,13 @@ export default function ProfileDetail() {
 
   async function fetchData(id: string) {
 
-    const results = await fetchUser(id);
-
-    if (typeof results === "string") {
-      setError(results)
-      setStatus(Status.Error)
-    } else {
+    try {
+      const results = await fetchUser(id);
       setProfileData(results)
       setStatus(Status.Success)
+    } catch (error: any) {
+      setError(error.message)
+      setStatus(Status.Error)
     }
 
   }
@@ -55,9 +54,9 @@ export default function ProfileDetail() {
     try {
       await deleteUser(userId)
       window.location.href = "/profiles";
-    } catch (error) {
+    } catch (error: any) {
       toast({
-        title: 'Failed to delete account. Please try again later.',
+        title: error.message,
         status: 'error',
         duration: 3000,
         position: 'top',
