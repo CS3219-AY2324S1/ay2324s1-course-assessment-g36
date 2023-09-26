@@ -3,6 +3,13 @@ import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
 const CREATE_USER_API = 'http://localhost:8000/users/register'
 const USERS_API = 'http://localhost:8000/users'
 
+async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
+  const response = await fetch(api, requestOptions)
+  const results = await response.json()
+  if (!response.ok) throw new Error(results.error)
+  return results.res
+}
+
 export async function createUser(userForm: UserForm): Promise<User> {
   const requestOptions = {
     method: "POST",
@@ -11,15 +18,11 @@ export async function createUser(userForm: UserForm): Promise<User> {
     },
     body: JSON.stringify(userForm)
   };
-
-  const response = await fetch(CREATE_USER_API, requestOptions)
-  const user = await response.json()
-  if (!response.ok) throw new Error(user.error)
-  return user.res
-
+  return fetchDataOrThrowError(CREATE_USER_API, requestOptions)
 }
 
 export async function updateUser(id: string, updateUserForm: UpdateUserProfileForm): Promise<User> {
+  const updateUserApi = `${USERS_API}/${id}`
   const requestOptions = {
     method: "PUT",
     headers: {
@@ -27,42 +30,22 @@ export async function updateUser(id: string, updateUserForm: UpdateUserProfileFo
     },
     body: JSON.stringify(updateUserForm)
   };
-
-  const updateUserApi = `${USERS_API}/${id}`
-
-  const response = await fetch(updateUserApi, requestOptions)
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error)
-  return data.res
+  return fetchDataOrThrowError(updateUserApi, requestOptions)
 }
 
 export async function fetchAllUsers(): Promise<User[]> {
-
-  const response = await fetch(USERS_API)
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error)
-  return data.res
-
+  return fetchDataOrThrowError(USERS_API)
 }
 
 export async function fetchUser(id: string): Promise<User> {
-  const api = `${USERS_API}/${id}`
-
-  const response = await fetch(api)
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error)
-  return data.res
-
+  const fetchUserApi = `${USERS_API}/${id}`
+  return fetchDataOrThrowError(fetchUserApi)
 }
 
-export async function deleteUser(id: string): Promise<void> {
+export async function deleteUser(id: string): Promise<User> {
   const deleteUserApi = `${USERS_API}/${id}`
   const requestOptions = {
     method: "DELETE"
   };
-
-  const response = await fetch(deleteUserApi, requestOptions)
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error)
-
+  return fetchDataOrThrowError(deleteUserApi, requestOptions)
 }
