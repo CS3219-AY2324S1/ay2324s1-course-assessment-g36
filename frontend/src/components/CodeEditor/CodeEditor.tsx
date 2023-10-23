@@ -9,18 +9,21 @@ const serverWsUrl = "ws://localhost:5173"
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
-export default function CodeEditor() {
+interface IOwnProps {
+  roomId: string;
+}
+
+export default function CodeEditor({ roomId }: IOwnProps): JSX.Element {
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
   async function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
 
-    // Initialize yjs
     const doc = new Doc(); // collection of shared objects
 
     // Connect to peers with WebSocket
-    const provider: WebsocketProvider = new WebsocketProvider(serverWsUrl, "roomId", doc);
+    const provider: WebsocketProvider = new WebsocketProvider(serverWsUrl, roomId, doc);
     const type = doc.getText("monaco");
 
     // Dynamic import 
@@ -29,7 +32,7 @@ export default function CodeEditor() {
     // Bind yjs doc to Manaco editor
     const binding = new MonacoBinding(type, editorRef.current!.getModel()!, new Set([editorRef.current]), provider.awareness);
 
-    provider.on('status', event => {
+    provider.on('status', (event: { status: any; }) => {
       console.log(event.status) // logs "connected" or "disconnected"
     })
 
