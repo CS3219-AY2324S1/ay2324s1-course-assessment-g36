@@ -11,6 +11,6 @@
 3. Run the server:
 
    ```
-   node server.js
+   npm start
    ```
 
