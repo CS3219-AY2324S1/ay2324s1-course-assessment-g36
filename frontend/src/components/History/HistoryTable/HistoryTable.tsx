@@ -14,7 +14,7 @@ import { fetchAllHistoryByUser } from '@/utils/historyApi';
 import HistoryRow from '../HistoryRow/HistoryRow';
 
 interface IOwnProps {
-    history: Attempt[]
+    history: Attempt[],
 }
 
 export default function HistoryTable({history}: IOwnProps): JSX.Element {
@@ -45,8 +45,8 @@ export default function HistoryTable({history}: IOwnProps): JSX.Element {
                 <HistoryRow
                 key={attempt.id}
                 attempt={attempt}
-                // deleteQuestion={removeQuestion}
-              />
+                // updateAttempt={}
+                />
             ))
           }
         </Tbody>

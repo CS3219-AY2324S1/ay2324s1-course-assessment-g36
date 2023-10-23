@@ -14,7 +14,7 @@ import {
   export default function HistoryRow({ attempt }: IOwnProps): JSX.Element {
     return (
       <Tr>
-        <Td><HistoryTitle attempt={attempt} /></Td>
+        <Td><HistoryTitle attempt={attempt}/></Td>
         <Td><HistoryDate date={attempt.date}/></Td>
       </Tr>
     )

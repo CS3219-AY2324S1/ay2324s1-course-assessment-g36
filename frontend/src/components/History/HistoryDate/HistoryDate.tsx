@@ -10,5 +10,5 @@ export default function HistoryDate({ date }: IOwnProps): JSX.Element {
     return new Date(date).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  return <span className={styles.date_label}>{ formatDate(date) }</span>
+  return <span className={styles.date_label}>{ date }</span>
 }

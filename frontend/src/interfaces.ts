@@ -43,6 +43,7 @@ export interface User {
 
 export interface Attempt {
   id: number;
+  userId: number;
   questionId: number;
   title: string;
   categories: string[];

@@ -1,0 +1,27 @@
+.date {
+    color: #9a9a9a;
+  }
+
+.bodyContainer{
+    display: flex;
+}
+
+.description {
+    flex: 1; 
+    margin-right: 10px; 
+}
+
+.inputField {
+    flex:1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    resize:none;
+    padding: 10px;
+    background-color: #f8f8f8;
+}
+
+.inputField::placeholder {
+    color: #ccc;
+  }
