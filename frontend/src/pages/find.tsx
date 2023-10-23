@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
-import { Stack, Heading, Text, Button } from '@chakra-ui/react'
+import { Flex, Stack, Heading, Text, Button } from '@chakra-ui/react'
+import Image from 'next/image'
+
 
 export default function Lobby() {
 
@@ -18,14 +20,21 @@ export default function Lobby() {
       </Head>
       <main>
         <Layout>
-          <Stack gap='16px'>
-            <Heading>Lobby</Heading>
-            <Text>
-              By clicking Find below, we will help you match with a peer
-              to practice technical interview questions.
-            </Text>
-            <Button onClick={handleClick}>Find</Button>
-          </Stack>
+          <Flex alignItems="center">
+            <Image
+              src="/pair_programming.png"
+              width={600}
+              height={600}
+              alt="Picture of the author"
+            />
+            <Stack gap='16px'>
+              <Heading>Lobby</Heading>
+              <Text>
+                Find a peer to practice technical interview questions.
+              </Text>
+              <Button onClick={handleClick}>Find</Button>
+            </Stack>
+          </Flex>
         </Layout>
       </main>
     </>
