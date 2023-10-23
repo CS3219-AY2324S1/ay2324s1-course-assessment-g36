@@ -79,3 +79,15 @@ export async function fetchHistoryByQuestion(userId: string, questionId: string)
     }
     return attempt;
 }
+
+export async function deleteHistory(attemptId: number): Promise<void> {
+  const deleteHistoryApi = `${HISTORY_API}/${attemptId}`
+  const requestOptions = {
+    method: "DELETE"
+  };
+  const response = await fetch(deleteHistoryApi, requestOptions)
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.error)
+  }
+}

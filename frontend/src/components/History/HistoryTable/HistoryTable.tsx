@@ -10,7 +10,7 @@ import {
 import { Attempt } from '@/interfaces';
 import styles from "./HistoryTable.module.css"
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
-import { fetchAllHistoryByUser } from '@/utils/historyApi';
+import { deleteHistory, fetchAllHistoryByUser } from '@/utils/historyApi';
 import HistoryRow from '../HistoryRow/HistoryRow';
 
 interface IOwnProps {
@@ -18,8 +18,18 @@ interface IOwnProps {
 }
 
 export default function HistoryTable({history}: IOwnProps): JSX.Element {
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [historyList, setHistoryList] = useState<Attempt[]>(history);
+
+  async function deleteAttempt(attemptId: number) {
+    try {
+      await deleteHistory(attemptId);
+      const filteredHistory = historyList.filter(attempt => attempt.id != attemptId);
+      setHistoryList(filteredHistory)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     setIsLoading(false)
@@ -37,15 +47,16 @@ export default function HistoryTable({history}: IOwnProps): JSX.Element {
           <Tr>
             <Th>question title</Th>
             <Th>date attempted</Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
           {
-            history.map(attempt => (
+            historyList.map(attempt => (
                 <HistoryRow
                 key={attempt.id}
                 attempt={attempt}
-                // updateAttempt={}
+                deleteAttempt={deleteAttempt}
                 />
             ))
           }

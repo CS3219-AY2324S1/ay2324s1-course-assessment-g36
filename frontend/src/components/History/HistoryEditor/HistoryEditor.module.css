@@ -1,18 +1,28 @@
 .date {
     color: #9a9a9a;
-  }
+}
+
+.contentContainer {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
 
 .bodyContainer{
+    position: absolute;
     display: flex;
+    height: 70%;
+    width: 95%;
 }
 
 .description {
-    flex: 1; 
+    flex: 0.5; 
     margin-right: 10px; 
 }
 
 .inputField {
-    flex:1;
+    position:relative;
+    flex:0.5;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-family: 'Courier New', Courier, monospace;

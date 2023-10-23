@@ -104,9 +104,29 @@ const getAllHistory = async (req, res, next) => {
         next(err);
     }
 }
+
+const deleteHistory = async (req, res, next) => {
+    try {
+        const id = req.params.attemptId;
+
+        const attempt = await Histories.findByPk(id)
+
+        if (!attempt) {
+            res.status(404).json({error: "History does not exist"});
+            return;
+        }
+
+        await Histories.destroy({where: {attemptId: id}});
+        res.sendStatus(204);
+    } catch (err) {
+        next(err);
+    }
+
+};
 module.exports = {
     addHistory,
     getHistoryByUser,
     getHistoryByQuestion,
-    getAllHistory
+    getAllHistory,
+    deleteHistory
 }

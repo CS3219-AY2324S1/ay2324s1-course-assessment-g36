@@ -12,7 +12,6 @@ import {
   Button,
   useToast
 } from '@chakra-ui/react'
-import Link from "next/link"
 import { useState } from "react"
 
 interface IOwnProps {
@@ -22,7 +21,6 @@ interface IOwnProps {
 }
 
 export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): JSX.Element {
-
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
 
@@ -57,12 +55,12 @@ export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className={styles.contentContainer}>
         <ModalHeader>
          {attempt.title}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody className={styles.body}>
             <div className={styles.date}>{attempt.date}</div>
             <div className={styles.bodyContainer}>
                 <div className={styles.description}>

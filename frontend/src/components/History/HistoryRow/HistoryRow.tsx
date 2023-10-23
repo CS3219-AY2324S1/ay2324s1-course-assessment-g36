@@ -9,13 +9,15 @@ import {
   
   interface IOwnProps {
     attempt: Attempt
+    deleteAttempt: (id: number) => void
   }
   
-  export default function HistoryRow({ attempt }: IOwnProps): JSX.Element {
+  export default function HistoryRow({ attempt, deleteAttempt }: IOwnProps): JSX.Element {
     return (
       <Tr>
         <Td><HistoryTitle attempt={attempt}/></Td>
         <Td><HistoryDate date={attempt.date}/></Td>
+        <Td><Button size="xs" colorScheme="red" onClick={() => deleteAttempt(attempt.id)}>X</Button></Td>
       </Tr>
     )
   }
