@@ -1,4 +1,5 @@
-import { History } from "@/interfaces";
+import { Attempt } from "@/interfaces";
+import { fetchQuestion } from "./questionApi";
 
 const HISTORY_API = 'http://localhost:8000/history'
 
@@ -9,7 +10,7 @@ async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<
   return results.res
 }
 
-export async function createHistory(userId: number, attempt: History): Promise<History> {
+export async function createHistory(userId: number, attempt: Attempt): Promise<Attempt> {
   const userHistoryApi = `${HISTORY_API}/${userId}`
   const requestOptions = {
     method: "POST",
@@ -21,12 +22,47 @@ export async function createHistory(userId: number, attempt: History): Promise<H
   return fetchDataOrThrowError(userHistoryApi, requestOptions)
 }
 
-export async function fetchAllHistoryByUser(userId: number): Promise<History[]> {
+export async function fetchAllHistoryByUser(userId: string): Promise<Attempt[]> {
   const userHistoryApi = `${HISTORY_API}/${userId}`
-  return fetchDataOrThrowError(userHistoryApi)
+  console.log(userHistoryApi);
+  const data = await fetchDataOrThrowError(userHistoryApi)
+
+  const attemptListPromises = data.map(async (item: any) => {
+    const question = await fetchQuestion(item.questionId);
+
+    return {
+      id: item.attemptId,
+      questionId: item.questionId,
+      title: question.title,
+      categories: question.categories,
+      complexity: question.complexity,
+      link: question.link,
+      description: question.description,
+      attempt: item.attempt,
+      date: item.updatedAt
+    };
+  });
+
+  const attemptList = await Promise.all(attemptListPromises);
+
+  return attemptList;
 }
 
-export async function fetchHistoryByQuestion(userId: number, questionId: number): Promise<History> {
+export async function fetchHistoryByQuestion(userId: string, questionId: string): Promise<Attempt> {
     const userQuestionHistoryApi = `${HISTORY_API}/${userId}/${questionId}`
-    return fetchDataOrThrowError(userQuestionHistoryApi)
+    const data = await fetchDataOrThrowError(userQuestionHistoryApi);
+    const question = await fetchQuestion(questionId);
+
+    const attempt: Attempt = {
+      id: data.attemptId,
+      questionId: data.questionId,
+      title: question.title,
+      categories: question.categories,
+      complexity: question.complexity,
+      link: question.link,
+      description: question.description,
+      attempt: data.attempt,
+      date: data.updatedAt
+    }
+    return attempt;
 }

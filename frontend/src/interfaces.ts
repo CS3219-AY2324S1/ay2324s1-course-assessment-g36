@@ -41,7 +41,14 @@ export interface User {
   updatedAt: string;
 }
 
-export interface History {
+export interface Attempt {
+  id: number;
   questionId: number;
+  title: string;
+  categories: string[];
+  complexity: string;
+  link: string;
+  description: string;
   attempt: string;
+  date: string;
 }
