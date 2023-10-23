@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import Layout from '@/components/Layout/Layout'
-import OldCodeEditor from '@/components/CodeEditor/OldCodeEditor'
 import CodeEditor from '@/components/CodeEditor/CodeEditor'
 
 export default function CodeRoom() {
@@ -13,9 +11,7 @@ export default function CodeRoom() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {/* <Layout> */}
         <CodeEditor />
-        {/* </Layout> */}
       </main>
     </>
   )

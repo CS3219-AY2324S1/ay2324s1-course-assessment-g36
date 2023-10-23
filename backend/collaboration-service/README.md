@@ -11,6 +11,6 @@
 3. Run the server:
 
    ```
-   node app.js
+   node server.js
    ```
 
