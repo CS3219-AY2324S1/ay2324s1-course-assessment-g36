@@ -9,7 +9,8 @@ async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<
   return results.res
 }
 
-export async function createHistory(attempt: History): Promise<History> {
+export async function createHistory(userId: number, attempt: History): Promise<History> {
+  const userHistoryApi = `${HISTORY_API}/${userId}`
   const requestOptions = {
     method: "POST",
     headers: {
@@ -17,15 +18,15 @@ export async function createHistory(attempt: History): Promise<History> {
     },
     body: JSON.stringify(attempt)
   };
-  return fetchDataOrThrowError(HISTORY_API, requestOptions)
+  return fetchDataOrThrowError(userHistoryApi, requestOptions)
 }
 
-export async function fetchAllHistoryByUser(userId: string): Promise<History[]> {
+export async function fetchAllHistoryByUser(userId: number): Promise<History[]> {
   const userHistoryApi = `${HISTORY_API}/${userId}`
   return fetchDataOrThrowError(userHistoryApi)
 }
 
-export async function fetchHistoryByQuestion(userId: string, questionId: string): Promise<History> {
+export async function fetchHistoryByQuestion(userId: number, questionId: number): Promise<History> {
     const userQuestionHistoryApi = `${HISTORY_API}/${userId}/${questionId}`
     return fetchDataOrThrowError(userQuestionHistoryApi)
 }

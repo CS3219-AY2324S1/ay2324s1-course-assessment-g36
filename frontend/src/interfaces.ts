@@ -42,7 +42,6 @@ export interface User {
 }
 
 export interface History {
-  userId: number;
   questionId: number;
   attempt: string;
 }
