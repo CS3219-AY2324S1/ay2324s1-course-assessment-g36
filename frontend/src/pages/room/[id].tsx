@@ -28,11 +28,11 @@ export default function CodeRoom({ id }: PageProps) {
         <Grid
           h='200px'
           templateColumns='30% 70%'
-          gap={4}
         >
           {isDomLoaded && (<>
             <Sidebar roomId={id} />
-            <CodeEditor roomId={id} /></>)}
+            <CodeEditor roomId={id} />
+          </>)}
         </Grid>
       </main >
     </>

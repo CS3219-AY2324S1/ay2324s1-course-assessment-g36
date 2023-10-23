@@ -1,6 +1,10 @@
 .sidebar_container {
+  color: #fff;
+  background-color: #25272a;
+}
+
+.sidebar {
   margin-top: 1em;
   margin-left: 1em;
-  /* color: #fff;
-  background-color: #1E1E1E; */
+  margin-right: 1em;
 }

@@ -20,7 +20,7 @@ export default function Lobby() {
       </Head>
       <main>
         <Layout>
-          <Flex alignItems="center">
+          <Flex justifyContent="center" alignItems="center">
             <Image
               src="/pair_programming.png"
               width={600}
