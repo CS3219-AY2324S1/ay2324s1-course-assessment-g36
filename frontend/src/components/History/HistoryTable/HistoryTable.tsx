@@ -10,7 +10,7 @@ import {
 import { Attempt } from '@/interfaces';
 import styles from "./HistoryTable.module.css"
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
-import { deleteHistory, fetchAllHistoryByUser } from '@/utils/historyApi';
+import { deleteHistory } from '@/utils/historyApi';
 import HistoryRow from '../HistoryRow/HistoryRow';
 
 interface IOwnProps {
