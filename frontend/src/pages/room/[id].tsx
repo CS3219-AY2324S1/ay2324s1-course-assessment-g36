@@ -1,11 +1,21 @@
+import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import CodeEditor from "@/components/CodeEditor/CodeEditor"
+import Sidebar from '@/components/Sidebar/Sidebar';
+import { Grid } from '@chakra-ui/react'
 
 interface PageProps {
   id: string;
 }
 
 export default function CodeRoom({ id }: PageProps) {
+
+  const [isDomLoaded, setIsDomLoaded] = useState(false)
+
+  useEffect(() => {
+    setIsDomLoaded(true)
+  }, [])
+
   return (
     <>
       <Head>
@@ -15,7 +25,15 @@ export default function CodeRoom({ id }: PageProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <CodeEditor roomId={id} />
+        <Grid
+          h='200px'
+          templateColumns='30% 70%'
+          gap={4}
+        >
+          {isDomLoaded && (<>
+            <Sidebar roomId={id} />
+            <CodeEditor roomId={id} /></>)}
+        </Grid>
       </main >
     </>
   )

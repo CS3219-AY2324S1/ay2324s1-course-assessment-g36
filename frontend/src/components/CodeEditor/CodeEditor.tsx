@@ -42,7 +42,6 @@ export default function CodeEditor({ roomId }: IOwnProps): JSX.Element {
     <>
       <Editor
         height="100vh"
-        width="80vw"
         language={"python"}
         theme={"vs-dark"}
         onMount={handleEditorDidMount}
