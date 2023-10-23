@@ -25,7 +25,6 @@
     "next-transpile-modules": "^10.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-monaco-editor": "^0.54.0",
     "typescript": "5.2.2",
     "y-monaco": "^0.1.4",
     "y-websocket": "^1.5.0",
