@@ -1,98 +1,49 @@
-import { useState, useRef } from "react";
-// import * as Y from 'yjs';
-// import { WebsocketProvider } from 'y-websocket'
-// import { MonacoBinding } from 'y-monaco';
-
-// const serverWsUrl = "wss://localhost:5174"
-
-// export default function CodeEditor(): JSX.Element {
-
-//   const editorRef = useRef<editor.IStandaloneCodeEditor>();
-
-//   function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
-//       editorRef.current = editor;
-
-//       // Initialize yjs
-//       const doc = new Y.Doc(); // collection of shared objects
-
-//       // Connect to peers with WebSocket
-//       const provider: WebsocketProvider = new WebsocketProvider(serverWsUrl, "roomId", doc);
-//       const type = doc.getText("monaco");
-
-//       // Bind yjs doc to Manaco editor
-//       const binding = new MonacoBinding(type, editorRef.current!.getModel()!, new Set([editorRef.current!]));
-
-//   }
-
-//   return (
-//       <>
-//       <Editor 
-//           height="100vh"
-//           language={"cpp"}
-//           defaultValue={"default value"}
-//           theme={"vs-dark"}
-//           onMount={handleEditorDidMount}
-//       />
-//       </>
-//   );
-// }
-
+import { useRef } from "react";
+import { Doc } from 'yjs';
+import { editor } from "monaco-editor";
 import dynamic from "next/dynamic";
+// @ts-ignore
+import { WebsocketProvider } from 'y-websocket';
 
-const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
+const serverWsUrl = "ws://localhost:5173"
 
-const serverWsUrl = "wss://localhost:5174"
+const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
 export default function CodeEditor() {
 
-  function onChange(newValue, e) {
-    console.log('onChange', newValue);
-    // const model = this.refs.monaco.editor.getModel();
-    // const value = model.getValue();
-  }
+  const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
-  function editorDidMount(editor, monaco) {
-    console.log('editorDidMount', editor);
-    editor.focus();
+  async function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
+    editorRef.current = editor;
 
-    // @ts-ignore
-    window.MonacoEnvironment.getWorkerUrl = (
-      _moduleId: string,
-      label: string
-    ) => {
-      if (label === "json")
-        return "_next/static/json.worker.js";
-      if (label === "css")
-        return "_next/static/css.worker.js";
-      if (label === "html")
-        return "_next/static/html.worker.js";
-      if (
-        label === "typescript" ||
-        label === "javascript"
-      )
-        return "_next/static/ts.worker.js";
-      return "_next/static/editor.worker.js";
-    }
+    // Initialize yjs
+    const doc = new Doc(); // collection of shared objects
+
+    // Connect to peers with WebSocket
+    const provider: WebsocketProvider = new WebsocketProvider(serverWsUrl, "roomId", doc);
+    const type = doc.getText("monaco");
+
+    // Dynamic import 
+    const { MonacoBinding } = await import("y-monaco")
+
+    // Bind yjs doc to Manaco editor
+    const binding = new MonacoBinding(type, editorRef.current!.getModel()!, new Set([editorRef.current]), provider.awareness);
+
+    provider.on('status', event => {
+      console.log(event.status) // logs "connected" or "disconnected"
+    })
 
   }
 
-  // etc
-  return (<div>
-    <MonacoEditor
-      // ref={editorRef}
-      editorDidMount={editorDidMount}
-      height="100vh"
-      width="80vw"
-      language="python"
-      theme="vs-dark"
-      value="# Enter code below"
-      options={{
-        minimap: {
-          enabled: false
-        }
-      }}
-      onChange={onChange}
-
-    />
-  </div>)
+  return (
+    <>
+      <Editor
+        height="100vh"
+        width="80vw"
+        language={"python"}
+        theme={"vs-dark"}
+        onMount={handleEditorDidMount}
+      />
+    </>
+  );
 }
