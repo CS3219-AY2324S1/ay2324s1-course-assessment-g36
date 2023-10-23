@@ -106,15 +106,15 @@ const updateQuestion = async(req, res, next) => {
 
 const deleteQuestion = async (req, res, next) => {
     try {
-        const title = req.params.questionTitle;
-        const question = await Questions.findOne({title: title});
+        const id = req.params.questionId;
+        const question = await Questions.findOne({id: id});
 
         if (!question) {
             res.status(404).json({error: "Question does not exist"});
             return;
         }
 
-        await Questions.deleteOne({title : title});
+        await Questions.deleteOne({id : id});
         res.sendStatus(204);
     } catch (err) {
         next(err);

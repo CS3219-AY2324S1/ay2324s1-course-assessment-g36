@@ -21,15 +21,15 @@ export async function fetchAllQuestions(): Promise<QuestionObject[]> {
     return data.res;
 }
 
-export async function fetchQuestion(id: String): Promise<QuestionObject> {
+export async function fetchQuestion(id: string): Promise<QuestionObject> {
     const fetchSingleQuestionApi = `${QUESTIONS_API}/${id}`
     const response = await fetch(fetchSingleQuestionApi);
     const data = await response.json();
     return data.res;
   }
 
-export async function deleteQuestion(title: string): Promise<void> {
-    const deleteQuestionApi = `${QUESTIONS_API}/${title}`
+export async function deleteQuestion(id: number): Promise<void> {
+    const deleteQuestionApi = `${QUESTIONS_API}/${id}`
     const requestOptions = {
         method: "DELETE"
     };

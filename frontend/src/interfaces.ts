@@ -40,3 +40,9 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface History {
+  userId: number;
+  questionId: number;
+  attempt: string;
+}

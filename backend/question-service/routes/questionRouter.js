@@ -10,6 +10,6 @@ questionRouter.get("/:questionId", questionController.getQuestionById);
 
 questionRouter.put("/:questionId", questionController.updateQuestion)
 
-questionRouter.delete("/:questionTitle", questionController.deleteQuestion);
+questionRouter.delete("/:questionId", questionController.deleteQuestion);
 
 module.exports = questionRouter;

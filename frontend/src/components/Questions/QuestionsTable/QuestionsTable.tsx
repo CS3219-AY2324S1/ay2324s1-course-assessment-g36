@@ -10,7 +10,7 @@ import {
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/interfaces';
 import styles from "./QuestionsTable.module.css"
-import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/utils/questionApi';
+import { fetchAllQuestions, addQuestion, deleteQuestion } from '@/utils/questionApi';
 import AddQuestion from '../QuestionForm/AddQuestion';
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
 
@@ -42,10 +42,10 @@ export default function QuestionsTable(): JSX.Element {
     }
   }
 
-  async function removeQuestion(questionTitle: string) {
+  async function removeQuestion(questionId: number) {
     try {
-      await deleteQuestion(questionTitle);
-      const filteredQuestions = questions.filter(question => question.title != questionTitle);
+      await deleteQuestion(questionId);
+      const filteredQuestions = questions.filter(question => question.id != questionId);
       setQuestions(filteredQuestions)
     } catch (error) {
       console.log(error);

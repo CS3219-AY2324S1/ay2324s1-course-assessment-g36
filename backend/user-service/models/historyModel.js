@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNULL: false,
         },
         attempt: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNULL: false
         }
     })
 
