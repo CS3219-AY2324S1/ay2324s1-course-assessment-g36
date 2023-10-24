@@ -5,15 +5,16 @@ import dynamic from "next/dynamic";
 // @ts-ignore
 import { WebsocketProvider } from 'y-websocket';
 
-const serverWsUrl = "ws://localhost:5173"
+const serverWsUrl = "ws://localhost:3001"
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
 interface IOwnProps {
   roomId: string;
+  programmingLanguage: string;
 }
 
-export default function CodeEditor({ roomId }: IOwnProps): JSX.Element {
+export default function CodeEditor({ roomId, programmingLanguage }: IOwnProps): JSX.Element {
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
@@ -42,7 +43,7 @@ export default function CodeEditor({ roomId }: IOwnProps): JSX.Element {
     <>
       <Editor
         height="100vh"
-        language={"python"}
+        language={programmingLanguage}
         theme={"vs-dark"}
         onMount={handleEditorDidMount}
       />

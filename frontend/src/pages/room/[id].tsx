@@ -12,20 +12,38 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { QuestionObject } from '@/interfaces';
+import io from "socket.io-client";
 
 interface PageProps {
   id: string;
   question: QuestionObject
 }
 
+const socket = io("http://localhost:3001")
+
+const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
+const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
+
 export default function CodeRoom({ id, question }: PageProps) {
 
   const [isDomLoaded, setIsDomLoaded] = useState(false)
+  const [programmingLanguage, setProgrammingLanguage] = useState("python")
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  function onProgrammingLanguageChange(language: string) {
+    setProgrammingLanguage(language)
+    socket.emit(UPDATE_PROGRAMMING_LANGUAGE_EVENT, { language: language, room: id })
+  }
+
   useEffect(() => {
-    setIsDomLoaded(true)
-  }, [])
+    if (!isDomLoaded) {
+      setIsDomLoaded(true)
+    }
+    socket.on(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
+      console.log(data)
+      setProgrammingLanguage(data.language)
+    }) 
+  }, [socket])
 
   return (
     <>
@@ -42,8 +60,17 @@ export default function CodeRoom({ id, question }: PageProps) {
           templateColumns='30% 70%'
         >
           {isDomLoaded && (<>
-            <Sidebar roomId={id} question={question} onOpen={onOpen} />
-            <CodeEditor roomId={id} />
+            <Sidebar 
+              roomId={id} 
+              question={question} 
+              onOpen={onOpen} 
+              programmingLanguage={programmingLanguage} 
+              handleChange={onProgrammingLanguageChange}
+            />
+            <CodeEditor 
+              roomId={id} 
+              programmingLanguage={programmingLanguage} 
+            />
             <Drawer
               size="sm"
               isOpen={isOpen}
@@ -54,7 +81,7 @@ export default function CodeRoom({ id, question }: PageProps) {
                 <DrawerCloseButton />
                 <DrawerHeader>Code results</DrawerHeader>
                 <DrawerBody>
-                  ...
+                  { programmingLanguage }
                 </DrawerBody>
               </DrawerContent>
             </Drawer>
