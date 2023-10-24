@@ -1,5 +1,5 @@
 import { QuestionObject } from "@/interfaces"
-const QUESTIONS_API = 'http://localhost:3001/questions'
+import { QUESTIONS_API, HISTORY_API } from "./api";
 
 export async function addQuestion(newQuestion: QuestionObject): Promise<QuestionObject> {
     const requestOptions = {
@@ -29,9 +29,13 @@ export async function fetchQuestion(id: string): Promise<QuestionObject> {
   }
 
 export async function deleteQuestion(id: number): Promise<void> {
-    const deleteQuestionApi = `${QUESTIONS_API}/${id}`
     const requestOptions = {
-        method: "DELETE"
+      method: "DELETE"
     };
+    const deleteQuestionApi = `${QUESTIONS_API}/${id}`
     await fetch(deleteQuestionApi, requestOptions)
+
+    // delete all attempts for this question if any
+    const deleteHistoryApi = `${HISTORY_API}/question/${id}`
+    await fetch(deleteHistoryApi, requestOptions)
 }

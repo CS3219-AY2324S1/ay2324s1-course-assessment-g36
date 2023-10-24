@@ -123,10 +123,23 @@ const deleteHistory = async (req, res, next) => {
     }
 
 };
+
+const deleteQuestionHistory = async (req, res, next) => {
+    try {
+        const id = req.params.questionId;
+
+        await Histories.destroy({where: {questionId: id}});
+        res.sendStatus(204);
+    } catch (err) {
+        next(err);
+    }
+};
+
 module.exports = {
     addHistory,
     getHistoryByUser,
     getHistoryByQuestion,
     getAllHistory,
-    deleteHistory
+    deleteHistory,
+    deleteQuestionHistory
 }

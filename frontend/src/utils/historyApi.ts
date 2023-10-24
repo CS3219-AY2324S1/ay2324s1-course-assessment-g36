@@ -1,7 +1,6 @@
 import { Attempt } from "@/interfaces";
 import { fetchQuestion } from "./questionApi";
-
-const HISTORY_API = 'http://localhost:8000/history'
+import { HISTORY_API } from "./api";
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('default', {
@@ -39,25 +38,29 @@ export async function fetchAllHistoryByUser(userId: string): Promise<Attempt[]> 
   const data = await fetchDataOrThrowError(userHistoryApi)
 
   const attemptListPromises = data.map(async (item: any) => {
-    const question = await fetchQuestion(item.questionId);
+    try {
+      const question = await fetchQuestion(item.questionId);
 
-    return {
-      id: item.attemptId,
-      userId: item.userId,
-      questionId: item.questionId,
-      title: question.title,
-      categories: question.categories,
-      complexity: question.complexity,
-      link: question.link,
-      description: question.description,
-      attempt: item.attempt,
-      date: formatDate(item.updatedAt)
-    };
-  });
+      return {
+        id: item.attemptId,
+        userId: item.userId,
+        questionId: item.questionId,
+        title: question.title,
+        categories: question.categories,
+        complexity: question.complexity,
+        link: question.link,
+        description: question.description,
+        attempt: item.attempt,
+        date: formatDate(item.updatedAt)
+      };
+    } catch (err) {
+      return null;
+    }
+  })
 
   const attemptList = await Promise.all(attemptListPromises);
 
-  return attemptList;
+  return attemptList.filter((item: any) => item !== null);
 }
 
 export async function fetchHistoryByQuestion(userId: string, questionId: string): Promise<Attempt> {

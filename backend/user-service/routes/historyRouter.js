@@ -11,6 +11,8 @@ historyRouter.get("/:userId/:questionId", historyController.getHistoryByQuestion
 
 historyRouter.delete("/:attemptId", historyController.deleteHistory);
 
+historyRouter.delete("/question/:questionId", historyController.deleteQuestionHistory);
+
 // for debugging purposes only
 historyRouter.get("/", historyController.getAllHistory);
 

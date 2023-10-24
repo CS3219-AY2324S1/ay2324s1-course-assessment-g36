@@ -1,7 +1,5 @@
 import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
-
-const CREATE_USER_API = 'http://localhost:8000/users/register'
-const USERS_API = 'http://localhost:8000/users'
+import { USERS_API, CREATE_USER_API } from "./api";
 
 async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
   const response = await fetch(api, requestOptions)
