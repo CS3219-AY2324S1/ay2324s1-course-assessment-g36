@@ -8,23 +8,14 @@ import {
   useDisclosure,
   RadioGroup,
   Radio,
-  Center,
-  Modal,
-  ModalOverlay,
-  ModalHeader,
-  ModalContent,
-  ModalBody
+  Center
 } from '@chakra-ui/react'
 import styles from "./MatchingForm.module.css"
-import { MatchCriteria, MatchResult } from '@/interfaces'
+import { MatchCriteria } from '@/interfaces'
 import { DIFFICULTY_LEVELS } from '@/types'
 import ResultModal from './ResultModal'
 
 export default function MatchingForm(): JSX.Element {
-  const [matchedUser, setMatchedUser] = useState<MatchResult>({
-    user_id: -1,
-    username: ''
-  })
   const [criteria, setCriteria] = useState<MatchCriteria>({
     difficulty: ""
   })
@@ -34,7 +25,6 @@ export default function MatchingForm(): JSX.Element {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-
 
   function isDisabled(): boolean {
     return criteria.difficulty == ""
@@ -62,14 +52,7 @@ export default function MatchingForm(): JSX.Element {
       <Button onClick={onOpen} isDisabled={isDisabled()}>
         Match
       </Button>
-      <Modal isOpen={isOpen} closeOnOverlayClick={false} onClose={onClose} size="3xl" isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody>
-            <ResultModal criteria={criteria}/>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <ResultModal isModalOpen={isOpen} onModalClose={onClose} criteria={criteria}/>
     </Stack>
     </>
   )

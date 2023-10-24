@@ -2,17 +2,23 @@ import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces"
 import { getMatch } from "@/utils/matchingApi";
 import {
+    Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
   Text
 } from '@chakra-ui/react'
 import { useEffect, useState } from "react";
 
 interface IOwnProps {
   criteria: MatchCriteria
+  isModalOpen: boolean
+  onModalClose: () => void
 }
 
 const SECOND = 1000
 
-function useTimer(seconds: number) {
+function useTimer(seconds: number, restart: boolean) {
   const [timespan, setTimespan] = useState(seconds * SECOND);
 
   useEffect(() => {
@@ -23,15 +29,20 @@ function useTimer(seconds: number) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [SECOND]);
+  }, [seconds]);
+
+    useEffect(() => {
+        setTimespan(seconds * SECOND);
+    }, [restart]);
 
   return timespan / SECOND;
 }
 
-export default function ResultModal({criteria}: IOwnProps) {
-    const seconds = useTimer(MAX_MATCH_WAIT_S)
+export default function ResultModal({criteria, isModalOpen, onModalClose}: IOwnProps) {
     const [waiting, setWaiting] = useState<boolean>(true);
+    const seconds = useTimer(MAX_MATCH_WAIT_S, waiting);
     const [matchedUser, setMatchedUser] = useState<string>('');
+
     function hasResult() {
         return matchedUser != ''
     }
@@ -44,6 +55,8 @@ export default function ResultModal({criteria}: IOwnProps) {
         return ''
     }
     const onRender = async () => {
+        setMatchedUser('')
+        setWaiting(true)
         const username = await Promise.any([startCountdown(), fetchMatch()])
         console.log(username)
         setWaiting(false)
@@ -51,13 +64,18 @@ export default function ResultModal({criteria}: IOwnProps) {
     }
     useEffect(() => {
         onRender()
-    }, [])
-    return <>
-    {waiting
-        ? <Text>{`Finding match in ${seconds}s...`}</Text>
-        : hasResult()
-            ? <Text> {`Matched with: ${matchedUser}`}</Text>
-            : <Text> Failed to find match </Text> 
-    }
-    </>
+    }, [criteria])
+    return <Modal isOpen={isModalOpen} closeOnOverlayClick={!waiting} closeOnEsc={!waiting} onClose={onModalClose} size="3xl" isCentered>
+        <ModalOverlay />
+        <ModalContent>
+            <ModalBody>
+                {waiting
+                    ? <Text>{`Finding match in ${seconds}s...`}</Text>
+                    : hasResult()
+                        ? <Text> {`Matched with: ${matchedUser}`}</Text>
+                        : <Text> Failed to find match </Text> 
+                }
+            </ModalBody>
+        </ModalContent>
+    </Modal>
 }
