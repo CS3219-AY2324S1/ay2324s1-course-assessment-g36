@@ -15,6 +15,7 @@ import {
 import { QuestionObject } from '@/interfaces'
 import { validateForm } from '@/utils/validators'
 import AlertBanner from '@/components/Feedback/AlertBanner'
+import { DIFFICULTY_LEVELS, CATEGORIES_OPTIONS } from '@/types'
 
 interface IOwnProps {
   onModalClose: () => void
@@ -45,13 +46,6 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
       setFormData({ ...form, categories: [...form.categories, input] })
     }
   }
-
-  const CATEGORIES_OPTIONS = [
-    'Array', 'String', 'Tree', 'Stack', 'Queue',
-    'Matrix', 'Database', 'Hash Table', 'Linked List',
-    'Graph', 'Binary Search', 'Heap (Priority Queue)', 
-    'Recursion', 'Greedy', 'Math', 'Backtracking', 'Dynamic Programming'
-  ]
 
   function isDisabled(): boolean {
     return form.title === ""
@@ -145,9 +139,9 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
         </FormLabel>
         <RadioGroup>
           <Stack direction='row'>
-            <Radio value='Easy' onChange={(e) => handleChange(e, "complexity")}>Easy</Radio>
-            <Radio value='Medium' onChange={(e) => handleChange(e, "complexity")}>Medium</Radio>
-            <Radio value='Hard' onChange={(e) => handleChange(e, "complexity")}>Hard</Radio>
+            {DIFFICULTY_LEVELS.map(level => 
+              <Radio value={level} onChange={(e) => handleChange(e, "complexity")}>{level}</Radio>
+            )}
           </Stack>
         </RadioGroup>
       </FormControl>
