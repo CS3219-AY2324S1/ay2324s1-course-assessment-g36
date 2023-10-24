@@ -8,7 +8,11 @@ questionRouter.get("/", questionController.getAllQuestions);
 
 questionRouter.get("/id/:questionId", questionController.getQuestionById);
 
+// match by complexity only
 questionRouter.get("/complexity/:complexity", questionController.getQuestionsByComplexity);
+
+// match by complexity and categories
+questionRouter.get("/:complexity/categories", questionController.getQuestionsByCategory);
 
 questionRouter.put("/id/:questionId", questionController.updateQuestion)
 

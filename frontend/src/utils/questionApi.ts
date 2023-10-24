@@ -28,11 +28,24 @@ export async function fetchQuestion(id: String): Promise<QuestionObject> {
     return data.res;
   }
 
+// returns questions that matches complexity
 export async function fetchQuestionsByComplexity(complexity: String): Promise<QuestionObject> {
   const fetchQuestionsApi = `${QUESTIONS_API}/complexity/${complexity}`
   const response = await fetch(fetchQuestionsApi);
   const data = await response.json();
   console.log(data);
+  return data.res;
+}
+
+// returns questions that matches complexity and at least one category
+// if no matching questions found, return questions with matching complexity
+export async function fetchQuestionsByCategory(complexity: string, categories: string[]): Promise<QuestionObject> {
+  const queryParams = categories.map(value => `category=${encodeURIComponent(value)}`).join('&');
+  const fetchQuestionsApi = `${QUESTIONS_API}/${complexity}/categories?${queryParams}`
+  console.log(fetchQuestionsApi);
+
+  const response = await fetch(fetchQuestionsApi);
+  const data = await response.json();
   return data.res;
 }
 

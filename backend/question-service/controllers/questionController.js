@@ -82,6 +82,41 @@ const getQuestionsByComplexity = async (req, res, next) => {
     }
 }
 
+const getQuestionsByCategory = async (req, res, next) => {
+    try {
+        const categories = req.query.category;
+        const complexity = req.params.complexity;
+
+        if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
+            res.status(400).json({error: "Invalid complexity"});
+            return;                
+        }
+
+        // at least 1 matching category
+        const questionList = await Questions.find({ 
+            complexity: complexity,
+            categories: {
+                $elemMatch: { 
+                    $in: categories 
+                }
+            }
+        });
+
+        if (questionList.length == 0) {
+            // no matching categories -> return only matching complexity
+            const altQuestionList = await Questions.find({ complexity: complexity});
+
+            res.status(200).json({res: altQuestionList});
+            return;
+        } else {
+            res.status(200).json({res: questionList});
+        }
+
+    } catch (err) {
+        next(err);
+    }
+}
+
 const updateQuestion = async(req, res, next) => {
     try {
         const id = req.params.questionId;
@@ -149,6 +184,7 @@ module.exports = {
     getAllQuestions,
     getQuestionById,
     getQuestionsByComplexity,
+    getQuestionsByCategory,
     updateQuestion,
     deleteQuestion
 }
