@@ -45,7 +45,7 @@ export default function ResultModal({criteria}: IOwnProps) {
     const startCountdown = async () => {
         await new Promise(r => setTimeout(r, MAX_MATCH_WAIT_S * SECOND))
         setWaiting(false)
-        if (!hasResult) setExpired(true)
+        if (!hasResult()) setExpired(true)
     }
     useEffect(() => {
         fetchMatch()
