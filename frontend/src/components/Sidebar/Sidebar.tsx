@@ -14,9 +14,12 @@ export default function Sidebar({ roomId, question, onOpen }: IOwnProps): JSX.El
   return <div className={styles.sidebar_container}>
     <div className={styles.sidebar}>
       <Stack spacing='20px'>
-        <HStack gap={5}>
-          <Badge colorScheme="blue">Room ID: {roomId}</Badge>
+        <HStack>
           <span className={styles.live_glowing_icon}></span>
+          <span>LIVE</span>
+        </HStack>
+        <HStack>
+          <Badge colorScheme="blue">Room ID: {roomId}</Badge>
         </HStack>
         <Heading size='md'>
           {question.id}. {question.title}
