@@ -22,11 +22,19 @@ export async function fetchAllQuestions(): Promise<QuestionObject[]> {
 }
 
 export async function fetchQuestion(id: String): Promise<QuestionObject> {
-    const fetchSingleQuestionApi = `${QUESTIONS_API}/${id}`
+    const fetchSingleQuestionApi = `${QUESTIONS_API}/id/${id}`
     const response = await fetch(fetchSingleQuestionApi);
     const data = await response.json();
     return data.res;
   }
+
+export async function fetchQuestionsByComplexity(complexity: String): Promise<QuestionObject> {
+  const fetchQuestionsApi = `${QUESTIONS_API}/complexity/${complexity}`
+  const response = await fetch(fetchQuestionsApi);
+  const data = await response.json();
+  console.log(data);
+  return data.res;
+}
 
 export async function deleteQuestion(title: string): Promise<void> {
     const deleteQuestionApi = `${QUESTIONS_API}/${title}`

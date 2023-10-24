@@ -21,6 +21,11 @@ const addQuestion = async(req, res, next) => {
             return;
         }
 
+        if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
+                res.status(400).json({error: "Invalid complexity"});
+                return;                
+        }
+
         const question = await Questions.create({
             id: id,
             title: title,
@@ -54,6 +59,24 @@ const getQuestionById = async(req, res, next) => {
             return;
         }
         res.status(200).json({res: question});
+    } catch (err) {
+        next(err);
+    }
+}
+
+const getQuestionsByComplexity = async (req, res, next) => {
+    try {
+        const complexity = req.params.complexity;
+
+        if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
+                res.status(400).json({error: "Invalid complexity"});
+                return;                
+        }
+
+        const questionList = await Questions.find({complexity: complexity});
+
+        res.status(200).json({res: questionList});
+
     } catch (err) {
         next(err);
     }
@@ -125,6 +148,7 @@ module.exports = {
     addQuestion,
     getAllQuestions,
     getQuestionById,
+    getQuestionsByComplexity,
     updateQuestion,
     deleteQuestion
 }

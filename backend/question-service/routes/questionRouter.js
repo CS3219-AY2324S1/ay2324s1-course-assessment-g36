@@ -6,9 +6,11 @@ questionRouter.post("/", questionController.addQuestion);
 
 questionRouter.get("/", questionController.getAllQuestions);
 
-questionRouter.get("/:questionId", questionController.getQuestionById);
+questionRouter.get("/id/:questionId", questionController.getQuestionById);
 
-questionRouter.put("/:questionId", questionController.updateQuestion)
+questionRouter.get("/complexity/:complexity", questionController.getQuestionsByComplexity);
+
+questionRouter.put("/id/:questionId", questionController.updateQuestion)
 
 questionRouter.delete("/:questionTitle", questionController.deleteQuestion);
 
