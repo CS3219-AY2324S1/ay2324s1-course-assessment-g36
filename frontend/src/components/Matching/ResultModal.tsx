@@ -2,7 +2,6 @@ import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces"
 import { getMatch } from "@/utils/matchingApi";
 import {
-    Alert,
   Text
 } from '@chakra-ui/react'
 import { useEffect, useState } from "react";
@@ -32,31 +31,33 @@ function useTimer(seconds: number) {
 export default function ResultModal({criteria}: IOwnProps) {
     const seconds = useTimer(MAX_MATCH_WAIT_S)
     const [waiting, setWaiting] = useState<boolean>(true);
-    const [expired, setExpired] = useState<boolean>(false);
     const [matchedUser, setMatchedUser] = useState<string>('');
-    const hasResult = () => {
+    function hasResult() {
         return matchedUser != ''
     }
     const fetchMatch = async () => {
         const user = await getMatch(criteria)
-        setWaiting(false)
-        if (!expired) setMatchedUser(user.username)
+        return user.username
     }
     const startCountdown = async () => {
         await new Promise(r => setTimeout(r, MAX_MATCH_WAIT_S * SECOND))
+        return ''
+    }
+    const onRender = async () => {
+        const username = await Promise.any([startCountdown(), fetchMatch()])
+        console.log(username)
         setWaiting(false)
-        if (!hasResult()) setExpired(true)
+        setMatchedUser(username)
     }
     useEffect(() => {
-        fetchMatch()
-        startCountdown()
+        onRender()
     }, [])
     return <>
     {waiting
         ? <Text>{`Finding match in ${seconds}s...`}</Text>
-        : expired
-            ? <Text> Failed to find match </Text>
-            : <Text> {`Matched with: ${matchedUser}`}</Text>
+        : hasResult()
+            ? <Text> {`Matched with: ${matchedUser}`}</Text>
+            : <Text> Failed to find match </Text> 
     }
     </>
 }

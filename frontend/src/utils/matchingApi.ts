@@ -5,7 +5,7 @@ export async function getMatch(criteria: MatchCriteria): Promise<MatchResult> {
     // const response = await fetch(MATCHING_API);
     // const data = await response.json();
     // return data.res;
-    await new Promise(f => setTimeout(f, 3_000));
+    await new Promise(f => setTimeout(f, 5_000));
     return {
         user_id: 100,
         username: 'john appleseed'

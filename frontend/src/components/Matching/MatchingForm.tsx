@@ -17,9 +17,7 @@ import {
 } from '@chakra-ui/react'
 import styles from "./MatchingForm.module.css"
 import { MatchCriteria, MatchResult } from '@/interfaces'
-import { MAX_MATCH_WAIT_S } from '@/constants'
 import { DIFFICULTY_LEVELS } from '@/types'
-import { getMatch } from '@/utils/matchingApi'
 import ResultModal from './ResultModal'
 
 export default function MatchingForm(): JSX.Element {
@@ -64,7 +62,7 @@ export default function MatchingForm(): JSX.Element {
       <Button onClick={onOpen} isDisabled={isDisabled()}>
         Match
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
+      <Modal isOpen={isOpen} closeOnOverlayClick={false} onClose={onClose} size="3xl" isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
