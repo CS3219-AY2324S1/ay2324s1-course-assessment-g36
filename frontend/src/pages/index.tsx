@@ -1,7 +1,8 @@
-import Head from 'next/head'
-import Layout from '@/components/Layout/Layout'
-import QuestionsTable from '@/components/Questions/QuestionsTable/QuestionsTable'
+import Head from "next/head";
+import Layout from "@/components/Layout/Layout";
+import QuestionsTable from "@/components/Questions/QuestionsTable/QuestionsTable";
 
+// TODO: get user and decide to go to either questions or login
 export default function Home() {
   return (
     <>
@@ -17,5 +18,5 @@ export default function Home() {
         </Layout>
       </main>
     </>
-  )
+  );
 }

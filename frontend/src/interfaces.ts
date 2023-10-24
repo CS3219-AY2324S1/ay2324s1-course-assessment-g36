@@ -13,6 +13,11 @@ export interface UserForm {
   password: string;
 }
 
+export interface LoginForm {
+  username: string;
+  password: string;
+}
+
 export interface UpdateUserProfileForm {
   username: string;
   password: string;
