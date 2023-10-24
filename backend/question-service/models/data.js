@@ -108,7 +108,7 @@ const dummyQuestions = [
       "title": "Soduku Solver",
       "categories": ["Array", "Hash Table", "Backtracking", "Matrix"],
       "complexity": "Hard",
-      "link": "https://leetcode.com/problems/sudoku-solver/description/",
+      "link": "https://leetcode.com/problems/sudoku-solver/",
       "description": "Write a program to solve a Sudoku puzzle by filling the empty cells.\n\nA sudoku solution must satisfy all of the following rules:\n\nEach of the digits 1-9 must occur exactly once in each row.\nEach of the digits 1-9 must occur exactly once in each column.\nEach of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.\nThe '.' character indicates empty cells."
     }
   ]
