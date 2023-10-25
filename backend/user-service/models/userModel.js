@@ -40,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
         website: {
             type: DataTypes.STRING,
         },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+        }
     })
 
     return Users;
