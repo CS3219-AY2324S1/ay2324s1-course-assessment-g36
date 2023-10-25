@@ -11,14 +11,15 @@ async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<
 }
 
 export async function loginUser(loginForm: LoginForm): Promise<string> {
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(loginForm),
-  };
-  return fetchDataOrThrowError(LOGIN_USER_API, requestOptions);
+  // const requestOptions = {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(loginForm),
+  // };
+  // return fetchDataOrThrowError(LOGIN_USER_API, requestOptions);
+  return "sample token";
 }
 
 export function logoutUser(): void {
@@ -28,7 +29,7 @@ export function logoutUser(): void {
   }
 }
 
-export function useToken() {
+export function useToken(): string {
   const [token, setToken] = useState<string>("");
   useEffect(() => {
     const token = localStorage.getItem("token");

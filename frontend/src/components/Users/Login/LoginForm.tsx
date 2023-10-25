@@ -16,8 +16,10 @@ import { LoginForm } from "@/interfaces";
 import styles from "./LoginForm.module.css";
 import { useState } from "react";
 import { loginUser } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function LoginForm(): JSX.Element {
+  const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false);
   const [loginForm, setLoginForm] = useState<LoginForm>({
@@ -38,7 +40,7 @@ export default function LoginForm(): JSX.Element {
     try {
       const token = await loginUser(userForm);
       localStorage.setItem("token", token);
-      window.location.href = `/questions`;
+      router.push("/questions");
     } catch (error: any) {
       toast({
         title: error.message,

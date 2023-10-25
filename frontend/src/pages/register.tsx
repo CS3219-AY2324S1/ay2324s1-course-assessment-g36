@@ -1,6 +1,6 @@
 import Head from "next/head";
-import Layout from "@/components/Layout/Layout";
 import RegistrationForm from "@/components/Users/Registration/RegistrationForm";
+import UnauthLayout from "@/components/Layout/UnauthLayout";
 
 export default function Register() {
   return (
@@ -12,9 +12,9 @@ export default function Register() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Layout>
+        <UnauthLayout>
           <RegistrationForm />
-        </Layout>
+        </UnauthLayout>
       </main>
     </>
   );
