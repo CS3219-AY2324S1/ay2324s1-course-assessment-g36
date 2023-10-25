@@ -3,6 +3,7 @@ import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/rea
 import { HamburgerIcon } from "@chakra-ui/icons"
 import Link from "next/link"
 import styles from "./Header.module.css"
+import useLocalStorage from "@/utils/hooks"
 import { useRouter } from "next/router"
 
 const PATH_QUESTIONS = "/questions"
@@ -11,6 +12,7 @@ const PATH_MATCH = "/match"
 
 export default function Header(): JSX.Element {
   const router = useRouter()
+  const [_token, setToken] = useLocalStorage("token", "")
 
   return (
     <header className={styles.container_header}>
@@ -29,6 +31,9 @@ export default function Header(): JSX.Element {
         <Link href={PATH_MATCH} className={styles.nav_link}>
           Practice with a peer
         </Link>
+        <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
+          Sign out
+        </Link>
       </nav>
 
       {/* Mobile navbar */}
@@ -44,6 +49,14 @@ export default function Header(): JSX.Element {
             <MenuItem onClick={() => router.push(PATH_QUESTIONS)}>Questions</MenuItem>
             <MenuItem onClick={() => router.push(PATH_PROFILES)}>View Profiles</MenuItem>
             <MenuItem onClick={() => router.push(PATH_MATCH)}>Practice with a peer</MenuItem>
+            <MenuItem
+              onClick={() => {
+                router.push("/")
+                setToken("")
+              }}
+            >
+              Sign out
+            </MenuItem>
           </MenuList>
         </Menu>
       </div>

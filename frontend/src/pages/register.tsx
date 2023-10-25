@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Layout from '@/components/Layout/Layout'
+import LoginLayout from '@/components/Layout/LoginLayout'
 import RegistrationForm from '@/components/Users/Registration/RegistrationForm'
 
 export default function Register() {
@@ -12,9 +12,9 @@ export default function Register() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Layout>
+        <LoginLayout>
           <RegistrationForm />
-        </Layout>
+        </LoginLayout>
       </main>
     </>
   )
