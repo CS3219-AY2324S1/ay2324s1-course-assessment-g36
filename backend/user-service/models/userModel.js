@@ -43,7 +43,11 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     Users.associate = (models) => {
-        Users.hasMany(models.Histories, {foreignKey: 'userId'});
+        Users.hasMany(models.Histories, 
+            {
+                foreignKey: 'userId',
+                onDelete: 'CASCADE'
+            });
     }
 
     return Users;
