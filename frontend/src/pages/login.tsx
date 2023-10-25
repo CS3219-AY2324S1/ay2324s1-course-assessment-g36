@@ -1,6 +1,6 @@
 import Head from "next/head";
-import Layout from "@/components/Layout/Layout";
 import LoginForm from "@/components/Users/Login/LoginForm";
+import UnauthLayout from "@/components/Layout/UnauthLayout";
 
 export default function Login() {
   return (
@@ -12,9 +12,9 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Layout>
+        <UnauthLayout>
           <LoginForm />
-        </Layout>
+        </UnauthLayout>
       </main>
     </>
   );

@@ -26,7 +26,9 @@ export default function Header(): JSX.Element {
         <Link href="#" className={styles.nav_link}>
           Practice for interviews
         </Link>
-        <Button onClick={logoutUser}>Logout</Button>
+        <Button variant="outline" onClick={logoutUser}>
+          Logout
+        </Button>
       </nav>
 
       {/* Mobile navbar */}

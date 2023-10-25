@@ -6,7 +6,9 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
   Stack,
+  Link,
   useToast,
 } from "@chakra-ui/react";
 import { LoginForm } from "@/interfaces";
@@ -85,6 +87,12 @@ export default function LoginForm(): JSX.Element {
       <Button colorScheme="blue" isDisabled={isDisabled()} onClick={(e) => handleSubmit(loginForm)}>
         Continue
       </Button>
+      <Text align={"center"}>
+        Do not have an account yet?{" "}
+        <Link href="/register" color="blue.400">
+          Register here
+        </Link>
+      </Text>
     </Stack>
   );
 }
