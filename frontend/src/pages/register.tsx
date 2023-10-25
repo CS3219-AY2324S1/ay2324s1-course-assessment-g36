@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
 import RegistrationForm from '@/components/Users/Registration/RegistrationForm'
 
-export default function Registration() {
+export default function Register() {
   return (
     <>
       <Head>
