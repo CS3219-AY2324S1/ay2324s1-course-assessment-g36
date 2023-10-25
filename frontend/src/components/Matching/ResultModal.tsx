@@ -1,14 +1,13 @@
 import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces"
-import { getMatch } from "@/utils/matchingApi";
 import {
-    Modal,
+  Modal,
   ModalBody,
   ModalContent,
   ModalOverlay,
   Text
 } from '@chakra-ui/react'
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface IOwnProps {
   criteria: MatchCriteria
@@ -18,62 +17,120 @@ interface IOwnProps {
 
 const SECOND = 1000
 
-function useTimer(seconds: number, restart: boolean) {
-  const [timespan, setTimespan] = useState(seconds * SECOND);
+type MatchState =
+  | { status: "not-matching" }
+  | {
+    status: "matching";
+    secondsRemaining: number;
+  }
+  | {
+    status: "matched";
+    user_id: number;
+    username: string;
+  }
+  | { status: "timed-out" };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimespan((_timespan) => _timespan - SECOND);
+function useMatcher({ userId }: { userId: number }) {
+  const wsRef = useRef<WebSocket>();
+  const [matchState, setMatchState] = useState<MatchState>({ status: "not-matching" });
+  const intervalIdRef = useRef<NodeJS.Timeout>();
+
+  function match(criteria: MatchCriteria) {
+    function cleanup() {
+       if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = undefined;
+      }
+      if (typeof intervalIdRef.current === "number") {
+        clearInterval(intervalIdRef.current);
+        intervalIdRef.current = undefined;
+      }
+    }
+
+    if (!wsRef.current) {
+      wsRef.current = new WebSocket("ws://localhost:3002/");
+      wsRef.current.addEventListener("message", (event) => {
+        const message = JSON.parse(event.data);
+        switch (message.status) {
+          case "initialized":
+            // No-op
+            break;
+          case "matched":
+            setMatchState({ status: "matched", user_id: message.user_id, username: `User ${message.user_id}` });
+            cleanup();
+        }
+      });
+      // Update matching state once closed.
+      wsRef.current.addEventListener("close", () => {
+        setMatchState((matchState) => {
+          if (matchState.status !== "matching") return matchState;
+          return { status: "not-matching" };
+        });
+      });
+      // Send initial matching request.
+      wsRef.current.addEventListener("open", () => {
+        wsRef.current?.send(JSON.stringify({
+          type: "initialization",
+          question_complexity: criteria.difficulty,
+          user_id: userId,
+        }));
+      });
+    }
+
+    setMatchState({
+      status: "matching",
+      secondsRemaining: MAX_MATCH_WAIT_S,
+    });
+
+    intervalIdRef.current = setInterval(() => {
+      setMatchState((matchState) => {
+        if (matchState.status !== "matching") return matchState;
+
+        return {
+          ...matchState,
+          secondsRemaining: Math.max(0, matchState.secondsRemaining - 1),
+        };
+      });
     }, SECOND);
 
+    // Close connection after timeout period.
+    const timeoutId = setTimeout(() => {
+      cleanup();
+    }, MAX_MATCH_WAIT_S * SECOND);
+
     return () => {
-      clearInterval(intervalId);
+      cleanup();
+      clearTimeout(timeoutId);
     };
-  }, [seconds]);
+  }
 
-    useEffect(() => {
-        setTimespan(seconds * SECOND);
-    }, [restart]);
-
-  return timespan / SECOND;
+  return {
+    matchState,
+    match,
+  };
 }
 
 export default function ResultModal({criteria, isModalOpen, onModalClose}: IOwnProps) {
-    const [waiting, setWaiting] = useState<boolean>(true);
-    const seconds = useTimer(MAX_MATCH_WAIT_S, waiting);
-    const [matchedUser, setMatchedUser] = useState<string>('');
+    // TODO: replace with current user ID.
+    const [userId] = useState(() => Math.round(Math.random() * 1000));
+    const { matchState, match } = useMatcher({ userId });
 
-    function hasResult() {
-        return matchedUser != ''
-    }
-    const fetchMatch = async () => {
-        const user = await getMatch(criteria)
-        return user.username
-    }
-    const startCountdown = async () => {
-        await new Promise(r => setTimeout(r, MAX_MATCH_WAIT_S * SECOND))
-        return ''
-    }
-    const onRender = async () => {
-        setMatchedUser('')
-        setWaiting(true)
-        const username = await Promise.any([startCountdown(), fetchMatch()])
-        console.log(username)
-        setWaiting(false)
-        setMatchedUser(username)
-    }
+    // Begin matching once modal opens.
     useEffect(() => {
-        onRender()
-    }, [criteria])
-    return <Modal isOpen={isModalOpen} closeOnOverlayClick={!waiting} closeOnEsc={!waiting} onClose={onModalClose} size="3xl" isCentered>
+        const cleanup = isModalOpen ? match(criteria) : () => {};
+
+        return cleanup;
+    }, [isModalOpen]);
+
+    return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>
         <ModalOverlay />
         <ModalContent>
             <ModalBody>
-                {waiting
-                    ? <Text>{`Finding match in ${seconds}s...`}</Text>
-                    : hasResult()
-                        ? <Text> {`Matched with: ${matchedUser}`}</Text>
-                        : <Text> Failed to find match </Text> 
+                {matchState.status === "matching"
+                    ? <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
+                    : matchState.status === "matched"
+                        ? <Text>{`Matched with: ${matchState.username}`}</Text>
+                        : <Text>Failed to find match</Text>
                 }
             </ModalBody>
         </ModalContent>
