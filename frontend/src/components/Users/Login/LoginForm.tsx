@@ -36,7 +36,7 @@ export default function LoginForm(): JSX.Element {
     try {
       const token = await loginUser(userForm);
       localStorage.setItem("token", token);
-      window.location.href = `/`;
+      window.location.href = `/questions`;
     } catch (error: any) {
       toast({
         title: error.message,

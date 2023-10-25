@@ -1,7 +1,8 @@
-import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Button, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
+import { logoutUser } from "@/utils/auth";
 import styles from "./Header.module.css";
 import { useRouter } from "next/router";
 
@@ -16,9 +17,6 @@ export default function Header(): JSX.Element {
 
       {/* Desktop navbar */}
       <nav className={styles.nav_links}>
-        <Link href="/register" className={styles.nav_link}>
-          Register
-        </Link>
         <Link href="/questions" className={styles.nav_link}>
           Questions
         </Link>
@@ -28,6 +26,7 @@ export default function Header(): JSX.Element {
         <Link href="#" className={styles.nav_link}>
           Practice for interviews
         </Link>
+        <Button onClick={logoutUser}>Logout</Button>
       </nav>
 
       {/* Mobile navbar */}
@@ -35,7 +34,6 @@ export default function Header(): JSX.Element {
         <Menu>
           <MenuButton as={IconButton} aria-label="Options" icon={<HamburgerIcon />} variant="outline" />
           <MenuList>
-            <MenuItem onClick={() => router.push("/register")}>Register</MenuItem>
             <MenuItem onClick={() => router.push("/questions")}>Questions</MenuItem>
             <MenuItem onClick={() => router.push("/profiles")}>View Profiles</MenuItem>
             <MenuItem onClick={() => router.push("#")}>Practice for interviews</MenuItem>
