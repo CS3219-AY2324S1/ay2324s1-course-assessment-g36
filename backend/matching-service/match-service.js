@@ -57,6 +57,17 @@ export class MatchService {
    */
   removeUserFromQueue(user) {
     const usersSet = this._getUsersSet(user.complexity);
-    usersSet.delete(user);
+    return usersSet.delete(user);
+  }
+
+  toString() {
+    const result = [];
+    for (const [complexity, usersSet] of this._complexityToUsersSetMap) {
+      if (!complexity || !usersSet.size) continue;
+      const userIds = [];
+      for (const user of usersSet) userIds.push(user.userId);
+      result.push(`"${complexity}": ${userIds.join(", ")}`);
+    }
+    return result.join("\n");
   }
 }

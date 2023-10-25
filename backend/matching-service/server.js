@@ -27,7 +27,14 @@ wss.on("connection", (ws) => {
   console.info("Received new connection");
 
   ws.on("error", console.error);
-  ws.on("close", () => matchService.removeUserFromQueue(ws));
+  ws.on("close", () => {
+    const removedUser = matchService.removeUserFromQueue(ws);
+    if (removedUser) {
+      console.info(`Connection closed; "${ws.complexity}": Removed user ${ws.userId}`);
+    } else {
+      console.info(`Connection closed: User ${ws.userId}`);
+    }
+  });
 
   ws.on("message", function(_message) {
     const message = JSON.parse(_message.toString());
@@ -41,7 +48,7 @@ wss.on("connection", (ws) => {
         } = message;
         if (complexity !== "Easy" && complexity !== "Medium" && complexity !== "Hard") {
           console.error("Invalid complexity");
-          // ws.close();
+          ws.close();
           return;
         }
 
@@ -54,15 +61,17 @@ wss.on("connection", (ws) => {
         if (!matchedUser) {
           matchService.addUserToQueue(ws);
           ws.send(JSON.stringify({ status: "initialized" }));
-          console.log(`Added user ${userId} to "${complexity}" queue`);
+          console.info(`"${complexity}": Added user ${userId}`);
         }
-        // Otherwise, send "matched" messages to both users.
+        // Otherwise, send "matched" messages to both users, and close both connections.
         else {
           ws.matchedUser = matchedUser;
           matchedUser.matchedUser = ws;
           ws.send(JSON.stringify({ status: "matched", user_id: matchedUser.userId }));
           matchedUser.send(JSON.stringify({ status: "matched", user_id: ws.userId }));
-          console.log(`Matched user ${matchedUser.userId} to ${userId} in "${complexity}" queue`);
+          console.info(`"${complexity}": Matched user ${matchedUser.userId} to user ${userId}`);
+          ws.close();
+          matchedUser.close();
         }
 
         return;
@@ -79,4 +88,12 @@ const PORT = process.env.PORT || 3002;
 
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+
+  if (process.env.NODE_ENV === "development") {
+    // Log out queue for debugging.
+    setInterval(() => {
+      const queueStr = matchService.toString();
+      if (queueStr) console.log(queueStr);
+    }, 5000);
+  }
 });
