@@ -13,15 +13,15 @@ interface IOwnProps {
 }
 
 const PROGRAMMING_LANGUAGES = [
-  {"Python": 'python'},
-  {"JavaScript": 'javascript'},
-  {"TypeScript": 'typescript'},
-  {"Java": 'java'},
-  {"Ruby": 'ruby'},
-  {"C++": 'c++'},
-  {"C#": 'c#'},
-  {"PHP": 'php'},
-  {"Objective-C": 'objective-c'},
+  { "Python": 'python' },
+  { "JavaScript": 'javascript' },
+  { "TypeScript": 'typescript' },
+  { "Java": 'java' },
+  { "Ruby": 'ruby' },
+  { "C++": 'c++' },
+  { "C#": 'c#' },
+  { "PHP": 'php' },
+  { "Objective-C": 'objective-c' },
 ]
 
 export default function Sidebar({ roomId, question, programmingLanguage, onOpen, handleChange }: IOwnProps): JSX.Element {
@@ -37,17 +37,15 @@ export default function Sidebar({ roomId, question, programmingLanguage, onOpen,
           <Badge colorScheme="blue">Room ID: {roomId}</Badge>
         </HStack>
         <Select placeholder='Choose programming language' value={programmingLanguage} variant={"flushed"} onChange={e => handleChange(e.target.value)}>
-          { PROGRAMMING_LANGUAGES
-              .map(language => <option value={Object.values(language)[0]}>{Object.keys(language)[0]}</option>)
+          {PROGRAMMING_LANGUAGES
+            .map(language => <option key={Object.keys(language)[0]} value={Object.values(language)[0]}>{Object.keys(language)[0]}</option>)
           }
         </Select>
         <Heading size='md'>
           {question.id}. {question.title}
         </Heading>
         <QuestionComplexity complexity={question.complexity} />
-        <Text>
-          <QuestionDescription description={question.description} />
-        </Text>
+        <QuestionDescription description={question.description} />
         <Button colorScheme="green" onClick={onOpen}>Run code</Button>
       </Stack>
     </div>

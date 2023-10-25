@@ -7,7 +7,7 @@ export default function QuestionDescription({ description }: IOwnProps): JSX.Ele
     <span>
       {description
         .split('\n')
-        .map(desc => <p key={desc}>{desc}<br /></p>)
+        .map((desc, idx) => <p key={idx}>{desc}<br /></p>)
       }
     </span>
   )
