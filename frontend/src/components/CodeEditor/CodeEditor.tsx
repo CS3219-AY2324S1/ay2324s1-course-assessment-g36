@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 // @ts-ignore
 import { WebsocketProvider } from 'y-websocket';
 
-const serverWsUrl = "ws://localhost:3001"
+const serverWsUrl = "ws://localhost:5173"
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 

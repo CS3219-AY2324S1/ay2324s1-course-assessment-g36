@@ -5,8 +5,10 @@ import { WebSocketServer } from 'ws';
 import { setupWSConnection } from 'y-websocket/bin/utils';
 import { Server } from "socket.io";
 
-const allowedOrigins = ['http://localhost:3000'];
+const DEFAULT_PORT = 5173
+const ALLOWED_ORIGINS = ['http://localhost:3000'];
 
+const JOIN_ROOM_EVENT = "room:join"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
@@ -14,7 +16,7 @@ const app = express();
 
 app.use(cors(
   {
-    origin: allowedOrigins,
+    origin: ALLOWED_ORIGINS,
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
     allowedHeaders: "Content-Type",
     credentials: true
@@ -28,7 +30,7 @@ export const wss = new WebSocketServer({ server: httpServer })
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ALLOWED_ORIGINS[0],
     methods: ["GET", "POST"],
   },
 });
@@ -36,9 +38,14 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.info(`connected: ${socket.id}`);
 
+  socket.on(JOIN_ROOM_EVENT, (data) => {
+    socket.join(data)
+    console.info("joined room!")
+  })
+
   socket.on(UPDATE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
-    console.info(data)
     socket.to(data.room).emit(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, data);
+    console.info(data)
   });
 });
 
@@ -48,7 +55,7 @@ wss.on('connection', (ws, req) => {
   setupWSConnection(ws, req);
 })
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || DEFAULT_PORT;
 httpServer.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

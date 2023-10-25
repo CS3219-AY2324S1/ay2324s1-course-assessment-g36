@@ -19,8 +19,9 @@ interface PageProps {
   question: QuestionObject
 }
 
-const socket = io("http://localhost:3001")
+const socket = io("http://localhost:5173")
 
+const JOIN_ROOM_EVENT = "room:join"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
@@ -38,10 +39,12 @@ export default function CodeRoom({ id, question }: PageProps) {
   useEffect(() => {
     if (!isDomLoaded) {
       setIsDomLoaded(true)
+      socket.emit(JOIN_ROOM_EVENT, id)
     }
+
     socket.on(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
-      console.log(data)
       setProgrammingLanguage(data.language)
+      console.info(data)
     }) 
   }, [socket])
 
