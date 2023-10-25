@@ -17,7 +17,7 @@ import styles from './LoginForm.module.css'
 import { useState } from 'react'
 import { loginUser } from '@/utils/auth'
 import { useRouter } from 'next/router'
-import useLocalStorage from '@/utils/hooks'
+import { useLocalStorage } from '@/utils/hooks'
 
 export default function LoginForm(): JSX.Element {
   const router = useRouter()

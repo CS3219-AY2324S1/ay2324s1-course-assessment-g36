@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
 import ProfileList from '@/components/Users/ProfileList/ProfileList'
+import { useJwtToken } from '@/utils/hooks'
 
 export default function Profiles() {
+  const token = useJwtToken()
   return (
     <>
       <Head>

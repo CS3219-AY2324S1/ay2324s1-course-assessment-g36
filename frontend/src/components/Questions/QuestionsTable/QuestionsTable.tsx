@@ -1,54 +1,47 @@
-import { useState, useEffect } from 'react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  TableContainer,
-} from '@chakra-ui/react'
+import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
+import { addQuestion, deleteQuestion, fetchAllQuestions } from '@/utils/questionApi'
+import { useEffect, useState } from 'react'
+
+import AddQuestion from '../QuestionForm/AddQuestion'
+import { QuestionObject } from '@/interfaces'
 import QuestionRow from '../QuestionRow/QuestionRow'
-import { QuestionObject } from '@/interfaces';
-import styles from "./QuestionsTable.module.css"
-import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/utils/questionApi';
-import AddQuestion from '../QuestionForm/AddQuestion';
-import SkeletonLoader from '@/components/Loader/SkeletonLoader';
+import SkeletonLoader from '@/components/Loader/SkeletonLoader'
+import styles from './QuestionsTable.module.css'
 
 export default function QuestionsTable(): JSX.Element {
-
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [questions, setQuestions] = useState<QuestionObject[]>([])
 
   useEffect(() => {
     fetchData()
     setIsLoading(false)
-  }, []);
+  }, [])
 
   async function fetchData() {
     try {
-      const results = await fetchAllQuestions();
-      setQuestions(results);
+      const results = await fetchAllQuestions()
+      setQuestions(results)
     } catch (error) {
-      console.log("Error fetching users")
+      console.log('Error fetching questions')
     }
   }
 
   async function createQuestion(newQuestion: QuestionObject) {
     try {
-      await addQuestion(newQuestion);
+      await addQuestion(newQuestion)
       setQuestions([...questions, newQuestion])
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
   }
 
   async function removeQuestion(questionTitle: string) {
     try {
-      await deleteQuestion(questionTitle);
-      const filteredQuestions = questions.filter(question => question.title != questionTitle);
+      await deleteQuestion(questionTitle)
+      const filteredQuestions = questions.filter((question) => question.title != questionTitle)
       setQuestions(filteredQuestions)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
@@ -56,32 +49,28 @@ export default function QuestionsTable(): JSX.Element {
     return <SkeletonLoader />
   }
 
-  return <div className={styles.table_container}>
-    <TableContainer>
-      <Table variant='simple' colorScheme='gray' size='md'>
-        <Thead>
-          <Tr>
-            <Th>title</Th>
-            <Th>complexity</Th>
-            <Th>category</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {
-            questions.map(question =>
-              <QuestionRow
-                key={question.id}
-                question={question}
-                deleteQuestion={removeQuestion}
-              />)
-          }
-        </Tbody>
-      </Table>
-    </TableContainer>
-    <br />
+  return (
+    <div className={styles.table_container}>
+      <TableContainer>
+        <Table variant="simple" colorScheme="gray" size="md">
+          <Thead>
+            <Tr>
+              <Th>title</Th>
+              <Th>complexity</Th>
+              <Th>category</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {questions.map((question) => (
+              <QuestionRow key={question.id} question={question} deleteQuestion={removeQuestion} />
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <br />
 
-    <AddQuestion addQuestion={createQuestion} />
-
-  </div>
+      <AddQuestion addQuestion={createQuestion} />
+    </div>
+  )
 }

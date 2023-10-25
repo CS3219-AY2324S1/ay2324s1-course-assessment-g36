@@ -17,5 +17,6 @@ export async function loginUser(loginForm: LoginForm): Promise<string> {
     },
     body: JSON.stringify(loginForm),
   }
+  return 'test_token' // TODO: remove this line to test BE
   return fetchDataOrThrowError(LOGIN_USER_API, requestOptions)
 }

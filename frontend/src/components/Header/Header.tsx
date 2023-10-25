@@ -3,7 +3,7 @@ import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/rea
 import { HamburgerIcon } from "@chakra-ui/icons"
 import Link from "next/link"
 import styles from "./Header.module.css"
-import useLocalStorage from "@/utils/hooks"
+import { useLocalStorage } from "@/utils/hooks"
 import { useRouter } from "next/router"
 
 const PATH_QUESTIONS = "/questions"
@@ -51,8 +51,8 @@ export default function Header(): JSX.Element {
             <MenuItem onClick={() => router.push(PATH_MATCH)}>Practice with a peer</MenuItem>
             <MenuItem
               onClick={() => {
-                router.push("/")
                 setToken("")
+                router.push("/")
               }}
             >
               Sign out
