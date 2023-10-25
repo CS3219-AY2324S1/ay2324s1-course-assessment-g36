@@ -53,3 +53,12 @@ export interface Attempt {
   attempt: string;
   date: string;
 }
+// extensible if we want to add criteria
+export interface MatchCriteria {
+  difficulty: string;
+}
+
+export interface MatchResult {
+  username: string;
+  user_id: number;
+}
