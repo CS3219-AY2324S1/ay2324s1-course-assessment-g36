@@ -3,20 +3,29 @@ version: '3.9'
 services:
   zookeeper:
     container_name: zookeeper
-    image: wurstmeister/zookeeper
+    image: wurstmeister/zookeeper:latest
     ports: 
       - 2181:2181
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - pubsubnet
 
   kafka:
     container_name: kafka
-    image: wurstmeister/kafka
+    image: wurstmeister/kafka:latest
     ports: 
       - 9092:9092
     volumes:
       - ./data/kafka:/var/run/docker.sock
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=kafka
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+    networks:
+      - pubsubnet
   
   db:
     container_name: db
@@ -36,7 +45,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "db", "-u", "admin", "-ppassword"]
       interval: 10s
       timeout: 5s
-      retries: 3  # Adjust the number of retries as needed
+      retries: 3
     networks:
       - usernet
 
@@ -47,9 +56,12 @@ services:
       - 3001:3001
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KAFKA_TOPIC=questionsU
+      - KAFKA_TOPIC=questions
     depends_on:
-      - kafka
+      kafka:
+        condition: service_started
+    networks:
+      - pubsubnet
 
   user-service:
     container_name: user-service
@@ -70,6 +82,8 @@ services:
         condition: service_started
     networks:
       - usernet
+      - pubsubnet
 
 networks:
   usernet:
+  pubsubnet:
