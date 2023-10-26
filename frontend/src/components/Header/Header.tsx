@@ -26,7 +26,7 @@ export default function Header(): JSX.Element {
         <Link href='/register' className={styles.nav_link}>Register</Link>
         <Link href='/' className={styles.nav_link}>Questions</Link>
         <Link href='/profiles' className={styles.nav_link}>View Profiles</Link>
-        <Link href='/find' className={styles.nav_link}>Find Peers</Link>
+        <Link href='/match' className={styles.nav_link}>Practice with a peer</Link>
       </nav>
 
       {/* Mobile navbar */}
@@ -42,11 +42,11 @@ export default function Header(): JSX.Element {
             <MenuItem onClick={() => router.push("/register")}>Register</MenuItem>
             <MenuItem onClick={() => router.push("/")}>Questions</MenuItem>
             <MenuItem onClick={() => router.push("/profiles")}>View Profiles</MenuItem>
-            <MenuItem onClick={() => router.push("/find")}>Find Peers</MenuItem>
+            <MenuItem onClick={() => router.push("/match")}>Practice for interviews</MenuItem>
           </MenuList>
         </Menu>
       </div>
-
+    x
     </header>
   )
 }
