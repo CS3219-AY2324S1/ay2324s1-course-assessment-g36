@@ -58,12 +58,12 @@ function useMatcher({ userId }: { userId: number }) {
             break;
           case "matched":
             setMatchState(
-            { 
-              status: "matched", 
-              user_id: message.user_id, 
-              username: `User ${message.user_id}`, 
-              room_id: message.room_id 
-            });
+              {
+                status: "matched",
+                user_id: message.user_id,
+                username: `User ${message.user_id}`,
+                room_id: message.room_id
+              });
             cleanup();
         }
       });
@@ -117,6 +117,21 @@ function useMatcher({ userId }: { userId: number }) {
   };
 }
 
+function redirectToCodeRoom(room_id: string, criteria: MatchCriteria): void {
+
+  const queryParams = new URLSearchParams();
+
+  for (const key in criteria) {
+    if (criteria.hasOwnProperty(key)) {
+      queryParams.append(key, criteria[key as keyof MatchCriteria]);
+    }
+  }
+
+  const queryString = queryParams.toString()
+  const redirectUrl = `/room/${room_id}?${queryString}`
+  window.location.href = redirectUrl
+}
+
 export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
   // TODO: replace with current user ID.
   const [userId] = useState(() => Math.round(Math.random() * 1000));
@@ -129,12 +144,8 @@ export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOw
     return cleanup;
   }, [isModalOpen]);
 
-  function redirectToCodeRoom(room_id: string) {
-    window.location.href = `/room/${room_id}?difficulty=${criteria.difficulty}`
-  }
-
   if (matchState.status === "matched") {
-    redirectToCodeRoom(matchState.room_id);
+    redirectToCodeRoom(matchState.room_id, criteria);
   }
 
   return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>

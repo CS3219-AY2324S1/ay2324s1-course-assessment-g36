@@ -3,6 +3,7 @@ import { Badge, Heading, Stack, Text, Button, HStack, Select } from "@chakra-ui/
 import QuestionComplexity from "../Questions/QuestionComplexity/QuestionComplexity";
 import QuestionDescription from "../Questions/QuestionDescription/QuestionDescription";
 import styles from "./Sidebar.module.css"
+import { PROGRAMMING_LANGUAGES } from "@/types";
 
 interface IOwnProps {
   roomId: string;
@@ -11,18 +12,6 @@ interface IOwnProps {
   onOpen: () => void;
   handleChange: (language: string) => void;
 }
-
-const PROGRAMMING_LANGUAGES = [
-  { "Python": 'python' },
-  { "JavaScript": 'javascript' },
-  { "TypeScript": 'typescript' },
-  { "Java": 'java' },
-  { "Ruby": 'ruby' },
-  { "C++": 'c++' },
-  { "C#": 'c#' },
-  { "PHP": 'php' },
-  { "Objective-C": 'objective-c' },
-]
 
 export default function Sidebar({ roomId, question, programmingLanguage, onOpen, handleChange }: IOwnProps): JSX.Element {
 
