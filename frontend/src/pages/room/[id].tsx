@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head'
-import CodeEditor from "@/components/CodeEditor/CodeEditor"
-import Sidebar from '@/components/Sidebar/Sidebar';
+import CodeEditor from "@/components/CodeRoom/CodeEditor/CodeEditor"
+import Sidebar from '@/components/CodeRoom/Sidebar/Sidebar';
 import {
   Grid,
   Drawer,
@@ -59,7 +59,7 @@ export default function CodeRoom({ id, question }: PageProps) {
 
       <main>
         <Grid
-          h='200px'
+          h='100vh'
           templateColumns='30% 70%'
         >
           {isDomLoaded && (<>

@@ -1,7 +1,7 @@
 import { QuestionObject } from "@/interfaces"
 import { Badge, Heading, Stack, Text, Button, HStack, Select } from "@chakra-ui/react";
-import QuestionComplexity from "../Questions/QuestionComplexity/QuestionComplexity";
-import QuestionDescription from "../Questions/QuestionDescription/QuestionDescription";
+import QuestionComplexity from "../../Questions/QuestionComplexity/QuestionComplexity";
+import QuestionDescription from "../../Questions/QuestionDescription/QuestionDescription";
 import styles from "./Sidebar.module.css"
 import { PROGRAMMING_LANGUAGES } from "@/types";
 
@@ -14,6 +14,10 @@ interface IOwnProps {
 }
 
 export default function Sidebar({ roomId, question, programmingLanguage, onOpen, handleChange }: IOwnProps): JSX.Element {
+
+  function handleSubmit(): void {
+    alert("Submitted code")
+  }
 
   return <div className={styles.sidebar_container}>
     <div className={styles.sidebar}>
@@ -35,7 +39,10 @@ export default function Sidebar({ roomId, question, programmingLanguage, onOpen,
         </Heading>
         <QuestionComplexity complexity={question.complexity} />
         <QuestionDescription description={question.description} />
-        <Button colorScheme="green" onClick={onOpen}>Run code</Button>
+        <HStack>
+          <Button colorScheme="whiteAlpha" onClick={onOpen}>Run code</Button>
+          <Button colorScheme="green" onClick={handleSubmit}>Submit</Button>
+        </HStack>
       </Stack>
     </div>
   </div>
