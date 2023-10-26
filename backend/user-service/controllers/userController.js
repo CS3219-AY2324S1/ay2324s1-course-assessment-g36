@@ -1,6 +1,8 @@
 const { Users } = require('../models')
 const bcrypt = require('bcrypt')
 const { Op } = require('sequelize')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const addUser = async (req, res, next) => {
   try {
@@ -59,7 +61,16 @@ const loginUser = async (req, res) => {
       return
     }
 
-    res.status(200).json({ res: user })
+    const token = jwt.sign(
+      {
+        username: user.username,
+        // TODO: add admin field
+        // isAdmin: user.isAdmin,
+      },
+      process.env.JWT_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    )
+    res.status(200).json({ res: token })
   } catch (err) {
     next(err)
   }

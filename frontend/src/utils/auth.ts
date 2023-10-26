@@ -2,13 +2,6 @@ import { LoginForm } from '@/interfaces'
 
 const LOGIN_USER_API = 'http://localhost:8000/users/login'
 
-async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
-  const response = await fetch(api, requestOptions)
-  const results = await response.json()
-  if (!response.ok) throw new Error(results.error)
-  return results.res
-}
-
 export async function loginUser(loginForm: LoginForm): Promise<string> {
   const requestOptions = {
     method: 'POST',
@@ -17,6 +10,9 @@ export async function loginUser(loginForm: LoginForm): Promise<string> {
     },
     body: JSON.stringify(loginForm),
   }
-  return 'test_token' // TODO: remove this line to test BE
-  return fetchDataOrThrowError(LOGIN_USER_API, requestOptions)
+  const response = await fetch(LOGIN_USER_API, requestOptions)
+  const results = await response.json()
+  if (!response.ok) throw new Error(results.error)
+  // returns JWT
+  return results.res
 }
