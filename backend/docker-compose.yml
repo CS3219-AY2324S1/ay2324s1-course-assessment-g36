@@ -1,0 +1,75 @@
+version: '3.9'
+
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    ports: 
+      - 2181:2181
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    ports: 
+      - 9092:9092
+    volumes:
+      - ./data/kafka:/var/run/docker.sock
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+  
+  db:
+    container_name: db
+    image: mysql:8.0
+    restart: unless-stopped
+    volumes:
+      - ./Docker/initdb.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - $HOME/database:/var/lib/mysql
+    ports: 
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password 
+      MYSQL_DATABASE: Users
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "db", "-u", "admin", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 3  # Adjust the number of retries as needed
+    networks:
+      - usernet
+
+  question-service:
+    container_name: question-service
+    build: ./question-service
+    ports:
+      - 3001:3001
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_TOPIC=questionsU
+    depends_on:
+      - kafka
+
+  user-service:
+    container_name: user-service
+    build: ./user-service
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      DB_HOST: db
+      DB_USER: admin
+      DB_PASSWORD: password
+      DB_NAME: Users
+      DB_PORT: 3306
+    depends_on:
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - usernet
+
+networks:
+  usernet:
