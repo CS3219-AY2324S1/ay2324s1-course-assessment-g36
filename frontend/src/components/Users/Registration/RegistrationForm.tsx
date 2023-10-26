@@ -10,22 +10,22 @@ import {
   Stack,
   Text,
   useToast,
-} from '@chakra-ui/react'
-import { User, UserForm } from '@/interfaces'
-import { validateEmail, validatePassword } from '@/utils/validators'
+} from "@chakra-ui/react"
+import { User, UserForm } from "@/interfaces"
+import { validateEmail, validatePassword } from "@/utils/validators"
 
-import AlertBanner from '@/components/Feedback/AlertBanner'
-import { createUser } from '@/utils/userApi'
-import styles from './RegistrationForm.module.css'
-import { useState } from 'react'
+import AlertBanner from "@/components/Feedback/AlertBanner"
+import { createUser } from "@/utils/userApi"
+import styles from "./RegistrationForm.module.css"
+import { useState } from "react"
 
 export default function RegistrationForm(): JSX.Element {
   const [show, setShow] = useState<boolean>(false)
   const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false)
   const [userForm, setUserForm] = useState<UserForm>({
-    username: '',
-    email: '',
-    password: '',
+    username: "",
+    email: "",
+    password: "",
   })
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true)
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true)
@@ -55,9 +55,9 @@ export default function RegistrationForm(): JSX.Element {
     } catch (error: any) {
       toast({
         title: error.message,
-        status: 'error',
+        status: "error",
         duration: 3000,
-        position: 'top',
+        position: "top",
         isClosable: true,
       })
       setIsFormSubmitting(false)
@@ -66,7 +66,7 @@ export default function RegistrationForm(): JSX.Element {
 
   function isDisabled(): boolean {
     return (
-      userForm.username == '' || userForm.email == '' || userForm.password == '' || isFormSubmitting
+      userForm.username == "" || userForm.email == "" || userForm.password == "" || isFormSubmitting
     )
   }
 
@@ -94,7 +94,7 @@ export default function RegistrationForm(): JSX.Element {
         <Input
           placeholder="Enter username"
           value={userForm.username}
-          onChange={(e) => handleChange(e, 'username')}
+          onChange={(e) => handleChange(e, "username")}
         />
       </FormControl>
 
@@ -103,7 +103,7 @@ export default function RegistrationForm(): JSX.Element {
         <Input
           placeholder="Enter email address"
           value={userForm.email}
-          onChange={(e) => handleChange(e, 'email')}
+          onChange={(e) => handleChange(e, "email")}
         />
       </FormControl>
 
@@ -112,24 +112,24 @@ export default function RegistrationForm(): JSX.Element {
         <InputGroup size="md">
           <Input
             pr="4.5rem"
-            type={show ? 'text' : 'password'}
+            type={show ? "text" : "password"}
             placeholder="Enter password"
             value={userForm.password}
-            onChange={(e) => handleChange(e, 'password')}
+            onChange={(e) => handleChange(e, "password")}
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handlePasswordClick}>
-              {show ? 'Hide' : 'Show'}
+              {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
 
       <Button colorScheme="blue" isDisabled={isDisabled()} onClick={(e) => handleSubmit(userForm)}>
-        {isFormSubmitting ? 'Creating...' : 'Create Account'}
+        {isFormSubmitting ? "Creating..." : "Create Account"}
       </Button>
-      <Text align={'center'}>
-        Already a user?{' '}
+      <Text align={"center"}>
+        Already a user?{" "}
         <Link href="/login" color="blue.400">
           Login
         </Link>

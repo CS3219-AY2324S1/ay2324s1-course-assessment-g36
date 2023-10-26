@@ -10,25 +10,25 @@ import {
   Stack,
   Link,
   useToast,
-} from '@chakra-ui/react'
-import { LoginForm } from '@/interfaces'
+} from "@chakra-ui/react"
+import { LoginForm } from "@/interfaces"
 
-import styles from './LoginForm.module.css'
-import { useState } from 'react'
-import { loginUser } from '@/utils/auth'
-import { useRouter } from 'next/router'
-import { useLocalStorage } from '@/utils/hooks'
+import styles from "./LoginForm.module.css"
+import { useState } from "react"
+import { loginUser } from "@/utils/auth"
+import { useRouter } from "next/router"
+import { useLocalStorage } from "usehooks-ts"
 
 export default function LoginForm(): JSX.Element {
   const router = useRouter()
   const [show, setShow] = useState<boolean>(false)
   const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false)
   const [loginForm, setLoginForm] = useState<LoginForm>({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   })
   const toast = useToast()
-  const [_token, setToken] = useLocalStorage('token', '')
+  const [_token, setToken] = useLocalStorage("token", "")
 
   const handlePasswordClick = () => setShow(!show)
 
@@ -42,13 +42,13 @@ export default function LoginForm(): JSX.Element {
     try {
       const token = await loginUser(userForm)
       setToken(token)
-      router.push('/questions')
+      router.push("/questions")
     } catch (error: any) {
       toast({
         title: error.message,
-        status: 'error',
+        status: "error",
         duration: 3000,
-        position: 'top',
+        position: "top",
         isClosable: true,
       })
       setIsFormSubmitting(false)
@@ -56,7 +56,7 @@ export default function LoginForm(): JSX.Element {
   }
 
   function isDisabled(): boolean {
-    return loginForm.username == '' || loginForm.password == '' || isFormSubmitting
+    return loginForm.username == "" || loginForm.password == "" || isFormSubmitting
   }
 
   return (
@@ -70,7 +70,7 @@ export default function LoginForm(): JSX.Element {
         <Input
           placeholder="Enter username"
           value={loginForm.username}
-          onChange={(e) => handleChange(e, 'username')}
+          onChange={(e) => handleChange(e, "username")}
         />
       </FormControl>
 
@@ -79,14 +79,14 @@ export default function LoginForm(): JSX.Element {
         <InputGroup size="md">
           <Input
             pr="4.5rem"
-            type={show ? 'text' : 'password'}
+            type={show ? "text" : "password"}
             placeholder="Enter password"
             value={loginForm.password}
-            onChange={(e) => handleChange(e, 'password')}
+            onChange={(e) => handleChange(e, "password")}
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handlePasswordClick}>
-              {show ? 'Hide' : 'Show'}
+              {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
@@ -95,8 +95,8 @@ export default function LoginForm(): JSX.Element {
       <Button colorScheme="blue" isDisabled={isDisabled()} onClick={(e) => handleSubmit(loginForm)}>
         Continue
       </Button>
-      <Text align={'center'}>
-        Do not have an account yet?{' '}
+      <Text align={"center"}>
+        Do not have an account yet?{" "}
         <Link href="/register" color="blue.400">
           Register here
         </Link>

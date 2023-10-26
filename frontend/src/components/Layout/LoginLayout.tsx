@@ -1,4 +1,4 @@
-import styles from './Layout.module.css'
+import styles from "./Layout.module.css"
 
 interface IOwnProps {
   children: JSX.Element | JSX.Element[]

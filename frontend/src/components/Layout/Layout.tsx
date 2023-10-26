@@ -1,5 +1,5 @@
-import Header from '../Header/Header'
-import styles from './Layout.module.css'
+import Header from "../Header/Header"
+import styles from "./Layout.module.css"
 
 interface IOwnProps {
   children: JSX.Element | JSX.Element[]

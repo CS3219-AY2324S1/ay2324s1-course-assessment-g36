@@ -3,7 +3,7 @@ import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/rea
 import { HamburgerIcon } from "@chakra-ui/icons"
 import Link from "next/link"
 import styles from "./Header.module.css"
-import { useLocalStorage } from "@/utils/hooks"
+import { useLocalStorage } from "usehooks-ts"
 import { useRouter } from "next/router"
 
 const PATH_QUESTIONS = "/questions"

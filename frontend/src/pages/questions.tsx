@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
 import QuestionsTable from '@/components/Questions/QuestionsTable/QuestionsTable'
-import { useJwtToken } from '@/utils/hooks'
+import { useJwt } from '@/utils/hooks'
 
 export default function Questions() {
-  const token = useJwtToken()
+  const token = useJwt()
   return (
     <>
       <Head>

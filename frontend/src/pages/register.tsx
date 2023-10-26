@@ -1,17 +1,17 @@
-import Head from 'next/head'
-import LoginLayout from '@/components/Layout/LoginLayout'
-import RegistrationForm from '@/components/Users/Registration/RegistrationForm'
-import { useEffect } from 'react'
-import { useLocalStorage } from '@/utils/hooks'
-import { useRouter } from 'next/router'
+import Head from "next/head"
+import LoginLayout from "@/components/Layout/LoginLayout"
+import RegistrationForm from "@/components/Users/Registration/RegistrationForm"
+import { useEffect } from "react"
+import { useReadLocalStorage } from "usehooks-ts"
+import { useRouter } from "next/router"
 
 export default function Register() {
-  const [token, _setToken] = useLocalStorage('token', '')
+  const token = useReadLocalStorage<string>("token")
   const router = useRouter()
   useEffect(() => {
     // redirect authenticated users to questions page
     if (!!token) {
-      router.push('/questions')
+      router.push("/questions")
     }
   })
   return (

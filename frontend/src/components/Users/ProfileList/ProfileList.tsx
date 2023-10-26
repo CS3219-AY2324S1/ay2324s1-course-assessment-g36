@@ -1,20 +1,22 @@
-import { Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { Heading, SimpleGrid, Stack, Text, useToast } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 
-import ProfileCard from '../ProfileCard/ProfileCard'
-import SkeletonLoader from '@/components/Loader/SkeletonLoader'
-import { Status } from '@/enums'
-import { User } from '@/interfaces'
-import { fetchAllUsers } from '@/utils/userApi'
+import ProfileCard from "../ProfileCard/ProfileCard"
+import SkeletonLoader from "@/components/Loader/SkeletonLoader"
+import { Status } from "@/enums"
+import { User } from "@/interfaces"
+import { fetchAllUsers } from "@/utils/userApi"
+import { useJwt } from "@/utils/hooks"
 
 export default function ProfileList(): JSX.Element {
   const [users, setUsers] = useState<User[]>([])
   const [status, setStatus] = useState<Status>(Status.Loading)
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<string>("")
+  const token = useJwt()
 
   async function fetchData() {
     try {
-      const results = await fetchAllUsers()
+      const results = await fetchAllUsers(token)
       setUsers(results)
       setStatus(Status.Success)
     } catch (error: any) {

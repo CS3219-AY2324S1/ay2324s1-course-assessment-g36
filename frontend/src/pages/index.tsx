@@ -1,16 +1,16 @@
-import { useEffect } from 'react'
-import { useLocalStorage } from '@/utils/hooks'
-import { useRouter } from 'next/router'
+import { useEffect } from "react"
+import { useReadLocalStorage } from "usehooks-ts"
+import { useRouter } from "next/router"
 
 export default function Index() {
+  const token = useReadLocalStorage<string>("token")
   const router = useRouter()
-  const [token, _setToken] = useLocalStorage('token', '')
 
   useEffect(() => {
     if (token) {
-      router.replace('/questions')
+      router.replace("/questions")
     } else {
-      router.replace('/login')
+      router.replace("/login")
     }
   })
   return <></>
