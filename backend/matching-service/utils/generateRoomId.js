@@ -1,4 +1,4 @@
-export function generateRandomChatRoomId(length = 8) {
+export function generateCodeRoomId(length = 8) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let chatRoomId = '';
 

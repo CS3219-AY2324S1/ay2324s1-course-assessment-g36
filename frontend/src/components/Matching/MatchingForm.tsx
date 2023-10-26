@@ -33,7 +33,7 @@ export default function MatchingForm(): JSX.Element {
   return (
     <>
     <Stack className={styles.form_container} spacing='20px'>
-      <Heading as='h2' size='xl' textAlign='center'>Practice with a peer</Heading>
+      <Heading as='h2' size='xl' textAlign='center'>Find a peer to practice</Heading>
       <FormControl>
         <FormLabel size='l' className={styles.criteria} textAlign='center'>
           Question complexity

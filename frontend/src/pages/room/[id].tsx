@@ -98,11 +98,20 @@ export default function CodeRoom({ id, question }: PageProps) {
 export async function getServerSideProps(context: any) {
   const { query } = context;
 
-  // Access the 'id' query parameter from the URL
-  const { id } = query;
+  // Access the 'id' and 'difficulty' query parameter from the URL
+  const { id, difficulty } = query;
 
   // TODO: Update with API call to get question based on a set of criteria during matching
-  const mockQuestion = {
+  const mockEasyQuestion = {
+    "id": 2,
+    "title": "Linked List Cycle Detection",
+    "categories": ["Data Structures", "Algorithms"],
+    "complexity": "Easy",
+    "link": "https://leetcode.com/problems/linked-list-cycle/",
+    "description": "Given head, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.\n\nReturn true if there is a cycle in the linked list. Otherwise, return false."
+  };
+
+  const mockMediumQuestion = {
     "id": 8,
     "title": "Repeated DNA Sequences",
     "categories": ["Algorithms", "Bit Manipulation"],
@@ -111,10 +120,28 @@ export async function getServerSideProps(context: any) {
     "description": "The DNA sequence is composed of a series of nucleotides abbreviated as 'A','C', 'G', and 'T'.\n\nFor example, 'ACGAATTCCG' is a DNA sequence. When studying DNA, it is useful to identify repeated sequences within the DNA.\n\nGiven a string s that represents a DNA sequence, return all the 10-letter long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order."
   };
 
+  const mockHardQuestion = {
+    "id": 15,
+    "title": "Sliding Window Maximum",
+    "categories": ["Arrays, Algorithms"],
+    "complexity": "Hard",
+    "link": "https://leetcode.com/problems/sliding-window-maximum/",
+    "description": "You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.\n\n Return the max sliding window."
+  };
+
+  let question = mockEasyQuestion
+
+  if (difficulty === "Medium") {
+    question = mockMediumQuestion
+  }
+  if (difficulty === "Hard") {
+    question = mockHardQuestion
+  }
+
   return {
     props: {
       id,
-      question: mockQuestion
+      question
     },
   };
 }

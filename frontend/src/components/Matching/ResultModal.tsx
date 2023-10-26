@@ -27,7 +27,7 @@ type MatchState =
     status: "matched";
     user_id: number;
     username: string;
-    room_id: number;
+    room_id: string;
   }
   | { status: "timed-out" };
 
@@ -117,10 +117,6 @@ function useMatcher({ userId }: { userId: number }) {
   };
 }
 
-function redirectToCodeRoom(room_id: string) {
-  window.location.href = `/room/${room_id}`
-}
-
 export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
   // TODO: replace with current user ID.
   const [userId] = useState(() => Math.round(Math.random() * 1000));
@@ -133,8 +129,12 @@ export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOw
     return cleanup;
   }, [isModalOpen]);
 
+  function redirectToCodeRoom(room_id: string) {
+    window.location.href = `/room/${room_id}?difficulty=${criteria.difficulty}`
+  }
+
   if (matchState.status === "matched") {
-    redirectToCodeRoom(matchState.room_id.toString());
+    redirectToCodeRoom(matchState.room_id);
   }
 
   return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>

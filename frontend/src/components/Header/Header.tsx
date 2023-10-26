@@ -42,11 +42,10 @@ export default function Header(): JSX.Element {
             <MenuItem onClick={() => router.push("/register")}>Register</MenuItem>
             <MenuItem onClick={() => router.push("/")}>Questions</MenuItem>
             <MenuItem onClick={() => router.push("/profiles")}>View Profiles</MenuItem>
-            <MenuItem onClick={() => router.push("/match")}>Practice for interviews</MenuItem>
+            <MenuItem onClick={() => router.push("/match")}>Practice with a peer</MenuItem>
           </MenuList>
         </Menu>
       </div>
-    x
     </header>
   )
 }
