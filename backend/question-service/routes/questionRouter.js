@@ -6,9 +6,15 @@ questionRouter.post("/", questionController.addQuestion);
 
 questionRouter.get("/", questionController.getAllQuestions);
 
-questionRouter.get("/:questionId", questionController.getQuestionById);
+questionRouter.get("/id/:questionId", questionController.getQuestionById);
 
-questionRouter.put("/:questionId", questionController.updateQuestion)
+// match by complexity only
+questionRouter.get("/complexity/:complexity", questionController.getQuestionsByComplexity);
+
+// match by complexity and categories
+questionRouter.get("/:complexity/categories", questionController.getQuestionsByCategory);
+
+questionRouter.put("/id/:questionId", questionController.updateQuestion)
 
 questionRouter.delete("/:questionId", questionController.deleteQuestion);
 

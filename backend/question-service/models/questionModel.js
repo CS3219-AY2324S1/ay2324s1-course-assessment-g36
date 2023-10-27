@@ -11,7 +11,10 @@ const questionSchema = new Schema ({
         unique: true,
     },
     categories: [String],
-    complexity: String,
+    complexity: {
+        type: String,
+        enum: ['Easy', 'Medium', 'Hard']
+    },
     link: String,
     description: String,
 })

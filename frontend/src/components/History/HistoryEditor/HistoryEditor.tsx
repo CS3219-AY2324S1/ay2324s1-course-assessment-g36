@@ -80,6 +80,7 @@ export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): 
                   <div className={styles.selectContainer}>
                     <Select variant={"flushed"} size="xs" placeholder={attempt.language} maxWidth="50%" textUnderlineOffset="none" onChange={e => handleLanguageChange(e.target.value)}>
                       {PROGRAMMING_LANGUAGES
+                        .filter(language => Object.keys(language)[0] != attempt.language)
                         .map(language => <option key={Object.keys(language)[0]} value={Object.keys(language)[0]}>{Object.keys(language)[0]}</option>)
                       }
                     </Select>
