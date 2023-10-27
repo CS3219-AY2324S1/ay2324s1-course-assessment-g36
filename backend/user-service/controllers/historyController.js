@@ -5,9 +5,9 @@ const { Op } = require('sequelize');
 const addHistory = async (req, res, next) => {
     try {
         const userId = req.params.userId
-        const { questionId, attempt } = req.body;
+        const { questionId, attempt, language } = req.body;
     
-        if (!userId || !questionId || !attempt) {
+        if (!userId || !questionId || !attempt || !language) {
             res.status(400).json({error: "Missing field"});
             return;
         }
@@ -28,11 +28,13 @@ const addHistory = async (req, res, next) => {
                 userId: userId,
                 questionId: questionId,
                 attempt: attempt,
+                language: language
             });
         
             res.status(201).json({ res: history});
         } else {
             existingHistory.attempt = attempt;
+            existingHistory.language = language;
 
             await existingHistory.save();
             res.status(200).json({ res: existingHistory});
@@ -54,16 +56,16 @@ const getHistoryByUser = async (req, res, next) => {
             return;
         }
 
-        const attemptList = await Histories.findAll({
+        const historyList = await Histories.findAll({
             where: {userId}
         })
 
-        if (!attemptList) {
+        if (!historyList) {
             res.status(404).json({error: "History does not exist"});
             return;
         }
 
-        res.status(200).json({res: attemptList});
+        res.status(200).json({res: historyList});
     } catch (err) {
         next(err);
     }
@@ -81,16 +83,16 @@ const getHistoryByQuestion = async (req, res, next) => {
             return;
         }
 
-        const attempt = await Histories.findOne({
+        const history = await Histories.findOne({
             where: {userId, questionId}
         })
 
-        if (!attempt) {
+        if (!history) {
             res.status(404).json({error: "History does not exist"});
             return;
         }
 
-        res.status(200).json({res: attempt});
+        res.status(200).json({res: history});
     } catch (err) {
         next(err);
     }
@@ -98,8 +100,8 @@ const getHistoryByQuestion = async (req, res, next) => {
 
 const getAllHistory = async (req, res, next) => {
     try {
-        const attemptList = await Histories.findAll();
-        res.status(200).json({ res: attemptList});
+        const historyList = await Histories.findAll();
+        res.status(200).json({ res: historyList});
     } catch (err) {
         next(err);
     }
@@ -109,9 +111,9 @@ const deleteHistory = async (req, res, next) => {
     try {
         const id = req.params.attemptId;
 
-        const attempt = await Histories.findByPk(id)
+        const history = await Histories.findByPk(id)
 
-        if (!attempt) {
+        if (!history) {
             res.status(404).json({error: "History does not exist"});
             return;
         }

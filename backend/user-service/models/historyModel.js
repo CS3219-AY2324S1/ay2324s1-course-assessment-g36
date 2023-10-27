@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         attempt: {
             type: DataTypes.TEXT,
             allowNULL: false
+        },
+        language: {
+            type: DataTypes.STRING,
+            allowNULL: false
         }
     })
 

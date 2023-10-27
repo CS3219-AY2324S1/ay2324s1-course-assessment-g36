@@ -51,6 +51,7 @@ export interface Attempt {
   link: string;
   description: string;
   attempt: string;
+  language: string;
   date: string;
 }
 // extensible if we want to add criteria

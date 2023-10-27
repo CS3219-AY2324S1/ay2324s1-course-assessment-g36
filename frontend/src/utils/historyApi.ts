@@ -51,6 +51,7 @@ export async function fetchAllHistoryByUser(userId: string): Promise<Attempt[]> 
         link: question.link,
         description: question.description,
         attempt: item.attempt,
+        language: item.language,
         date: formatDate(item.updatedAt)
       };
     } catch (err) {
@@ -78,6 +79,7 @@ export async function fetchHistoryByQuestion(userId: string, questionId: string)
       link: question.link,
       description: question.description,
       attempt: data.attempt,
+      language: data.language,
       date: formatDate(data.updatedAt)
     }
     return attempt;

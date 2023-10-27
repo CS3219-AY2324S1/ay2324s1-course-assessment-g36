@@ -1,6 +1,7 @@
 import { createHistory } from "@/utils/historyApi"
 import styles from "./HistoryEditor.module.css"
 import { Attempt } from "@/interfaces"
+import { PROGRAMMING_LANGUAGES } from "@/types"
 import {
   Modal,
   ModalOverlay,
@@ -10,7 +11,8 @@ import {
   ModalFooter,
   ModalCloseButton,
   Button,
-  useToast
+  useToast,
+  Select
 } from '@chakra-ui/react'
 import { useState } from "react"
 
@@ -24,11 +26,19 @@ export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): 
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUpdatedAttempt((prevAttempt) => ({
         ...prevAttempt,
         attempt: e.target.value,
       }));
+  };
+
+  const handleLanguageChange = (e: string) => {
+    setUpdatedAttempt((prevAttempt) => ({
+        ...prevAttempt,
+        language: e
+      }));
+    console.log(updatedAttempt);
   };
 
   async function updateAttempt() {
@@ -66,11 +76,20 @@ export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): 
                 <div className={styles.description}>
                     {attempt.description.split('\n').map(desc => <p>{desc}<br /></p>)}
                 </div>
-                <textarea 
-                    className={styles.inputField}
-                    value={updatedAttempt.attempt}
-                    onChange={e => handleChange(e)}
-                />
+                <div className={styles.inputContainer}>
+                  <div className={styles.selectContainer}>
+                    <Select variant={"flushed"} size="xs" placeholder={attempt.language} maxWidth="50%" textUnderlineOffset="none" onChange={e => handleLanguageChange(e.target.value)}>
+                      {PROGRAMMING_LANGUAGES
+                        .map(language => <option key={Object.keys(language)[0]} value={Object.keys(language)[0]}>{Object.keys(language)[0]}</option>)
+                      }
+                    </Select>
+                  </div>
+                  <textarea 
+                      className={styles.inputField}
+                      value={updatedAttempt.attempt}
+                      onChange={e => handleCodeChange(e)}
+                  />
+                </div>
             </div>
         </ModalBody>
         <ModalFooter>
