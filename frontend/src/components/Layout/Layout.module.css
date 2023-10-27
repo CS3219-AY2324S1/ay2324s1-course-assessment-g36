@@ -8,3 +8,17 @@
     width: 90%;
   }
 }
+
+.container_header {
+  margin-top: 3em;
+  margin-bottom: 4em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo_title {
+  font-size: 1.3rem;
+  color: #2d6cdf;
+  font-weight: 600;
+}

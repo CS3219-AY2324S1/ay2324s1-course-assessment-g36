@@ -1,37 +1,43 @@
-import Link from "next/link"
-import { useRouter } from "next/router";
-import styles from "./Header.module.css"
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-} from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
-const PATH_HOME = '/'
-const PATH_REGISTER = '/register'
-const PATH_PROFILES = '/profiles'
-const PATH_MATCH = '/match'
+import { HamburgerIcon } from "@chakra-ui/icons";
+import Link from "next/link";
+import styles from "./Header.module.css";
+import { useIsAdmin } from "@/utils/hooks";
+import { useLocalStorage } from "usehooks-ts";
+import { useRouter } from "next/router";
+
+const PATH_QUESTIONS = "/questions";
+const PATH_PROFILES = "/profiles";
+const PATH_MATCH = "/match";
 
 export default function Header(): JSX.Element {
-
-  const router = useRouter()
+  const router = useRouter();
+  const [_token, setToken] = useLocalStorage("token", "");
+  const isAdmin = useIsAdmin();
 
   return (
     <header className={styles.container_header}>
-
-      <Link href="/">
+      <Link href="/questions">
         <h3 className={styles.logo_title}>PeerPrep</h3>
       </Link>
 
       {/* Desktop navbar */}
       <nav className={styles.nav_links}>
-        <Link href={PATH_REGISTER} className={styles.nav_link}>Register</Link>
-        <Link href={PATH_HOME} className={styles.nav_link}>Questions</Link>
-        <Link href={PATH_PROFILES} className={styles.nav_link}>View Profiles</Link>
-        <Link href={PATH_MATCH} className={styles.nav_link}>Practice with a peer</Link>
+        <Link href={PATH_QUESTIONS} className={styles.nav_link}>
+          Questions
+        </Link>
+        {isAdmin && (
+          <Link href={PATH_PROFILES} className={styles.nav_link}>
+            View Profiles
+          </Link>
+        )}
+        <Link href={PATH_MATCH} className={styles.nav_link}>
+          Practice with a peer
+        </Link>
+        <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
+          Sign out
+        </Link>
       </nav>
 
       {/* Mobile navbar */}
@@ -44,13 +50,22 @@ export default function Header(): JSX.Element {
             variant="outline"
           />
           <MenuList>
-            <MenuItem onClick={() => router.push(PATH_REGISTER)}>Register</MenuItem>
-            <MenuItem onClick={() => router.push(PATH_HOME)}>Questions</MenuItem>
-            <MenuItem onClick={() => router.push(PATH_REGISTER)}>View Profiles</MenuItem>
+            <MenuItem onClick={() => router.push(PATH_QUESTIONS)}>Questions</MenuItem>
+            {isAdmin && (
+              <MenuItem onClick={() => router.push(PATH_PROFILES)}>View Profiles</MenuItem>
+            )}
             <MenuItem onClick={() => router.push(PATH_MATCH)}>Practice with a peer</MenuItem>
+            <MenuItem
+              onClick={() => {
+                setToken("");
+                router.push("/");
+              }}
+            >
+              Sign out
+            </MenuItem>
           </MenuList>
         </Menu>
       </div>
     </header>
-  )
+  );
 }

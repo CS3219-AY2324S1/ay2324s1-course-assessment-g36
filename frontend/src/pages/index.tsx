@@ -1,21 +1,17 @@
-import Head from 'next/head'
-import Layout from '@/components/Layout/Layout'
-import QuestionsTable from '@/components/Questions/QuestionsTable/QuestionsTable'
+import { useEffect } from "react";
+import { useReadLocalStorage } from "usehooks-ts";
+import { useRouter } from "next/router";
 
-export default function Home() {
-  return (
-    <>
-      <Head>
-        <title>PeerPrep</title>
-        <meta name="description" content="Question bank to ace your technical interviews" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>
-        <Layout>
-          <QuestionsTable />
-        </Layout>
-      </main>
-    </>
-  )
+export default function Index() {
+  const token = useReadLocalStorage<string>("token");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (token) {
+      router.replace("/questions");
+    } else {
+      router.replace("/login");
+    }
+  });
+  return <></>;
 }

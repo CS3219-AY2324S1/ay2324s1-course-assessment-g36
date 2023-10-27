@@ -25,6 +25,11 @@ export interface UpdateUserProfileForm {
   website: string;
 }
 
+export interface LoginForm {
+  username: string;
+  password: string;
+}
+
 export interface User {
   userId: number;
   email: string;

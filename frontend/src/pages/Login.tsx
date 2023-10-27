@@ -1,12 +1,12 @@
 import Head from "next/head";
-import LoginLayout from "@/components/Layout/LoginLayout";
-import RegistrationForm from "@/components/Users/Registration/RegistrationForm";
+import LoginForm from "@/components/Users/Login/LoginForm";
 import { useEffect } from "react";
-import { useReadLocalStorage } from "usehooks-ts";
+import { useLocalStorage } from "usehooks-ts";
 import { useRouter } from "next/router";
+import LoginLayout from "@/components/Layout/LoginLayout";
 
-export default function Register() {
-  const token = useReadLocalStorage<string>("token");
+export default function Login() {
+  const [token, _setToken] = useLocalStorage("token", "");
   const router = useRouter();
   useEffect(() => {
     // redirect authenticated users to questions page
@@ -17,14 +17,14 @@ export default function Register() {
   return (
     <>
       <Head>
-        <title>PeerPrep: Registration</title>
+        <title>PeerPrep: Login</title>
         <meta name="description" content="Question bank to ace your technical interviews" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
         <LoginLayout>
-          <RegistrationForm />
+          <LoginForm />
         </LoginLayout>
       </main>
     </>
