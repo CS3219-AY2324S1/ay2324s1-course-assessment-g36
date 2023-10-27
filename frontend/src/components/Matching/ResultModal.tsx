@@ -27,6 +27,7 @@ type MatchState =
     status: "matched";
     user_id: number;
     username: string;
+    room_id: string;
   }
   | { status: "timed-out" };
 
@@ -37,7 +38,7 @@ function useMatcher({ userId }: { userId: number }) {
 
   function match(criteria: MatchCriteria) {
     function cleanup() {
-       if (wsRef.current) {
+      if (wsRef.current) {
         wsRef.current.close();
         wsRef.current = undefined;
       }
@@ -56,7 +57,13 @@ function useMatcher({ userId }: { userId: number }) {
             // No-op
             break;
           case "matched":
-            setMatchState({ status: "matched", user_id: message.user_id, username: `User ${message.user_id}` });
+            setMatchState(
+              {
+                status: "matched",
+                user_id: message.user_id,
+                username: `User ${message.user_id}`,
+                room_id: message.room_id
+              });
             cleanup();
         }
       });
@@ -110,29 +117,48 @@ function useMatcher({ userId }: { userId: number }) {
   };
 }
 
-export default function ResultModal({criteria, isModalOpen, onModalClose}: IOwnProps) {
-    // TODO: replace with current user ID.
-    const [userId] = useState(() => Math.round(Math.random() * 1000));
-    const { matchState, match } = useMatcher({ userId });
+function redirectToCodeRoom(room_id: string, criteria: MatchCriteria): void {
 
-    // Begin matching once modal opens.
-    useEffect(() => {
-        const cleanup = isModalOpen ? match(criteria) : () => {};
+  const queryParams = new URLSearchParams();
 
-        return cleanup;
-    }, [isModalOpen]);
+  for (const key in criteria) {
+    if (criteria.hasOwnProperty(key)) {
+      queryParams.append(key, criteria[key as keyof MatchCriteria]);
+    }
+  }
 
-    return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>
-        <ModalOverlay />
-        <ModalContent>
-            <ModalBody>
-                {matchState.status === "matching"
-                    ? <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
-                    : matchState.status === "matched"
-                        ? <Text>{`Matched with: ${matchState.username}`}</Text>
-                        : <Text>Failed to find match</Text>
-                }
-            </ModalBody>
-        </ModalContent>
-    </Modal>
+  const queryString = queryParams.toString()
+  const redirectUrl = `/room/${room_id}?${queryString}`
+  window.location.href = redirectUrl
+}
+
+export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
+  // TODO: replace with current user ID.
+  const [userId] = useState(() => Math.round(Math.random() * 1000));
+  const { matchState, match } = useMatcher({ userId });
+
+  // Begin matching once modal opens.
+  useEffect(() => {
+    const cleanup = isModalOpen ? match(criteria) : () => { };
+
+    return cleanup;
+  }, [isModalOpen]);
+
+  if (matchState.status === "matched") {
+    redirectToCodeRoom(matchState.room_id, criteria);
+  }
+
+  return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalBody>
+        {matchState.status === "matching"
+          ? <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
+          : matchState.status === "matched"
+            ? <Text>{`Matched with: ${matchState.username}`}</Text>
+            : <Text>Failed to find match</Text>
+        }
+      </ModalBody>
+    </ModalContent>
+  </Modal>
 }
