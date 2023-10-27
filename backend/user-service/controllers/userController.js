@@ -1,11 +1,33 @@
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
+
+const authenticate = async (req, res, next) => {
+    if (['/login', '/register'].includes(req.path)) {
+        next();
+        return;
+    }
+
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        console.log()
+        if (!jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET).isAdmin) {
+            return res.sendStatus(401);
+        }
+    } catch {
+        return res.sendStatus(401);
+    }
+    next();
+};
 
 const addUser = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
-    
+
         if (!username || !email || !password) {
             res.status(400).json({error: "Missing field"});
             return;
@@ -24,23 +46,22 @@ const addUser = async (req, res, next) => {
             res.status(400).json({ error: "User already exists"});
             return;
         }
-    
+
         const hash = await bcrypt.hash(password, 10);
-    
+
         const user = await Users.create({
             username: username,
             email: email,
             password: hash
         });
-    
+
         res.status(201).json({ res: user});
     } catch (err) {
         next(err);
     }
   };  
 
-
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
@@ -63,7 +84,16 @@ const loginUser = async (req, res) => {
             return;
         }
 
-        res.status(200).json({ res: user})
+        const token = jwt.sign(
+            {
+                username: user.username,
+                isAdmin: user.isAdmin,
+            },
+            process.env.JSON_WEB_TOKEN_SECRET,
+            { expiresIn: '7d' }
+        );
+        res.status(200).json({ res: token });
+        
     } catch (err) {
         next(err);
     }
@@ -173,6 +203,7 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
+    authenticate,
     addUser,
     loginUser,
     getAllUsers,
