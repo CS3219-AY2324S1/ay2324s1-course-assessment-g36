@@ -64,7 +64,7 @@ const getQuestionById = async(req, res, next) => {
     }
 }
 
-const getQuestionsByComplexity = async (req, res, next) => {
+const getRandomQuestionByComplexity = async (req, res, next) => {
     try {
         const complexity = req.params.complexity;
 
@@ -73,9 +73,12 @@ const getQuestionsByComplexity = async (req, res, next) => {
                 return;                
         }
 
-        const questionList = await Questions.find({complexity: complexity});
+        const matchedQuestion = await Questions.aggregate([
+            { $match: {complexity: complexity} },
+            { $sample: { size: 1 } }
+        ]);
 
-        res.status(200).json({res: questionList});
+        res.status(200).json({res: matchedQuestion[0]});
 
     } catch (err) {
         next(err);
@@ -92,24 +95,29 @@ const getQuestionsByCategory = async (req, res, next) => {
             return;                
         }
 
-        // at least 1 matching category
-        const questionList = await Questions.find({ 
-            complexity: complexity,
-            categories: {
-                $elemMatch: { 
-                    $in: categories 
+        const matchedQuestion = await Questions.aggregate([
+            { $match: { 
+                complexity: complexity,
+                categories: {
+                    $elemMatch: { 
+                        $in: categories 
+                    }
                 }
-            }
-        });
+            } },
+            { $sample: { size: 1 } }
+        ]);
 
-        if (questionList.length == 0) {
+        if (matchedQuestion.length == 0) {
             // no matching categories -> return only matching complexity
-            const altQuestionList = await Questions.find({ complexity: complexity});
+            const altMatchedQuestion = await Questions.aggregate([
+                { $match: {complexity: complexity} },
+                { $sample: { size: 1 } }
+            ]);
 
-            res.status(200).json({res: altQuestionList});
+            res.status(200).json({res: altMatchedQuestion[0]});
             return;
         } else {
-            res.status(200).json({res: questionList});
+            res.status(200).json({res: matchedQuestion[0]});
         }
 
     } catch (err) {
@@ -183,7 +191,7 @@ module.exports = {
     addQuestion,
     getAllQuestions,
     getQuestionById,
-    getQuestionsByComplexity,
+    getRandomQuestionByComplexity,
     getQuestionsByCategory,
     updateQuestion,
     deleteQuestion
