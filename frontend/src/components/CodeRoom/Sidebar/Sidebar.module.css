@@ -1,0 +1,40 @@
+.sidebar_container {
+  color: #fff;
+  background-color: #282828;
+}
+
+.sidebar {
+  margin: 1em;
+}
+
+.live_glowing_icon {
+  position: relative;
+  background-color: rgb(0,255,0);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.live_glowing_icon:before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: rgba(0, 255, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: live 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+
+@keyframes live {
+  0% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(3, 3);
+    background-color: rgba(0,255,0,0);
+  }
+}

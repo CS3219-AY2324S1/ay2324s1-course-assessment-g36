@@ -8,3 +8,15 @@ export const CATEGORIES_OPTIONS: string[] = [
 'Graph', 'Binary Search', 'Heap (Priority Queue)', 
 'Recursion', 'Greedy', 'Math', 'Backtracking', 'Dynamic Programming'
 ]
+
+export const PROGRAMMING_LANGUAGES = [
+  { "Python": 'python' },
+  { "JavaScript": 'javascript' },
+  { "TypeScript": 'typescript' },
+  { "Java": 'java' },
+  { "Ruby": 'ruby' },
+  { "C++": 'c++' },
+  { "C#": 'c#' },
+  { "PHP": 'php' },
+  { "Objective-C": 'objective-c' },
+]

@@ -5,6 +5,7 @@ import cors from "cors";
 import { WebSocketServer } from "ws";
 
 import { MatchService } from "./match-service.js";
+import { generateCodeRoomId } from "./utils/generateRoomId.js";
 
 const app = express();
 app.use(cors({
@@ -67,8 +68,9 @@ wss.on("connection", (ws) => {
         else {
           ws.matchedUser = matchedUser;
           matchedUser.matchedUser = ws;
-          ws.send(JSON.stringify({ status: "matched", user_id: matchedUser.userId }));
-          matchedUser.send(JSON.stringify({ status: "matched", user_id: ws.userId }));
+          const uniqueRoomId = generateCodeRoomId();
+          ws.send(JSON.stringify({ status: "matched", user_id: matchedUser.userId, room_id: uniqueRoomId }));
+          matchedUser.send(JSON.stringify({ status: "matched", user_id: ws.userId, room_id: uniqueRoomId }));
           console.info(`"${complexity}": Matched user ${matchedUser.userId} to user ${userId}`);
           ws.close();
           matchedUser.close();

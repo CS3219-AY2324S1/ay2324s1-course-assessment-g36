@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
 import MatchingForm from '@/components/Matching/MatchingForm'
+import { Flex } from '@chakra-ui/react'
+import Image from 'next/image'
 
 export default function Matching() {
   return (
@@ -13,7 +15,15 @@ export default function Matching() {
       </Head>
       <main>
         <Layout>
-          <MatchingForm />
+          <Flex justifyContent="center" alignItems="center">
+            <Image
+              src="/pair_programming.png"
+              width={600}
+              height={600}
+              alt="Pair programming"
+            />
+            <MatchingForm />
+          </Flex>
         </Layout>
       </main>
     </>
