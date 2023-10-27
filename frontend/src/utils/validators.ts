@@ -1,5 +1,5 @@
 import { QuestionObject } from "@/interfaces";
-import { fetchAllQuestions } from "./questionApi";
+import { fetchAllQuestions } from "../services/questions";
 
 export async function validateForm(form: QuestionObject) {
   return await validateFormTitleField(form.title) 

@@ -14,7 +14,7 @@ import {
 import { QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
-import { executeCode } from '@/utils/codeExecutionApi';
+import { executeCode } from '@/services/code_execution';
 
 interface PageProps {
   id: string;

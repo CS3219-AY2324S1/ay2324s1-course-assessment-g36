@@ -10,7 +10,7 @@ import {
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/interfaces';
 import styles from "./QuestionsTable.module.css"
-import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/utils/questionApi';
+import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/services/questions';
 import AddQuestion from '../QuestionForm/AddQuestion';
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
 import { useIsAdmin, useJwt } from '@/utils/hooks';
