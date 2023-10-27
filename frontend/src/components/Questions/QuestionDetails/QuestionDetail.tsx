@@ -10,6 +10,7 @@ import {
   Button
 } from '@chakra-ui/react'
 import Link from "next/link"
+import QuestionDescription from "../QuestionDescription/QuestionDescription"
 
 interface IOwnProps {
   question: QuestionObject
@@ -27,7 +28,7 @@ export default function QuestionDetail({ question, isOpen, onClose }: IOwnProps)
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {question.description.split('\n').map(desc => <p key={desc}>{desc}<br /></p>)}
+          <QuestionDescription description={question.description} />
         </ModalBody>
         <ModalFooter>
           <Link href={question.link}><Button colorScheme="green">Check out here</Button></Link>
