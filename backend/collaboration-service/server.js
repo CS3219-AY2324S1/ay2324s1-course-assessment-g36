@@ -9,6 +9,7 @@ const DEFAULT_PORT = 5173
 const ALLOWED_ORIGINS = ['http://localhost:3000'];
 
 const JOIN_ROOM_EVENT = "room:join"
+const MATCH_QUESTION_EVENT = "question"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
@@ -41,6 +42,11 @@ io.on("connection", (socket) => {
   socket.on(JOIN_ROOM_EVENT, (data) => {
     socket.join(data)
     console.info("joined room!")
+  })
+
+  socket.on(MATCH_QUESTION_EVENT, (data) => {
+    io.to(data.room).emit(MATCH_QUESTION_EVENT, data)
+    console.info(data)
   })
 
   socket.on(UPDATE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
