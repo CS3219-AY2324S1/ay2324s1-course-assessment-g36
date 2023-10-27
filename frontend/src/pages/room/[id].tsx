@@ -13,6 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
+import SkeletonLoader from '@/components/Loader/SkeletonLoader';
+import { executeCode } from '@/utils/codeExecutionApi';
 
 interface PageProps {
   id: string;
@@ -29,11 +31,25 @@ export default function CodeRoom({ id, question }: PageProps) {
 
   const [isDomLoaded, setIsDomLoaded] = useState(false)
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
+  const [isResultsLoading, setIsResultsLoading] = useState(false)
+  const [codeResults, setCodeResults] = useState<string>("")
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   function onProgrammingLanguageChange(language: string) {
     setProgrammingLanguage(language)
     socket.emit(UPDATE_PROGRAMMING_LANGUAGE_EVENT, { language: language, room: id })
+  }
+
+  async function onRunCode() {
+    setIsResultsLoading(true)
+    try {
+      const results = await executeCode(programmingLanguage, "blablabla")
+      setCodeResults(results)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsResultsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -45,7 +61,7 @@ export default function CodeRoom({ id, question }: PageProps) {
     socket.on(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
       setProgrammingLanguage(data.language)
       console.info(data)
-    }) 
+    })
   }, [socket])
 
   return (
@@ -63,16 +79,17 @@ export default function CodeRoom({ id, question }: PageProps) {
           templateColumns='30% 70%'
         >
           {isDomLoaded && (<>
-            <Sidebar 
-              roomId={id} 
-              question={question} 
-              onOpen={onOpen} 
-              programmingLanguage={programmingLanguage} 
-              handleChange={onProgrammingLanguageChange}
+            <Sidebar
+              roomId={id}
+              question={question}
+              onOpen={onOpen}
+              programmingLanguage={programmingLanguage}
+              onProgrammingLanguageChange={onProgrammingLanguageChange}
+              onRunCode={onRunCode}
             />
-            <CodeEditor 
-              roomId={id} 
-              programmingLanguage={programmingLanguage} 
+            <CodeEditor
+              roomId={id}
+              programmingLanguage={programmingLanguage}
             />
             <Drawer
               size="sm"
@@ -84,7 +101,9 @@ export default function CodeRoom({ id, question }: PageProps) {
                 <DrawerCloseButton />
                 <DrawerHeader>Code results</DrawerHeader>
                 <DrawerBody>
-                  { programmingLanguage }
+                  {isResultsLoading
+                    ? <SkeletonLoader />
+                    : codeResults}
                 </DrawerBody>
               </DrawerContent>
             </Drawer>
