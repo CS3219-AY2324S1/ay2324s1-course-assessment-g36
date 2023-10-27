@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-    const Users = sequelize.define("Users", {
+    const Users = sequelize.define('Users', {
         userId: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true
+            primaryKey: true,
         },
         email: {
             type: DataTypes.STRING,
@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         password: {
             type: DataTypes.STRING,
             allowNULL: false,
+        },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            default: false,
         },
         firstName: {
             type: DataTypes.STRING,
@@ -40,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         website: {
             type: DataTypes.STRING,
         },
-    })
+    });
 
     return Users;
-}
+};

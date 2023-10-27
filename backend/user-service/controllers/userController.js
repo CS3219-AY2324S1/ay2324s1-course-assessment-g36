@@ -13,8 +13,9 @@ const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
-        // TODO: add isAdmin check
-        jwt.verify(token, process.env.JWT_TOKEN_SECRET);
+        if (!jwt.verify(token, process.env.JWT_TOKEN_SECRET).isAdmin) {
+            return res.sendStatus(401);
+        }
     } catch {
         return res.sendStatus(401);
     }
@@ -55,7 +56,7 @@ const addUser = async (req, res, next) => {
     }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
@@ -83,8 +84,7 @@ const loginUser = async (req, res) => {
         const token = jwt.sign(
             {
                 username: user.username,
-                // TODO: add admin field
-                // isAdmin: user.isAdmin,
+                isAdmin: user.isAdmin,
             },
             process.env.JWT_TOKEN_SECRET,
             { expiresIn: '7d' }

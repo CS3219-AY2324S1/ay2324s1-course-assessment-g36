@@ -1,4 +1,31 @@
 const Questions = require('../models/questionModel');
+require('dotenv').config();
+
+const authenticate = async (req, res, next) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        jwt.verify(token, process.env.JWT_TOKEN_SECRET);
+    } catch {
+        return res.sendStatus(401);
+    }
+    next();
+};
+
+const authenticateAdmin = async (req, res, next) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        const { user } = jwt.verify(token, process.env.JWT_TOKEN_SECRET);
+        // TODO: add isAdmin check
+        // if (!user.isAdmin) {
+        //     return res.sendStatus(401);
+        // }
+    } catch {
+        return res.sendStatus(401);
+    }
+    next();
+};
 
 const addQuestion = async (req, res, next) => {
     try {
@@ -123,6 +150,8 @@ const deleteQuestion = async (req, res, next) => {
 };
 
 module.exports = {
+    authenticate,
+    authenticateAdmin,
     addQuestion,
     getAllQuestions,
     getQuestionById,

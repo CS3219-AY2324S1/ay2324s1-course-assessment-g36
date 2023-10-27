@@ -3,6 +3,7 @@ import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/rea
 import { HamburgerIcon } from "@chakra-ui/icons"
 import Link from "next/link"
 import styles from "./Header.module.css"
+import { useIsAdmin } from "@/utils/hooks"
 import { useLocalStorage } from "usehooks-ts"
 import { useRouter } from "next/router"
 
@@ -13,6 +14,7 @@ const PATH_MATCH = "/match"
 export default function Header(): JSX.Element {
   const router = useRouter()
   const [_token, setToken] = useLocalStorage("token", "")
+  const isAdmin = useIsAdmin()
 
   return (
     <header className={styles.container_header}>
@@ -25,9 +27,11 @@ export default function Header(): JSX.Element {
         <Link href={PATH_QUESTIONS} className={styles.nav_link}>
           Questions
         </Link>
-        <Link href={PATH_PROFILES} className={styles.nav_link}>
-          View Profiles
-        </Link>
+        {isAdmin && (
+          <Link href={PATH_PROFILES} className={styles.nav_link}>
+            View Profiles
+          </Link>
+        )}
         <Link href={PATH_MATCH} className={styles.nav_link}>
           Practice with a peer
         </Link>
@@ -47,7 +51,9 @@ export default function Header(): JSX.Element {
           />
           <MenuList>
             <MenuItem onClick={() => router.push(PATH_QUESTIONS)}>Questions</MenuItem>
-            <MenuItem onClick={() => router.push(PATH_PROFILES)}>View Profiles</MenuItem>
+            {isAdmin && (
+              <MenuItem onClick={() => router.push(PATH_PROFILES)}>View Profiles</MenuItem>
+            )}
             <MenuItem onClick={() => router.push(PATH_MATCH)}>Practice with a peer</MenuItem>
             <MenuItem
               onClick={() => {
