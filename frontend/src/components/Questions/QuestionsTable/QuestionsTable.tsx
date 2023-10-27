@@ -13,11 +13,14 @@ import styles from "./QuestionsTable.module.css"
 import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/utils/questionApi';
 import AddQuestion from '../QuestionForm/AddQuestion';
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
+import { useIsAdmin, useJwt } from '@/utils/hooks';
 
 export default function QuestionsTable(): JSX.Element {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<QuestionObject[]>([])
+  const token = useJwt();
+  const isAdmin = useIsAdmin();
 
   useEffect(() => {
     fetchData()
@@ -26,16 +29,16 @@ export default function QuestionsTable(): JSX.Element {
 
   async function fetchData() {
     try {
-      const results = await fetchAllQuestions();
+      const results = await fetchAllQuestions(token);
       setQuestions(results);
     } catch (error) {
-      console.log("Error fetching users")
+      console.log("Error fetching questions")
     }
   }
 
   async function createQuestion(newQuestion: QuestionObject) {
     try {
-      await addQuestion(newQuestion);
+      await addQuestion(newQuestion, token);
       setQuestions([...questions, newQuestion])
     } catch (err) {
       console.log(err);
@@ -44,7 +47,7 @@ export default function QuestionsTable(): JSX.Element {
 
   async function removeQuestion(questionTitle: string) {
     try {
-      await deleteQuestion(questionTitle);
+      await deleteQuestion(questionTitle, token);
       const filteredQuestions = questions.filter(question => question.title != questionTitle);
       setQuestions(filteredQuestions)
     } catch (error) {
@@ -81,7 +84,7 @@ export default function QuestionsTable(): JSX.Element {
     </TableContainer>
     <br />
 
-    <AddQuestion addQuestion={createQuestion} />
+    {isAdmin && <AddQuestion addQuestion={createQuestion} />}
 
   </div>
 }

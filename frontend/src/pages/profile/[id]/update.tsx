@@ -20,6 +20,7 @@ import { useRouter } from 'next/router'
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
 import { Status } from "@/enums"
 import { validatePassword } from "@/utils/validators"
+import { useJwt } from "@/utils/hooks"
 
 export default function ProfileUpdate() {
 
@@ -30,6 +31,7 @@ export default function ProfileUpdate() {
   const router = useRouter()
   const userId = router.query.id as string
   const toast = useToast()
+  const token = useJwt()
 
   const [userProfileData, setUserProfileData] = useState<UpdateUserProfileForm>({
     "username": "",
@@ -50,7 +52,7 @@ export default function ProfileUpdate() {
   async function fetchData(id: string) {
 
     try {
-      const results = await fetchUser(id);
+      const results = await fetchUser(id, token);
       setUserProfileData({...results, password: ""})
       setStatus(Status.Success)
     } catch (error: any) {
@@ -74,7 +76,7 @@ export default function ProfileUpdate() {
     }
 
     try {
-      await updateUser(userId, userProfileData)
+      await updateUser(userId, userProfileData, token)
       toast({
         position: 'top',
         title: 'Profile updated',

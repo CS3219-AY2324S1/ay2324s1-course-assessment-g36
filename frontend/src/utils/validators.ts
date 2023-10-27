@@ -8,11 +8,15 @@ export async function validateForm(form: QuestionObject) {
 
 async function validateFormTitleField(formTitle: string): Promise<boolean> {
   // Checks form title is not a duplicate
-  const formTitleLowercase = formTitle.toLowerCase();
-  const questionsInDatabase: QuestionObject[] = await fetchAllQuestions()
-  const duplicateQn = questionsInDatabase.filter(question => question.title.toLowerCase() === formTitleLowercase)
+  const token = localStorage.getItem("token") ?? ""
+  const formTitleLowercase = formTitle.toLowerCase()
+  const questionsInDatabase: QuestionObject[] = await fetchAllQuestions(token)
+  const duplicateQn = questionsInDatabase.filter(
+    (question) => question.title.toLowerCase() === formTitleLowercase
+  )
   return duplicateQn.length === 0
 }
+
 
 function validateFormLinkField(formLink: string): boolean {
   try {
