@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { Doc } from 'yjs';
 import { editor } from "monaco-editor";
 import dynamic from "next/dynamic";
@@ -12,9 +12,10 @@ const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 interface IOwnProps {
   roomId: string;
   programmingLanguage: string;
+  onCodeChange: (code: string) => void;
 }
 
-export default function CodeEditor({ roomId, programmingLanguage }: IOwnProps): JSX.Element {
+export default function CodeEditor({ roomId, programmingLanguage, onCodeChange }: IOwnProps): JSX.Element {
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
@@ -36,6 +37,11 @@ export default function CodeEditor({ roomId, programmingLanguage }: IOwnProps): 
     provider.on('status', (event: { status: any; }) => {
       console.log(event.status) // logs "connected" or "disconnected"
     })
+
+    editorRef.current.onDidChangeModelContent(() => {
+      const code = editorRef.current?.getValue();
+      onCodeChange(code ?? "");
+    });
 
   }
 

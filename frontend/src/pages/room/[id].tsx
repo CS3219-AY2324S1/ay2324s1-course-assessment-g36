@@ -2,19 +2,11 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import CodeEditor from "@/components/CodeRoom/CodeEditor/CodeEditor"
 import Sidebar from '@/components/CodeRoom/Sidebar/Sidebar';
-import {
-  Grid,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure
-} from '@chakra-ui/react'
+import { Grid, useDisclosure } from '@chakra-ui/react'
 import { QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
-import SkeletonLoader from '@/components/Loader/SkeletonLoader';
 import { executeCode } from '@/services/code_execution';
+import CodeResultDrawer from '@/components/CodeRoom/CodeResultDrawer/CodeResultDrawer';
 
 interface PageProps {
   id: string;
@@ -31,6 +23,7 @@ export default function CodeRoom({ id, question }: PageProps) {
 
   const [isDomLoaded, setIsDomLoaded] = useState(false)
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
+  const [codeFromEditor, setCodeFromEditor] = useState("")
   const [isResultsLoading, setIsResultsLoading] = useState(false)
   const [codeResults, setCodeResults] = useState<string>("")
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -40,10 +33,14 @@ export default function CodeRoom({ id, question }: PageProps) {
     socket.emit(UPDATE_PROGRAMMING_LANGUAGE_EVENT, { language: language, room: id })
   }
 
+  function onCodeChange(code: string) {
+    setCodeFromEditor(code)
+  }
+
   async function onRunCode() {
     setIsResultsLoading(true)
     try {
-      const results = await executeCode(programmingLanguage, "blablabla")
+      const results = await executeCode(programmingLanguage, codeFromEditor)
       setCodeResults(results)
     } catch (e) {
       console.error(e)
@@ -90,23 +87,14 @@ export default function CodeRoom({ id, question }: PageProps) {
             <CodeEditor
               roomId={id}
               programmingLanguage={programmingLanguage}
+              onCodeChange={onCodeChange}
             />
-            <Drawer
-              size="sm"
+            <CodeResultDrawer
               isOpen={isOpen}
-              placement='right'
               onClose={onClose}
-            >
-              <DrawerContent>
-                <DrawerCloseButton />
-                <DrawerHeader>Code results</DrawerHeader>
-                <DrawerBody>
-                  {isResultsLoading
-                    ? <SkeletonLoader />
-                    : codeResults}
-                </DrawerBody>
-              </DrawerContent>
-            </Drawer>
+              isResultsLoading={isResultsLoading}
+              codeResults={codeResults}
+            />
           </>)}
         </Grid>
       </main >
