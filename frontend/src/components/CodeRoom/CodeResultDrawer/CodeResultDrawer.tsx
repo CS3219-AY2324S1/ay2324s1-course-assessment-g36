@@ -6,16 +6,17 @@ import {
   DrawerCloseButton,
 } from '@chakra-ui/react'
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
-import CodeResult from '@/components/CodeRoom/CodeResult/CodeResult';
+import { CodeResult } from '@/interfaces';
+import CodeResultOutput from '../CodeResultOutput/CodeResultOutput';
 
 interface IOwnProps {
   isOpen: boolean;
   onClose: () => void;
   isResultsLoading: boolean;
-  codeResults: string;
+  codeResult: CodeResult;
 }
 
-export default function CodeResultDrawer({ isOpen, onClose, isResultsLoading, codeResults }: IOwnProps): JSX.Element {
+export default function CodeResultDrawer({ isOpen, onClose, isResultsLoading, codeResult }: IOwnProps): JSX.Element {
   return <>
     <Drawer
       size="sm"
@@ -29,7 +30,7 @@ export default function CodeResultDrawer({ isOpen, onClose, isResultsLoading, co
         <DrawerBody>
           {isResultsLoading
             ? <SkeletonLoader />
-            : <CodeResult codeResultString={codeResults} />
+            : <CodeResultOutput codeResult={codeResult} />
           }
         </DrawerBody>
       </DrawerContent>

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import CodeEditor from "@/components/CodeRoom/CodeEditor/CodeEditor"
 import Sidebar from '@/components/CodeRoom/Sidebar/Sidebar';
 import { Grid, useDisclosure } from '@chakra-ui/react'
-import { QuestionObject } from '@/interfaces';
+import { CodeResult, QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
 import { executeCode } from '@/services/code_execution';
 import CodeResultDrawer from '@/components/CodeRoom/CodeResultDrawer/CodeResultDrawer';
@@ -25,7 +25,7 @@ export default function CodeRoom({ id, question }: PageProps) {
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
   const [codeFromEditor, setCodeFromEditor] = useState("")
   const [isResultsLoading, setIsResultsLoading] = useState(false)
-  const [codeResults, setCodeResults] = useState<string>("")
+  const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   function onProgrammingLanguageChange(language: string) {
@@ -40,8 +40,8 @@ export default function CodeRoom({ id, question }: PageProps) {
   async function onRunCode() {
     setIsResultsLoading(true)
     try {
-      const results = await executeCode(programmingLanguage, codeFromEditor)
-      setCodeResults(results)
+      const result: CodeResult = await executeCode(programmingLanguage, codeFromEditor)
+      setCodeResult(result)
     } catch (e) {
       console.error(e)
     } finally {
@@ -93,7 +93,7 @@ export default function CodeRoom({ id, question }: PageProps) {
               isOpen={isOpen}
               onClose={onClose}
               isResultsLoading={isResultsLoading}
-              codeResults={codeResults}
+              codeResult={codeResult}
             />
           </>)}
         </Grid>
