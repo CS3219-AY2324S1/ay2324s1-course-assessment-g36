@@ -23,6 +23,7 @@ Clients will send the following message to the server:
   user_id: "<uid>",
   question_complexity: "Easy" | "Hard" | "Medium",
   question_category: "<category>",
+  token: "<json web token>",
 }
 ```
 

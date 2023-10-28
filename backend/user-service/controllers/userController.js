@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 
-require('dotenv').config();
+require('dotenv').config({path: "../.env"});
 
 const authenticate = async (req, res, next) => {
     if (['/login', '/register'].includes(req.path)) {

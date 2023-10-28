@@ -1,5 +1,5 @@
 const Questions = require("../models/questionModel");
-require('dotenv').config();
+require('dotenv').config({path: "../.env"});
 
 const authenticate = async (req, res, next) => {
     try {

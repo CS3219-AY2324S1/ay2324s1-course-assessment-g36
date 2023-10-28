@@ -61,5 +61,10 @@ export async function deleteQuestion(title: string, token: string): Promise<void
       Authorization: `Bearer ${token}`,
     },
   }
-  return fetchDataOrThrowError(deleteQuestionApi, requestOptions)
+  await fetch(deleteQuestionApi, requestOptions).then((response) => {
+    if (response.status === 401) {
+      throw new Error("unauthorized")
+    }
+    return response
+  })
 }

@@ -1,5 +1,6 @@
 import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces"
+import { useJwt } from "@/utils/hooks";
 import {
   Modal,
   ModalBody,
@@ -35,6 +36,7 @@ function useMatcher({ userId }: { userId: number }) {
   const wsRef = useRef<WebSocket>();
   const [matchState, setMatchState] = useState<MatchState>({ status: "not-matching" });
   const intervalIdRef = useRef<NodeJS.Timeout>();
+  const token = useJwt()
 
   function match(criteria: MatchCriteria) {
     function cleanup() {
@@ -80,6 +82,7 @@ function useMatcher({ userId }: { userId: number }) {
           type: "initialization",
           question_complexity: criteria.difficulty,
           user_id: userId,
+          token: token,
         }));
       });
     }
