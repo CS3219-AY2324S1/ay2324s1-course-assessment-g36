@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Doc } from 'yjs';
 import { editor } from "monaco-editor";
 import dynamic from "next/dynamic";
@@ -38,10 +38,6 @@ export default function CodeEditor({
 
     // Bind yjs doc to Manaco editor
     const binding = new MonacoBinding(type, editorRef.current!.getModel()!, new Set([editorRef.current]), provider.awareness);
-
-    provider.on('status', (event: { status: any; }) => {
-      console.log(event.status) // logs "connected" or "disconnected"
-    })
 
     editorRef.current.onDidChangeModelContent(() => {
       const code = editorRef.current?.getValue();

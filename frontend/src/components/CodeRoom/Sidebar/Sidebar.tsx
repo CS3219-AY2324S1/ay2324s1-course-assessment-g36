@@ -1,5 +1,5 @@
 import { QuestionObject } from "@/interfaces"
-import { Badge, Heading, Stack, Button, HStack, Select } from "@chakra-ui/react";
+import { Badge, Heading, Stack, HStack, Select } from "@chakra-ui/react";
 import QuestionComplexity from "../../Questions/QuestionComplexity/QuestionComplexity";
 import QuestionDescription from "../../Questions/QuestionDescription/QuestionDescription";
 import styles from "./Sidebar.module.css"

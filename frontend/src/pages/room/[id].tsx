@@ -44,7 +44,7 @@ export default function CodeRoom({ id, question }: PageProps) {
       setProgrammingLanguage(data.language)
       console.info(data)
     })
-  }, [isDomLoaded, id, socket])
+  }, [isDomLoaded, id])
 
   return (
     <>

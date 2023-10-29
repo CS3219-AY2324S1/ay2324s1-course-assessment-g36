@@ -9,10 +9,9 @@ Run the development server:
 npm run dev
 ```
 
-To generate static assets (HTML/CSS/JS):
+Build project:
 ```bash
 npm run build
 ```
-Access the build in the `/out/` directory
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the app

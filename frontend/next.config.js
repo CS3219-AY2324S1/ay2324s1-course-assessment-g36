@@ -8,8 +8,6 @@ const nextConfig = {
 
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const withTM = require("next-transpile-modules")([
-  // `monaco-editor` isn't published to npm correctly: it includes both CSS
-  // imports and non-Node friendly syntax, so it needs to be compiled.
   "monaco-editor"
 ]);
 
@@ -33,16 +31,7 @@ module.exports = withTM({
     config.plugins.push(
       new MonacoWebpackPlugin({
         languages: [
-          "json",
-          "markdown",
-          "css",
-          "typescript",
-          "javascript",
-          "html",
-          "graphql",
           "python",
-          "scss",
-          "yaml"
         ],
         filename: "static/[name].worker.js"
       })
