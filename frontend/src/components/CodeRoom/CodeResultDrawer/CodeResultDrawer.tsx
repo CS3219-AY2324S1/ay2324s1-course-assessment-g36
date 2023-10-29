@@ -11,12 +11,17 @@ import CodeResultOutput from '../CodeResultOutput/CodeResultOutput';
 
 interface IOwnProps {
   isOpen: boolean;
-  onClose: () => void;
   isResultsLoading: boolean;
   codeResult: CodeResult;
+  onClose: () => void;
 }
 
-export default function CodeResultDrawer({ isOpen, onClose, isResultsLoading, codeResult }: IOwnProps): JSX.Element {
+export default function CodeResultDrawer({
+  isOpen,
+  isResultsLoading,
+  codeResult,
+  onClose
+}: IOwnProps): JSX.Element {
   return <>
     <Drawer
       size="sm"

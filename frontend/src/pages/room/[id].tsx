@@ -49,6 +49,11 @@ export default function CodeRoom({ id, question }: PageProps) {
     }
   }
 
+  async function onSubmitCode() {
+    // access programming language and code via the states above
+    alert("submitted code")
+  }
+
   useEffect(() => {
     if (!isDomLoaded) {
       setIsDomLoaded(true)
@@ -79,10 +84,11 @@ export default function CodeRoom({ id, question }: PageProps) {
             <Sidebar
               roomId={id}
               question={question}
-              onOpen={onOpen}
               programmingLanguage={programmingLanguage}
+              onOpen={onOpen}
               onProgrammingLanguageChange={onProgrammingLanguageChange}
               onRunCode={onRunCode}
+              onSubmitCode={onSubmitCode}
             />
             <CodeEditor
               roomId={id}

@@ -15,7 +15,11 @@ interface IOwnProps {
   onCodeChange: (code: string) => void;
 }
 
-export default function CodeEditor({ roomId, programmingLanguage, onCodeChange }: IOwnProps): JSX.Element {
+export default function CodeEditor({
+  roomId,
+  programmingLanguage,
+  onCodeChange
+}: IOwnProps): JSX.Element {
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 

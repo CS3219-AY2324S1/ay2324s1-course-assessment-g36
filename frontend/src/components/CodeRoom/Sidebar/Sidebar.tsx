@@ -12,17 +12,22 @@ interface IOwnProps {
   onOpen: () => void;
   onProgrammingLanguageChange: (language: string) => void;
   onRunCode: () => void;
+  onSubmitCode: () => void;
 }
 
-export default function Sidebar({ roomId, question, programmingLanguage, onOpen, onProgrammingLanguageChange, onRunCode }: IOwnProps): JSX.Element {
+export default function Sidebar({
+  roomId,
+  question,
+  programmingLanguage,
+  onOpen,
+  onProgrammingLanguageChange,
+  onRunCode,
+  onSubmitCode
+}: IOwnProps): JSX.Element {
 
   function handleRunCode() {
     onOpen()
     onRunCode()
-  }
-
-  function handleSubmit(): void {
-    alert("Submitted code")
   }
 
   return <div className={styles.sidebar_container}>
@@ -38,9 +43,20 @@ export default function Sidebar({ roomId, question, programmingLanguage, onOpen,
           <Badge colorScheme="blue">Room ID: {roomId}</Badge>
         </HStack>
 
-        <Select placeholder='Choose programming language' value={programmingLanguage} variant={"flushed"} onChange={e => onProgrammingLanguageChange(e.target.value)}>
+        <Select
+          placeholder='Choose programming language'
+          value={programmingLanguage} variant={"flushed"}
+          onChange={e => onProgrammingLanguageChange(e.target.value)}
+        >
           {PROGRAMMING_LANGUAGES
-            .map(language => <option key={Object.keys(language)[0]} value={Object.values(language)[0]}>{Object.keys(language)[0]}</option>)
+            .map(language => {
+              const _key = Object.keys(language)[0]
+              return <option
+                key={_key}
+                value={Object.values(language)[0]}>{_key}
+              </option>
+            }
+            )
           }
         </Select>
 
@@ -54,7 +70,7 @@ export default function Sidebar({ roomId, question, programmingLanguage, onOpen,
 
         <HStack>
           <Button colorScheme="whiteAlpha" onClick={handleRunCode}>Run code</Button>
-          <Button colorScheme="green" onClick={handleSubmit}>Submit</Button>
+          <Button colorScheme="green" onClick={onSubmitCode}>Submit</Button>
         </HStack>
 
       </Stack>
