@@ -10,8 +10,6 @@ interface IOwnProps {
   question: QuestionObject;
   programmingLanguage: string;
   onProgrammingLanguageChange: (language: string) => void;
-  onRunCode: () => void;
-  onSubmitCode: () => void;
 }
 
 export default function Sidebar({
@@ -19,12 +17,10 @@ export default function Sidebar({
   question,
   programmingLanguage,
   onProgrammingLanguageChange,
-  onRunCode,
-  onSubmitCode
 }: IOwnProps): JSX.Element {
 
   return <div className={styles.sidebar_container}>
-    <Stack spacing='20px'>
+    <Stack spacing='14px'>
 
       <HStack>
         <span className={styles.live_glowing_icon}></span>
@@ -59,11 +55,6 @@ export default function Sidebar({
       <QuestionComplexity complexity={question.complexity} />
 
       <QuestionDescription description={question.description} />
-
-      <HStack>
-        <Button colorScheme="whiteAlpha" onClick={onRunCode}>Run code</Button>
-        <Button colorScheme="green" onClick={onSubmitCode}>Submit</Button>
-      </HStack>
 
     </Stack>
   </div>

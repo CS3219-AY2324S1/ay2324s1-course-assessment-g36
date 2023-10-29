@@ -140,7 +140,7 @@ export default function QuestionForm({ onModalClose, addQuestion }: IOwnProps): 
         <RadioGroup>
           <Stack direction='row'>
             {DIFFICULTY_LEVELS.map(level => 
-              <Radio value={level} onChange={(e) => handleChange(e, "complexity")}>{level}</Radio>
+              <Radio key={level} value={level} onChange={(e) => handleChange(e, "complexity")}>{level}</Radio>
             )}
           </Stack>
         </RadioGroup>

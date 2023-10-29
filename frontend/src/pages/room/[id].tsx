@@ -3,9 +3,8 @@ import Head from 'next/head'
 import CodeEditor from "@/components/CodeRoom/CodeEditor/CodeEditor"
 import Sidebar from '@/components/CodeRoom/Sidebar/Sidebar';
 import { Grid, GridItem } from '@chakra-ui/react'
-import { CodeResult, QuestionObject } from '@/interfaces';
+import { QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
-import { executeCode } from '@/services/code_execution';
 import CodeConsole from '@/components/CodeRoom/CodeConsole/CodeConsole';
 import styles from "./room.module.css"
 
@@ -25,8 +24,6 @@ export default function CodeRoom({ id, question }: PageProps) {
   const [isDomLoaded, setIsDomLoaded] = useState(false)
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
   const [codeFromEditor, setCodeFromEditor] = useState("")
-  const [isResultsLoading, setIsResultsLoading] = useState(false)
-  const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult)
 
   function onProgrammingLanguageChange(language: string) {
     setProgrammingLanguage(language)
@@ -35,23 +32,6 @@ export default function CodeRoom({ id, question }: PageProps) {
 
   function onCodeChange(code: string) {
     setCodeFromEditor(code)
-  }
-
-  async function onRunCode() {
-    setIsResultsLoading(true)
-    try {
-      const result: CodeResult = await executeCode(programmingLanguage, codeFromEditor)
-      setCodeResult(result)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setIsResultsLoading(false)
-    }
-  }
-
-  async function onSubmitCode() {
-    // access programming language and code via the states above
-    alert("submitted code")
   }
 
   useEffect(() => {
@@ -64,7 +44,7 @@ export default function CodeRoom({ id, question }: PageProps) {
       setProgrammingLanguage(data.language)
       console.info(data)
     })
-  }, [socket])
+  }, [isDomLoaded, id, socket])
 
   return (
     <>
@@ -91,8 +71,6 @@ export default function CodeRoom({ id, question }: PageProps) {
                 question={question}
                 programmingLanguage={programmingLanguage}
                 onProgrammingLanguageChange={onProgrammingLanguageChange}
-                onRunCode={onRunCode}
-                onSubmitCode={onSubmitCode}
               />
             </GridItem>
             <GridItem area={'code-editor'}>
@@ -104,8 +82,8 @@ export default function CodeRoom({ id, question }: PageProps) {
             </GridItem>
             <GridItem area={'code-console'}>
               <CodeConsole
-                isResultsLoading={isResultsLoading}
-                codeResult={codeResult}
+                programmingLanguage={programmingLanguage}
+                codeFromEditor={codeFromEditor}
               />
             </GridItem>
           </>)}
