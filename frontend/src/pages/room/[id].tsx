@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import CodeEditor from "@/components/CodeRoom/CodeEditor/CodeEditor"
 import Sidebar from '@/components/CodeRoom/Sidebar/Sidebar';
-import { Grid, useDisclosure } from '@chakra-ui/react'
+import { Grid, GridItem } from '@chakra-ui/react'
 import { CodeResult, QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
 import { executeCode } from '@/services/code_execution';
-import CodeResultDrawer from '@/components/CodeRoom/CodeResultDrawer/CodeResultDrawer';
+import CodeConsole from '@/components/CodeRoom/CodeConsole/CodeConsole';
+import styles from "./room.module.css"
 
 interface PageProps {
   id: string;
@@ -26,7 +27,6 @@ export default function CodeRoom({ id, question }: PageProps) {
   const [codeFromEditor, setCodeFromEditor] = useState("")
   const [isResultsLoading, setIsResultsLoading] = useState(false)
   const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult)
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   function onProgrammingLanguageChange(language: string) {
     setProgrammingLanguage(language)
@@ -75,32 +75,39 @@ export default function CodeRoom({ id, question }: PageProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main className={styles.room_container}>
         <Grid
+          templateAreas={`"sidebar code-editor"
+                  "sidebar code-console"`}
+          gridTemplateRows={'1fr auto'}
+          gridTemplateColumns={'30% 70%'}
           h='100vh'
-          templateColumns='30% 70%'
+          gap={2}
         >
           {isDomLoaded && (<>
-            <Sidebar
-              roomId={id}
-              question={question}
-              programmingLanguage={programmingLanguage}
-              onOpen={onOpen}
-              onProgrammingLanguageChange={onProgrammingLanguageChange}
-              onRunCode={onRunCode}
-              onSubmitCode={onSubmitCode}
-            />
-            <CodeEditor
-              roomId={id}
-              programmingLanguage={programmingLanguage}
-              onCodeChange={onCodeChange}
-            />
-            <CodeResultDrawer
-              isOpen={isOpen}
-              onClose={onClose}
-              isResultsLoading={isResultsLoading}
-              codeResult={codeResult}
-            />
+            <GridItem area={'sidebar'}>
+              <Sidebar
+                roomId={id}
+                question={question}
+                programmingLanguage={programmingLanguage}
+                onProgrammingLanguageChange={onProgrammingLanguageChange}
+                onRunCode={onRunCode}
+                onSubmitCode={onSubmitCode}
+              />
+            </GridItem>
+            <GridItem area={'code-editor'}>
+              <CodeEditor
+                roomId={id}
+                programmingLanguage={programmingLanguage}
+                onCodeChange={onCodeChange}
+              />
+            </GridItem>
+            <GridItem area={'code-console'}>
+              <CodeConsole
+                isResultsLoading={isResultsLoading}
+                codeResult={codeResult}
+              />
+            </GridItem>
           </>)}
         </Grid>
       </main >

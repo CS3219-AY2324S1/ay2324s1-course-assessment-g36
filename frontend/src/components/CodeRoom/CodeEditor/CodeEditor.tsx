@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { WebsocketProvider } from 'y-websocket';
 
 const serverWsUrl = "ws://localhost:5173"
+const VS_THEME = 'vs-dark'
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
@@ -52,9 +53,8 @@ export default function CodeEditor({
   return (
     <>
       <Editor
-        height="100vh"
+        theme={VS_THEME}
         language={programmingLanguage}
-        theme={"vs-dark"}
         onMount={handleEditorDidMount}
       />
     </>

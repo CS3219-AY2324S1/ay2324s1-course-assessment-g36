@@ -1,6 +1,5 @@
 import { Stack, Heading } from "@chakra-ui/react";
 import styles from "./CodeResultOutput.module.css"
-import AlertBanner from "@/components/Feedback/AlertBanner";
 import { CodeResult } from "@/interfaces";
 
 interface IOwnProps {
@@ -9,10 +8,15 @@ interface IOwnProps {
 
 export default function CodeResultOutput({ codeResult }: IOwnProps): JSX.Element {
 
+  // initial state
+  if (Object.entries(codeResult).length === 0) {
+    return <></>
+  }
+
   const isApiCallFailed = !codeResult.status
 
   if (isApiCallFailed) {
-    return <AlertBanner title="Server error" message="Please try again later." />
+    return <div className={styles.error}>Server error. Please try again later.</div>
   }
 
   const hasNoStdoutputOrStderr = !codeResult.stdout && !codeResult.stderr
