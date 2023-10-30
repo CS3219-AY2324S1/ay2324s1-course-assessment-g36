@@ -37,14 +37,32 @@ export default function CodeConsole({
     alert("submitted code")
   }
 
+  function isBtnDisabled(): boolean {
+    return !codeFromEditor || isResultsLoading
+  }
+
   return <div className={styles.console_container}>
     <Stack>
       <Flex alignItems='center'>
         <Heading size='md'>Console</Heading>
         <Spacer />
         <ButtonGroup gap='1'>
-          <Button colorScheme='whiteAlpha' size={BTN_SIZE} onClick={onRunCode}>Run code</Button>
-          <Button colorScheme='green' size={BTN_SIZE} onClick={onSubmitCode}>Submit</Button>
+          <Button
+            colorScheme='whiteAlpha'
+            size={BTN_SIZE}
+            onClick={onRunCode}
+            isDisabled={isBtnDisabled()}
+          >
+            Run code
+          </Button>
+          <Button
+            colorScheme='green'
+            size={BTN_SIZE}
+            onClick={onSubmitCode}
+            isDisabled={isBtnDisabled()}
+          >
+            Submit
+          </Button>
         </ButtonGroup>
       </Flex>
       {isResultsLoading

@@ -20,15 +20,17 @@ function getLanguageId(language: string): number {
   return languageToIdMap[language] || DEFAULT_ID
 }
 
+const CODE_EXECUTION_API_HOST = 'judge0-ce.p.rapidapi.com'
+const CODE_EXECUTION_API_URL = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true'
+
 export async function executeCode(language: string, srcCode: string): Promise<any> {
-  const url = process.env.NEXT_PUBLIC_CODE_EXECUTION_API_URL || '';
   const options = {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       'Content-Type': 'application/json',
       'X-RapidAPI-Key': process.env.NEXT_PUBLIC_CODE_EXECUTION_API_KEY || '',
-      'X-RapidAPI-Host': process.env.NEXT_PUBLIC_CODE_EXECUTION_HOST || ''
+      'X-RapidAPI-Host': CODE_EXECUTION_API_HOST
     },
     body: JSON.stringify({
       language_id: getLanguageId(language),
@@ -36,7 +38,7 @@ export async function executeCode(language: string, srcCode: string): Promise<an
     })
   };
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(CODE_EXECUTION_API_URL, options);
     const result = await response.text();
     const json = JSON.parse(result) as CodeResult
     return json
