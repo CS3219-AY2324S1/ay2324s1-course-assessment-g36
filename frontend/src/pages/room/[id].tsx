@@ -16,6 +16,7 @@ interface PageProps {
 const socket = io("http://localhost:5173")
 
 const JOIN_ROOM_EVENT = "room:join"
+const GET_LATEST_PROGRAMMING_LANGUAGE_EVENT = "programming_language:get"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
@@ -39,6 +40,14 @@ export default function CodeRoom({ id, question }: PageProps) {
       setIsDomLoaded(true)
       socket.emit(JOIN_ROOM_EVENT, id)
     }
+    
+    // Handles the scenario where a user refreshes his page
+    // It should display the latest programming language if it was changed earlier
+    // Instead of displaying the default one (Python)
+    socket.on(GET_LATEST_PROGRAMMING_LANGUAGE_EVENT, (data) => {
+      setProgrammingLanguage(data.language)
+      console.info("GOT LATEST PROGRAMMING LANGUAGE")
+    })
 
     socket.on(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
       setProgrammingLanguage(data.language)
