@@ -4,6 +4,8 @@ import {
   FormLabel,
   Stack,
   Input,
+  Text,
+  Link,
   InputGroup,
   InputRightElement,
   Button,
@@ -113,6 +115,12 @@ export default function RegistrationForm(): JSX.Element {
       <Button colorScheme='blue' isDisabled={isDisabled()} onClick={(e) => handleSubmit(userForm)}>
         {isFormSubmitting ? "Creating..." : "Create Account"}
       </Button>
+      <Text align={"center"}>
+        Already a user?{" "}
+        <Link href="/login" color="blue.400">
+          Login
+        </Link>
+      </Text>
     </Stack>
   )
 }
