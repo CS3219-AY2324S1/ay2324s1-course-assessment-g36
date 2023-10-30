@@ -9,10 +9,10 @@ questionRouter.get("/", questionController.getAllQuestions);
 questionRouter.get("/id/:questionId", questionController.getQuestionById);
 
 // match by complexity only
-questionRouter.get("/complexity/:complexity", questionController.getRandomQuestionByComplexity);
+questionRouter.get("/complexity/:complexity", questionController.getRandomIdByComplexity);
 
 // match by complexity and categories
-questionRouter.get("/:complexity/categories", questionController.getQuestionsByCategory);
+// questionRouter.get("/:complexity/categories", questionController.getQuestionsByCategory);
 
 questionRouter.put("/id/:questionId", questionController.updateQuestion)
 
