@@ -88,7 +88,6 @@ const dummyQuestions = [
       "description": "The string 'PAYPALISHIRING' is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)\n\nP   A   H   N\nA P L S I I G\nY   I   R\nAnd then read line by line: 'PAHNAPLSIIGYIR'\n\nWrite the code that will take a string and make this conversion given a number of rows:\n\nstring convert(string s, int numRows);"
     },
     {
-      "_id": "653f70a1c418120b3b5d8ea4",
       "id": 12,
       "title": "Search in Rotated Sorted Array",
       "categories": [
