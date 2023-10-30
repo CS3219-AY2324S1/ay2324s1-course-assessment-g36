@@ -6,6 +6,7 @@ import { WebSocketServer } from "ws";
 
 import { MatchService } from "./match-service.js";
 import { generateCodeRoomId } from "./utils/generateRoomId.js";
+import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
 const app = express();
 app.use(cors({
@@ -37,7 +38,7 @@ wss.on("connection", (ws) => {
     }
   });
 
-  ws.on("message", function(_message) {
+  ws.on("message", async function(_message) {
     const message = JSON.parse(_message.toString());
     console.log("Received message: %s", _message);
 
@@ -69,11 +70,13 @@ wss.on("connection", (ws) => {
           ws.matchedUser = matchedUser;
           matchedUser.matchedUser = ws;
           const uniqueRoomId = generateCodeRoomId();
-          ws.send(JSON.stringify({ status: "matched", user_id: matchedUser.userId, room_id: uniqueRoomId }));
-          matchedUser.send(JSON.stringify({ status: "matched", user_id: ws.userId, room_id: uniqueRoomId }));
-          console.info(`"${complexity}": Matched user ${matchedUser.userId} to user ${userId}`);
-          ws.close();
-          matchedUser.close();
+          getRandomQuestionId(ws.complexity).then((questionId) => {
+            ws.send(JSON.stringify({ status: "matched", user_id: matchedUser.userId, room_id: uniqueRoomId, question_id: questionId }));
+            matchedUser.send(JSON.stringify({ status: "matched", user_id: ws.userId, room_id: uniqueRoomId, question_id: questionId }));
+            console.info(`"${complexity}": Matched user ${matchedUser.userId} to user ${userId} with question ${questionId}`);
+            ws.close();
+            matchedUser.close();
+          });
         }
 
         return;

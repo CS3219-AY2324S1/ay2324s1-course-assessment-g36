@@ -29,24 +29,23 @@ export async function fetchQuestion(id: string): Promise<QuestionObject> {
   }
 
 // returns random that matches complexity
-export async function fetchQuestionByComplexity(complexity: string): Promise<QuestionObject> {
-  const fetchQuestionsApi = `${QUESTIONS_API}/complexity/${complexity}`
-  const response = await fetch(fetchQuestionsApi);
-  const data = await response.json();
-  console.log(data)
-  return data.res;
-}
+// export async function fetchQuestionByComplexity(complexity: string): Promise<QuestionObject> {
+//   const fetchQuestionsApi = `${QUESTIONS_API}/complexity/${complexity}`
+//   const response = await fetch(fetchQuestionsApi);
+//   const data = await response.json();
+//   return data.res;
+// }
 
 // returns random question that matches complexity and at least one category
 // if no match found, return any question with matching complexity
-export async function fetchQuestionByCategory(complexity: string, categories: string[]): Promise<QuestionObject> {
-  const queryParams = categories.map(value => `category=${encodeURIComponent(value)}`).join('&');
-  const fetchQuestionsApi = `${QUESTIONS_API}/${complexity}/categories?${queryParams}`
+// export async function fetchQuestionByCategory(complexity: string, categories: string[]): Promise<QuestionObject> {
+//   const queryParams = categories.map(value => `category=${encodeURIComponent(value)}`).join('&');
+//   const fetchQuestionsApi = `${QUESTIONS_API}/${complexity}/categories?${queryParams}`
 
-  const response = await fetch(fetchQuestionsApi);
-  const data = await response.json();
-  return data.res;
-}
+//   const response = await fetch(fetchQuestionsApi);
+//   const data = await response.json();
+//   return data.res;
+// }
 
 export async function deleteQuestion(id: number): Promise<void> {
     const requestOptions = {
