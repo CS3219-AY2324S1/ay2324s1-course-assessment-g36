@@ -1,6 +1,4 @@
 const { Users, Histories } = require('../models');
-const bcrypt = require("bcrypt");
-const { Op } = require('sequelize');
 
 const addHistory = async (req, res, next) => {
     try {
