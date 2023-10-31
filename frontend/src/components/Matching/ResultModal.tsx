@@ -26,14 +26,13 @@ type MatchState =
   }
   | {
     status: "matched";
-    user_id: number;
     username: string;
     room_id: string;
     question_id: number;
   }
   | { status: "timed-out" };
 
-function useMatcher({ userId }: { userId: number }) {
+function useMatcher() {
   const wsRef = useRef<WebSocket>();
   const [matchState, setMatchState] = useState<MatchState>({ status: "not-matching" });
   const intervalIdRef = useRef<NodeJS.Timeout>();
@@ -63,8 +62,7 @@ function useMatcher({ userId }: { userId: number }) {
             setMatchState(
               {
                 status: "matched",
-                user_id: message.user_id,
-                username: `User ${message.user_id}`,
+                username: message.username,
                 room_id: message.room_id,
                 question_id: message.question_id
               });
@@ -83,7 +81,6 @@ function useMatcher({ userId }: { userId: number }) {
         wsRef.current?.send(JSON.stringify({
           type: "initialization",
           question_complexity: criteria.difficulty,
-          user_id: userId,
           token: token,
         }));
       });
@@ -135,8 +132,7 @@ function redirectToCodeRoom(room_id: string, question_id: number): void {
 
 export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
   // TODO: replace with current user ID.
-  const [userId] = useState(() => Math.round(Math.random() * 1000));
-  const { matchState, match } = useMatcher({ userId });
+  const { matchState, match } = useMatcher();
 
   // Begin matching once modal opens.
   useEffect(() => {
