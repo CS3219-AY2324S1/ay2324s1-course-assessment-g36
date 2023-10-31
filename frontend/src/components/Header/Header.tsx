@@ -1,5 +1,6 @@
-import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Button, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
+import { Avatar } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import styles from "./Header.module.css";
@@ -36,9 +37,9 @@ export default function Header(): JSX.Element {
         <Link href={PATH_MATCH} className={styles.nav_link}>
           Practice with a peer
         </Link>
-        <Link href={PATH_HISTORY} className={styles.nav_link}>
+        {!isAdmin && (<Link href={PATH_HISTORY} className={styles.nav_link}>
           My History
-        </Link>
+        </Link>)}
         <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
           Sign out
         </Link>

@@ -1,6 +1,6 @@
 import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
 import { USERS_API, CREATE_USER_API } from "./api";
-import { fetchDataOrThrowError } from "./apiUtils";
+import { fetchDataOrThrowError } from "./utils";
 
 export async function createUser(userForm: UserForm): Promise<User> {
   const requestOptions = {

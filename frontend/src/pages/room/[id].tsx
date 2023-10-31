@@ -9,6 +9,7 @@ import { fetchQuestion } from '@/services/questions';
 import { useJwt } from '@/utils/hooks';
 import CodeConsole from '@/components/CodeRoom/CodeConsole/CodeConsole';
 import styles from "./room.module.css"
+import Loader from '@/components/Loader/Loader';
 
 interface PageProps {
   id: string;
@@ -23,18 +24,10 @@ const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
 export default function CodeRoom({ id, questionId }: PageProps) {
-  const dummyQuestion: QuestionObject = {
-    id: questionId,
-    title: '',
-    categories: [''],
-    complexity: '',
-    link: '',
-    description: ''
-  }
-
   const [isDomLoaded, setIsDomLoaded] = useState(false)
+  const [isQuestionLoaded, setIsQuestionLoaded] = useState(false)
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
-  const [question, setQuestion] = useState<QuestionObject>(dummyQuestion);
+  const [question, setQuestion] = useState<QuestionObject>({} as QuestionObject);
 
   const token = useJwt();
   const [codeFromEditor, setCodeFromEditor] = useState("")
@@ -47,7 +40,9 @@ export default function CodeRoom({ id, questionId }: PageProps) {
   async function getQuestion() {
     try {
       const result = await fetchQuestion(questionId, token);
+      console.log(result);
       setQuestion(result);
+      setIsQuestionLoaded(true);
     } catch (err) {
       console.log(err);
     }
@@ -60,10 +55,11 @@ export default function CodeRoom({ id, questionId }: PageProps) {
   useEffect(() => {
     if (!isDomLoaded) {
       socket.emit(JOIN_ROOM_EVENT, id)
-      getQuestion();
       setIsDomLoaded(true);
     }
-    
+
+    getQuestion();
+
     // Handles the scenario where a user refreshes his page
     // It should display the latest programming language if it was changed earlier
     // Instead of displaying the default one (Python)
@@ -77,6 +73,10 @@ export default function CodeRoom({ id, questionId }: PageProps) {
       console.info(data)
     })
   }, [isDomLoaded, id])
+
+  if (!isQuestionLoaded) {
+    return <Loader/>;
+  }
 
   return (
     <>
@@ -116,6 +116,7 @@ export default function CodeRoom({ id, questionId }: PageProps) {
               <CodeConsole
                 programmingLanguage={programmingLanguage}
                 codeFromEditor={codeFromEditor}
+                question={question}
               />
             </GridItem>
           </>)}

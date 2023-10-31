@@ -1,7 +1,7 @@
-import { Attempt } from "@/interfaces";
+import { Attempt, AttemptForm } from "@/interfaces";
 import { fetchQuestion } from "./questions";
 import { HISTORY_API } from "./api";
-import { fetchDataOrThrowError } from "./apiUtils";
+import { fetchDataOrThrowError } from "./utils";
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('default', {
@@ -14,9 +14,7 @@ function formatDate(date: string): string {
   });
 }
 
-export async function createHistory(attempt: Attempt, token: string): Promise<Attempt> {
-  const userId = attempt.userId;
-  const userHistoryApi = `${HISTORY_API}/${userId}`
+export async function createHistory(attempt: AttemptForm, token: string): Promise<Attempt> {
   const requestOptions = {
     method: "POST",
     headers: {
@@ -25,7 +23,19 @@ export async function createHistory(attempt: Attempt, token: string): Promise<At
     },
     body: JSON.stringify(attempt)
   };
-  return fetchDataOrThrowError(userHistoryApi, requestOptions)
+  return fetchDataOrThrowError(HISTORY_API, requestOptions)
+}
+
+export async function updateHistory(attempt: Attempt, token: string): Promise<Attempt> {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(attempt)
+  };
+  return fetchDataOrThrowError(HISTORY_API, requestOptions)
 }
 
 export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {
@@ -65,27 +75,6 @@ export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {
 
   return attemptList.filter((item: any) => item !== null);
 }
-
-// export async function fetchHistoryByQuestion(userId: string, questionId: number, token: string): Promise<Attempt> {
-//     const userQuestionHistoryApi = `${HISTORY_API}/${userId}/${questionId}`
-//     const data = await fetchDataOrThrowError(userQuestionHistoryApi);
-//     const question = await fetchQuestion(questionId, token);
-
-//     const attempt: Attempt = {
-//       id: data.attemptId,
-//       userId: data.userId,
-//       questionId: data.questionId,
-//       title: question.title,
-//       categories: question.categories,
-//       complexity: question.complexity,
-//       link: question.link,
-//       description: question.description,
-//       attempt: data.attempt,
-//       language: data.language,
-//       date: formatDate(data.updatedAt)
-//     }
-//     return attempt;
-// }
 
 export async function deleteHistory(attemptId: number, token: string): Promise<void> {
   const deleteHistoryApi = `${HISTORY_API}/${attemptId}`

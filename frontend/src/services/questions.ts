@@ -1,6 +1,6 @@
 import { QuestionObject } from "@/interfaces"
 import { QUESTIONS_API, HISTORY_API } from "./api";
-import { fetchDataOrThrowError } from "./apiUtils";
+import { fetchDataOrThrowError } from "./utils";
 
 export async function addQuestion(
   newQuestion: QuestionObject,

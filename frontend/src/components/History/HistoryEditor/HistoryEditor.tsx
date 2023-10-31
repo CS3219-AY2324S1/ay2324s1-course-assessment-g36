@@ -1,4 +1,4 @@
-import { createHistory } from "@/services/history"
+import { createHistory, updateHistory } from "@/services/history"
 import styles from "./HistoryEditor.module.css"
 import { Attempt } from "@/interfaces"
 import { PROGRAMMING_LANGUAGES } from "@/types"
@@ -15,6 +15,7 @@ import {
   Select
 } from '@chakra-ui/react'
 import { useState } from "react"
+import { useJwt } from "@/utils/hooks"
 
 interface IOwnProps {
   attempt: Attempt
@@ -25,6 +26,7 @@ interface IOwnProps {
 export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): JSX.Element {
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
+  const token = useJwt();
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUpdatedAttempt((prevAttempt) => ({
@@ -38,12 +40,11 @@ export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): 
         ...prevAttempt,
         language: e
       }));
-    console.log(updatedAttempt);
   };
 
   async function updateAttempt() {
     try {
-        await createHistory(updatedAttempt);
+        await updateHistory(updatedAttempt, token);
         toast({
             position: 'top',
             title: 'Attempt updated',
@@ -81,7 +82,10 @@ export default function HistoryEditor({ attempt, isOpen, onClose }: IOwnProps): 
                     <Select variant={"flushed"} size="xs" placeholder={attempt.language} maxWidth="50%" textUnderlineOffset="none" onChange={e => handleLanguageChange(e.target.value)}>
                       {PROGRAMMING_LANGUAGES
                         .filter(language => Object.keys(language)[0] != attempt.language)
-                        .map(language => <option key={Object.keys(language)[0]} value={Object.keys(language)[0]}>{Object.keys(language)[0]}</option>)
+                        .map(language => {
+                          const _key = Object.keys(language)[0]
+                          return <option key={_key} value={_key}>{_key}</option>
+                      })
                       }
                     </Select>
                   </div>

@@ -123,11 +123,17 @@ const getAllHistory = async (req, res, next) => {
 const deleteHistory = async (req, res, next) => {
     try {
         const id = req.params.attemptId;
+        const userId = req.user.userId;
 
         const history = await Histories.findByPk(id)
 
         if (!history) {
             res.status(404).json({error: "History does not exist"});
+            return;
+        }
+
+        if (history.userId != userId) {
+            res.sendStatus(401);
             return;
         }
 
