@@ -15,7 +15,7 @@ import {
   Text
 } from '@chakra-ui/react'
 import { UpdateUserProfileForm } from "@/interfaces"
-import { fetchUser, updateUser } from "@/utils/userApi"
+import { fetchUser, updateUser } from "@/services/users"
 import { useRouter } from 'next/router'
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
 import { Status } from "@/enums"

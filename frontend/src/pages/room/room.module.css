@@ -1,0 +1,6 @@
+.room_container {
+  box-sizing: border-box;
+  background-color: #3d3c3c;
+  height: 100vh;
+  color: #fff;
+}

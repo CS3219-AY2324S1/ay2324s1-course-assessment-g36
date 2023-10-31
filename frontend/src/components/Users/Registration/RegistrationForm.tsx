@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import styles from "./RegistrationForm.module.css"
 import { User, UserForm } from '@/interfaces'
-import { createUser } from '@/utils/userApi'
+import { createUser } from '@/services/users'
 import AlertBanner from '@/components/Feedback/AlertBanner'
 import { validateEmail, validatePassword } from '@/utils/validators'
 
