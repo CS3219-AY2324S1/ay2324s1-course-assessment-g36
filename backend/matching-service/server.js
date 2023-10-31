@@ -8,6 +8,10 @@ import { MatchService } from "./match-service.js";
 import { generateCodeRoomId } from "./utils/generateRoomId.js";
 import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
+import jwt from 'jsonwebtoken';
+import dotenv from "dotenv"
+dotenv.config({path: "../.env"})
+
 const app = express();
 app.use(cors({
   origin: ["http://localhost:3000"],
@@ -25,7 +29,6 @@ const wss = new WebSocketServer({ server: httpServer });
 const matchService = new MatchService();
 
 wss.on("connection", (ws) => {
-  // TODO: Validate authentication?
   console.info("Received new connection");
 
   ws.on("error", console.error);
@@ -47,7 +50,18 @@ wss.on("connection", (ws) => {
         const {
           user_id: userId,
           question_complexity: complexity,
+          token,
         } = message;
+
+        // Authenticate users
+        try {
+          jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
+        } catch (error) {
+          console.error("Unauthenticated");
+          ws.close();
+          return;
+        }
+
         if (complexity !== "Easy" && complexity !== "Medium" && complexity !== "Hard") {
           console.error("Invalid complexity");
           ws.close();

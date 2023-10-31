@@ -1,60 +1,74 @@
 import { QuestionObject } from "@/interfaces"
 import { QUESTIONS_API, HISTORY_API } from "./api";
 
-export async function addQuestion(newQuestion: QuestionObject): Promise<QuestionObject> {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newQuestion)
-    };
-    const response = await fetch(QUESTIONS_API, requestOptions)
-    const question = await response.json()
-    return question.res
-  }
-
-
-export async function fetchAllQuestions(): Promise<QuestionObject[]> {
-    const response = await fetch(QUESTIONS_API);
-    const data = await response.json();
-    return data.res;
+async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
+  const response = await fetch(api, requestOptions).then((response) => {
+    if (response.status === 401) {
+      throw new Error("unauthorized")
+    }
+    return response
+  })
+  const results = await response.json()
+  if (!response.ok) throw new Error(results.error)
+  return results.res
 }
 
-export async function fetchQuestion(id: string): Promise<QuestionObject> {
-    const fetchSingleQuestionApi = `${QUESTIONS_API}/id/${id}`
-    const response = await fetch(fetchSingleQuestionApi);
-    const data = await response.json();
-    return data.res;
+export async function addQuestion(
+  newQuestion: QuestionObject,
+  token: string
+): Promise<QuestionObject> {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(newQuestion),
+  }
+  return fetchDataOrThrowError(QUESTIONS_API, requestOptions)
+}
+
+export async function fetchAllQuestions(token: string): Promise<QuestionObject[]> {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  return fetchDataOrThrowError(QUESTIONS_API, requestOptions)
+}
+
+export async function fetchQuestion(id: number, token: string): Promise<QuestionObject> {
+  const fetchSingleQuestionApi = `${QUESTIONS_API}/id/${id}`
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  return fetchDataOrThrowError(fetchSingleQuestionApi, requestOptions)
+}
+
+export async function deleteQuestion(id: number, token: string): Promise<void> {
+  const deleteQuestionApi = `${QUESTIONS_API}/${id}`
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   }
 
-// returns random that matches complexity
-// export async function fetchQuestionByComplexity(complexity: string): Promise<QuestionObject> {
-//   const fetchQuestionsApi = `${QUESTIONS_API}/complexity/${complexity}`
-//   const response = await fetch(fetchQuestionsApi);
-//   const data = await response.json();
-//   return data.res;
-// }
+  const deleteHistoryApi = `${HISTORY_API}/question/${id}`
+  await fetch(deleteHistoryApi, requestOptions)
 
-// returns random question that matches complexity and at least one category
-// if no match found, return any question with matching complexity
-// export async function fetchQuestionByCategory(complexity: string, categories: string[]): Promise<QuestionObject> {
-//   const queryParams = categories.map(value => `category=${encodeURIComponent(value)}`).join('&');
-//   const fetchQuestionsApi = `${QUESTIONS_API}/${complexity}/categories?${queryParams}`
+  await fetch(deleteQuestionApi, requestOptions).then((response) => {
+    if (response.status === 401) {
+      throw new Error("unauthorized")
+    }
 
-//   const response = await fetch(fetchQuestionsApi);
-//   const data = await response.json();
-//   return data.res;
-// }
-
-export async function deleteQuestion(id: number): Promise<void> {
-    const requestOptions = {
-      method: "DELETE"
-    };
-    const deleteQuestionApi = `${QUESTIONS_API}/${id}`
-    await fetch(deleteQuestionApi, requestOptions)
-
-    // delete all attempts for this question if any
-    const deleteHistoryApi = `${HISTORY_API}/question/${id}`
-    await fetch(deleteHistoryApi, requestOptions)
+    return response
+  })
 }

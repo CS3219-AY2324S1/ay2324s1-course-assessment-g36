@@ -2,7 +2,12 @@ import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
 import { USERS_API, CREATE_USER_API } from "./api";
 
 async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
-  const response = await fetch(api, requestOptions)
+  const response = await fetch(api, requestOptions).then((response) => {
+    if (response.status === 401) {
+      throw new Error("unauthorized")
+    }
+    return response
+  })
   const results = await response.json()
   if (!response.ok) throw new Error(results.error)
   return results.res
@@ -19,35 +24,51 @@ export async function createUser(userForm: UserForm): Promise<User> {
   return fetchDataOrThrowError(CREATE_USER_API, requestOptions)
 }
 
-export async function updateUser(id: string, updateUserForm: UpdateUserProfileForm): Promise<User> {
+export async function updateUser(
+  id: string,
+  updateUserForm: UpdateUserProfileForm,
+  token: string
+): Promise<User> {
   const updateUserApi = `${USERS_API}/${id}`
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(updateUserForm)
   };
   return fetchDataOrThrowError(updateUserApi, requestOptions)
 }
 
-export async function fetchAllUsers(): Promise<User[]> {
-  return fetchDataOrThrowError(USERS_API)
+export async function fetchAllUsers(token: string): Promise<User[]> {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  return fetchDataOrThrowError(USERS_API, requestOptions)
 }
 
-export async function fetchUser(id: string): Promise<User> {
+export async function fetchUser(id: string, token: string): Promise<User> {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }
   const fetchUserApi = `${USERS_API}/${id}`
-  return fetchDataOrThrowError(fetchUserApi)
+  return fetchDataOrThrowError(fetchUserApi, requestOptions)
 }
 
-export async function deleteUser(id: string): Promise<void> {
+export async function deleteUser(id: string, token: string): Promise<void> {
   const deleteUserApi = `${USERS_API}/${id}`
   const requestOptions = {
-    method: "DELETE"
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
   };
-  const response = await fetch(deleteUserApi, requestOptions)
-  if (!response.ok) {
-    const data = await response.json()
-    throw new Error(data.error)
-  }
+  fetchDataOrThrowError(deleteUserApi, requestOptions)
 }

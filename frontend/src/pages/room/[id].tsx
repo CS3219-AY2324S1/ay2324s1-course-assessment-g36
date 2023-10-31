@@ -14,11 +14,11 @@ import {
 import { QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
 import { fetchQuestion } from '@/utils/questionApi';
-import Loader from '@/components/Loader/Loader';
+import { useJwt } from '@/utils/hooks';
 
 interface PageProps {
   id: string;
-  question: QuestionObject;
+  questionId: number;
 }
 
 const socket = io("http://localhost:5173")
@@ -27,30 +27,48 @@ const JOIN_ROOM_EVENT = "room:join"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
-export default function CodeRoom({ id, question }: PageProps) {
+export default function CodeRoom({ id, questionId }: PageProps) {
+  const dummyQuestion: QuestionObject = {
+    id: questionId,
+    title: '',
+    categories: [''],
+    complexity: '',
+    link: '',
+    description: ''
+  }
+
   const [isDomLoaded, setIsDomLoaded] = useState(false)
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [question, setQuestion] = useState<QuestionObject>(dummyQuestion);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const token = useJwt();
 
   function onProgrammingLanguageChange(language: string) {
     setProgrammingLanguage(language)
     socket.emit(UPDATE_PROGRAMMING_LANGUAGE_EVENT, { language: language, room: id })
   }
 
+  async function getQuestion() {
+    try {
+      const result = await fetchQuestion(questionId, token);
+      setQuestion(result);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     if (!isDomLoaded) {
-      setIsDomLoaded(true);
       socket.emit(JOIN_ROOM_EVENT, id)
+      getQuestion();
+      setIsDomLoaded(true);
     }
 
     socket.on(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
       setProgrammingLanguage(data.language)
     }) 
   }, [socket])
-
-  if (!isDomLoaded) {
-    return <Loader/>
-  }
 
   return (
     <>
@@ -104,18 +122,10 @@ export async function getServerSideProps(context: any) {
 
   const { id, questionId } = query;
 
-  let question;
-
-  try {
-    question = await fetchQuestion(questionId);
-  } catch (err) {
-    console.log(err);
-  }
-
   return {
     props: {
       id,
-      question
+      questionId
     },
   };
 }

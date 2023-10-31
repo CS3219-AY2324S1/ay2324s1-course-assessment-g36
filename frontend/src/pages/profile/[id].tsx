@@ -9,6 +9,7 @@ import { deleteUser } from "@/utils/userApi"
 import Link from "next/link"
 import { Status } from "@/enums"
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
+import { useJwt } from "@/utils/hooks"
 
 export default function ProfileDetail() {
 
@@ -32,11 +33,12 @@ export default function ProfileDetail() {
   const router = useRouter()
   const userId = router.query.id as string
   const toast = useToast()
+  const token = useJwt()
 
   async function fetchData(id: string) {
 
     try {
-      const results = await fetchUser(id);
+      const results = await fetchUser(id, token);
       setProfileData(results)
       setStatus(Status.Success)
     } catch (error: any) {
@@ -52,7 +54,7 @@ export default function ProfileDetail() {
 
   async function handleDelete() {
     try {
-      await deleteUser(userId)
+      await deleteUser(userId, token)
       window.location.href = "/profiles";
     } catch (error: any) {
       toast({
