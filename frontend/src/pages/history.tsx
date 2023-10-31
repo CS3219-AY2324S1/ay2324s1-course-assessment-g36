@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout/Layout'
@@ -8,21 +7,17 @@ import { Status } from '@/enums'
 import { Attempt } from '@/interfaces'
 import SkeletonLoader from '@/components/Loader/SkeletonLoader'
 import { Text } from '@chakra-ui/react'
+import { useJwt } from '@/utils/hooks'
 
 export default function History() {
   const [status, setStatus] = useState<Status>(Status.Loading)
   const [error, setError] = useState<string>("")
-  const router = useRouter()
-  const id = router.query.id as string
   const [history, setHistory] = useState<Attempt[]>([])
+  const token = useJwt();
 
-  async function fetchData(id: string) {
-    if (id == undefined) {  // still loading
-      return;
-    }
-
+  async function fetchData() {
     try {
-      const results = await fetchAllHistoryByUser(id);
+      const results = await fetchAllHistoryByUser(token);
       setHistory(results);
       setStatus(Status.Success)
     } catch (error: any) {
@@ -32,8 +27,8 @@ export default function History() {
   }
 
   useEffect(() => {
-    fetchData(id)
-  }, [id])
+    fetchData()
+  }, [])
 
   return (
     <>

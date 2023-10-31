@@ -131,7 +131,6 @@ function redirectToCodeRoom(room_id: string, question_id: number): void {
 }
 
 export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
-  // TODO: replace with current user ID.
   const { matchState, match } = useMatcher();
 
   // Begin matching once modal opens.

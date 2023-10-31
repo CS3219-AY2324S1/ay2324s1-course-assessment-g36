@@ -103,11 +103,6 @@ export default function ProfileDetail() {
                     Update Profile
                   </Button>
                 </Link>
-                <Link href={`/profile/${userId}/history`}>
-                  <Button colorScheme="gray">
-                    View History
-                  </Button>
-                </Link>
                 <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
               </HStack>
             </Stack>

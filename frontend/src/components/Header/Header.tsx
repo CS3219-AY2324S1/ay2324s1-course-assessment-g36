@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 const PATH_QUESTIONS = "/questions";
 const PATH_PROFILES = "/profiles";
 const PATH_MATCH = "/match";
+const PATH_HISTORY = "/history";
 
 export default function Header(): JSX.Element {
   const router = useRouter();
@@ -34,6 +35,9 @@ export default function Header(): JSX.Element {
         )}
         <Link href={PATH_MATCH} className={styles.nav_link}>
           Practice with a peer
+        </Link>
+        <Link href={PATH_HISTORY} className={styles.nav_link}>
+          My History
         </Link>
         <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
           Sign out
