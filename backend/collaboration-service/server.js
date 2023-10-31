@@ -9,6 +9,7 @@ const DEFAULT_PORT = 5173
 const ALLOWED_ORIGINS = ['http://localhost:3000'];
 
 const JOIN_ROOM_EVENT = "room:join"
+const GET_LATEST_PROGRAMMING_LANGUAGE_EVENT = "programming_language:get"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
@@ -35,23 +36,29 @@ const io = new Server(httpServer, {
   },
 });
 
+const roomToProgrammingLanguageState = new Map()
+
 io.on("connection", (socket) => {
   console.info(`connected: ${socket.id}`);
 
-  socket.on(JOIN_ROOM_EVENT, (data) => {
-    socket.join(data)
-    console.info("joined room!")
+  socket.on(JOIN_ROOM_EVENT, (roomId) => {
+    socket.join(roomId)
+    if (roomToProgrammingLanguageState.has(roomId)) {
+      console.info(`Get current programming language: ${roomToProgrammingLanguageState.get(roomId)} for roomId ${roomId}`)
+      io.to(socket.id).emit(GET_LATEST_PROGRAMMING_LANGUAGE_EVENT, { language: roomToProgrammingLanguageState.get(roomId) })
+    }
   })
 
   socket.on(UPDATE_PROGRAMMING_LANGUAGE_EVENT, (data) => {
+    roomToProgrammingLanguageState.set(data.room, data.language)
     socket.to(data.room).emit(RECEIVE_PROGRAMMING_LANGUAGE_EVENT, data);
-    console.info(data)
+    console.info(`Updated programming language for room ${data.room}`, data)
   });
+
 });
 
 // On connection, use the utility file provided by y-websocket
 wss.on('connection', (ws, req) => {
-  console.info("ws:connection");
   setupWSConnection(ws, req);
 })
 

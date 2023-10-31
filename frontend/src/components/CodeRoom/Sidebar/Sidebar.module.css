@@ -1,10 +1,7 @@
 .sidebar_container {
-  color: #fff;
-  background-color: #282828;
-}
-
-.sidebar {
-  margin: 1em;
+  background-color: #1E1E1E;
+  height: 100vh;
+  padding: 1em;
 }
 
 .live_glowing_icon {
@@ -27,7 +24,6 @@
   animation: live 2s ease-in-out infinite;
   z-index: -1;
 }
-
 
 @keyframes live {
   0% {

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Layout from '@/components/Layout/Layout'
 import HistoryTable from "@/components/History/HistoryTable/HistoryTable"
-import { fetchAllHistoryByUser } from '@/utils/historyApi'
+import { fetchAllHistoryByUser } from '@/services/history'
 import { Status } from '@/enums'
 import { Attempt } from '@/interfaces'
 import SkeletonLoader from '@/components/Loader/SkeletonLoader'

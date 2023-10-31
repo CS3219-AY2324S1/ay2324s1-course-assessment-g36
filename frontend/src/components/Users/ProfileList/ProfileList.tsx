@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchAllUsers } from "@/utils/userApi"
+import { fetchAllUsers } from "@/services/users"
 import { User } from "@/interfaces";
 import ProfileCard from "../ProfileCard/ProfileCard";
 import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";

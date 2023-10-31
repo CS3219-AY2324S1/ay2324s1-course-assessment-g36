@@ -3,9 +3,9 @@ import Head from 'next/head'
 import Layout from '@/components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { User } from "@/interfaces"
-import { fetchUser } from "@/utils/userApi"
+import { fetchUser } from "@/services/users"
 import { Heading, HStack, Stack, Text, Button, useToast } from '@chakra-ui/react'
-import { deleteUser } from "@/utils/userApi"
+import { deleteUser } from "@/services/users"
 import Link from "next/link"
 import { Status } from "@/enums"
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"

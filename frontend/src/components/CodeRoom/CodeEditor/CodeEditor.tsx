@@ -6,15 +6,21 @@ import dynamic from "next/dynamic";
 import { WebsocketProvider } from 'y-websocket';
 
 const serverWsUrl = "ws://localhost:5173"
+const VS_THEME = 'vs-dark'
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
 interface IOwnProps {
   roomId: string;
   programmingLanguage: string;
+  onCodeChange: (code: string) => void;
 }
 
-export default function CodeEditor({ roomId, programmingLanguage }: IOwnProps): JSX.Element {
+export default function CodeEditor({
+  roomId,
+  programmingLanguage,
+  onCodeChange
+}: IOwnProps): JSX.Element {
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
@@ -33,18 +39,18 @@ export default function CodeEditor({ roomId, programmingLanguage }: IOwnProps): 
     // Bind yjs doc to Manaco editor
     const binding = new MonacoBinding(type, editorRef.current!.getModel()!, new Set([editorRef.current]), provider.awareness);
 
-    provider.on('status', (event: { status: any; }) => {
-      console.log(event.status) // logs "connected" or "disconnected"
-    })
+    editorRef.current.onDidChangeModelContent(() => {
+      const code = editorRef.current?.getValue();
+      onCodeChange(code ?? "");
+    });
 
   }
 
   return (
     <>
       <Editor
-        height="100vh"
+        theme={VS_THEME}
         language={programmingLanguage}
-        theme={"vs-dark"}
         onMount={handleEditorDidMount}
       />
     </>

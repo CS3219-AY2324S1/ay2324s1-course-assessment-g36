@@ -1,5 +1,5 @@
 import { Attempt } from "@/interfaces";
-import { fetchQuestion } from "./questionApi";
+import { fetchQuestion } from "./questions";
 import { HISTORY_API } from "./api";
 import { fetchDataOrThrowError } from "./apiUtils";
 

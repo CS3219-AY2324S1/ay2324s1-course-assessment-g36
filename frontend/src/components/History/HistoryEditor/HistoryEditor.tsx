@@ -1,4 +1,4 @@
-import { createHistory } from "@/utils/historyApi"
+import { createHistory } from "@/services/history"
 import styles from "./HistoryEditor.module.css"
 import { Attempt } from "@/interfaces"
 import { PROGRAMMING_LANGUAGES } from "@/types"
