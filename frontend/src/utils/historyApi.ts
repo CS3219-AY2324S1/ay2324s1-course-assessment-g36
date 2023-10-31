@@ -1,6 +1,7 @@
 import { Attempt } from "@/interfaces";
 import { fetchQuestion } from "./questionApi";
 import { HISTORY_API } from "./api";
+import { fetchDataOrThrowError } from "./apiUtils";
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('default', {
@@ -11,13 +12,6 @@ function formatDate(date: string): string {
     minute: '2-digit',
     second: '2-digit',
   });
-}
-
-async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
-  const response = await fetch(api, requestOptions)
-  const results = await response.json()
-  if (!response.ok) throw new Error(results.error)
-  return results.res
 }
 
 export async function createHistory(attempt: Attempt): Promise<Attempt> {

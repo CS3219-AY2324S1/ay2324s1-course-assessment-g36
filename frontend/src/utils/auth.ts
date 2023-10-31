@@ -1,6 +1,5 @@
 import { LoginForm } from "@/interfaces";
-
-const LOGIN_USER_API = "http://localhost:8000/users/login";
+import { LOGIN_USER_API } from "./api";
 
 export async function loginUser(loginForm: LoginForm): Promise<string> {
   const requestOptions = {

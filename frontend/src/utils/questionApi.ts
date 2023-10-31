@@ -1,17 +1,6 @@
 import { QuestionObject } from "@/interfaces"
 import { QUESTIONS_API, HISTORY_API } from "./api";
-
-async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
-  const response = await fetch(api, requestOptions).then((response) => {
-    if (response.status === 401) {
-      throw new Error("unauthorized")
-    }
-    return response
-  })
-  const results = await response.json()
-  if (!response.ok) throw new Error(results.error)
-  return results.res
-}
+import { fetchDataOrThrowError } from "./apiUtils";
 
 export async function addQuestion(
   newQuestion: QuestionObject,
