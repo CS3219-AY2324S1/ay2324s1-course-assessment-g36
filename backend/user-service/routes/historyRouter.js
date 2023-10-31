@@ -2,18 +2,16 @@ const express = require('express');
 const historyController = require("../controllers/historyController");
 const historyRouter = express.Router();
 
+historyRouter.use(historyController.authenticate)
 
-historyRouter.post("/:userId", historyController.addHistory);
+historyRouter.post("/", historyController.addHistory);
 
-historyRouter.get("/:userId", historyController.getHistoryByUser);
+historyRouter.get("/", historyController.getHistoryByUser);
 
-historyRouter.get("/:userId/:questionId", historyController.getHistoryByQuestion);
+historyRouter.get("/:questionId", historyController.getHistoryByQuestion);
 
 historyRouter.delete("/:attemptId", historyController.deleteHistory);
 
 historyRouter.delete("/question/:questionId", historyController.deleteQuestionHistory);
-
-// for debugging purposes only
-historyRouter.get("/", historyController.getAllHistory);
 
 module.exports = historyRouter;

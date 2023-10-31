@@ -86,6 +86,7 @@ const loginUser = async (req, res, next) => {
 
         const token = jwt.sign(
             {
+                userId: user.userId,
                 username: user.username,
                 isAdmin: user.isAdmin,
             },
@@ -134,7 +135,6 @@ const updateUser = async (req, res, next) => {
 
         const { username, password, firstName, lastName, summary, education, work, github, website } = req.body;
 
-        // TODO: make this nicer?
         if (username && typeof username == 'string') {
             const existingUser = await Users.findOne({ where: { username: username }});
     

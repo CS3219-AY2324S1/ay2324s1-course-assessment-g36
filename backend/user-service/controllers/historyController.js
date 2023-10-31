@@ -1,8 +1,23 @@
 const { Users, Histories } = require('../models');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config({path: "../.env"});
+
+const authenticate = async (req, res, next) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        const user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
+        req.user = user;
+    } catch {
+        return res.sendStatus(401);
+    }
+    next();
+};
 
 const addHistory = async (req, res, next) => {
     try {
-        const userId = req.params.userId
+        const userId = req.user.userId
         const { questionId, attempt, language } = req.body;
     
         if (!userId || !questionId || !attempt || !language) {
@@ -45,7 +60,7 @@ const addHistory = async (req, res, next) => {
 
 const getHistoryByUser = async (req, res, next) => {
     try {
-        const userId = req.params.userId
+        const userId = req.user.userId
 
         const existingUser = await Users.findByPk(userId);
 
@@ -71,7 +86,7 @@ const getHistoryByUser = async (req, res, next) => {
 
 const getHistoryByQuestion = async (req, res, next) => {
     try {
-        const userId = req.params.userId
+        const userId = req.user.userId
         const questionId = req.params.questionId
 
         const existingUser = await Users.findByPk(userId);
@@ -136,6 +151,7 @@ const deleteQuestionHistory = async (req, res, next) => {
 };
 
 module.exports = {
+    authenticate,
     addHistory,
     getHistoryByUser,
     getHistoryByQuestion,
