@@ -113,67 +113,6 @@ const getRandomIdByComplexity = async (req, res, next) => {
     }
 }
 
-// const getRandomQuestionByComplexity = async (req, res, next) => {
-//     try {
-//         const complexity = req.params.complexity;
-
-//         if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
-//                 res.status(400).json({error: "Invalid complexity"});
-//                 return;                
-//         }
-
-//         const matchedQuestion = await Questions.aggregate([
-//             { $match: {complexity: complexity} },
-//             { $sample: { size: 1 } }
-//         ]);
-
-//         res.status(200).json({res: matchedQuestion[0]});
-
-//     } catch (err) {
-//         next(err);
-//     }
-// }
-
-// const getQuestionsByCategory = async (req, res, next) => {
-//     try {
-//         const categories = req.query.category;
-//         const complexity = req.params.complexity;
-
-//         if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
-//             res.status(400).json({error: "Invalid complexity"});
-//             return;                
-//         }
-
-//         const matchedQuestion = await Questions.aggregate([
-//             { $match: { 
-//                 complexity: complexity,
-//                 categories: {
-//                     $elemMatch: { 
-//                         $in: categories 
-//                     }
-//                 }
-//             } },
-//             { $sample: { size: 1 } }
-//         ]);
-
-//         if (matchedQuestion.length == 0) {
-//             // no matching categories -> return only matching complexity
-//             const altMatchedQuestion = await Questions.aggregate([
-//                 { $match: {complexity: complexity} },
-//                 { $sample: { size: 1 } }
-//             ]);
-
-//             res.status(200).json({res: altMatchedQuestion[0]});
-//             return;
-//         } else {
-//             res.status(200).json({res: matchedQuestion[0]});
-//         }
-
-//     } catch (err) {
-//         next(err);
-//     }
-// }
-
 const updateQuestion = async(req, res, next) => {
     try {
         const id = req.params.questionId;
@@ -243,7 +182,6 @@ module.exports = {
     getAllQuestions,
     getQuestionById,
     getRandomIdByComplexity,
-    // getQuestionsByCategory,
     updateQuestion,
     deleteQuestion
 }
