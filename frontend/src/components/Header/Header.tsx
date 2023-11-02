@@ -3,10 +3,10 @@ import { IconButton, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from 
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import styles from "./Header.module.css";
-import { useIsAdmin } from "@/utils/hooks";
+import { useIsAdmin, useUserId, useUsername } from "@/utils/hooks";
 import { useLocalStorage } from "usehooks-ts";
 import { useRouter } from "next/router";
-import ProfileMenu from "./ProfileMenu";
+import AccountMenu from "./AccountMenu";
 
 const PATH_QUESTIONS = "/questions";
 const PATH_PROFILES = "/profiles";
@@ -16,6 +16,8 @@ export default function Header(): JSX.Element {
   const router = useRouter();
   const [_token, setToken] = useLocalStorage("token", "");
   const isAdmin = useIsAdmin();
+  const username = useUsername();
+  const userId = useUserId();
 
   function handleSignOut() {
     setToken("");
@@ -40,10 +42,7 @@ export default function Header(): JSX.Element {
         {!isAdmin && <Link href={PATH_MATCH} className={styles.nav_link}>
           Practice with a peer
         </Link>}
-        {/* <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
-          Sign out
-        </Link> */}
-        <ProfileMenu signOut={handleSignOut} isAdmin={isAdmin}/>
+        <AccountMenu signOut={handleSignOut} isAdmin={isAdmin} username={username} userId={userId}/>
       </nav>
 
       {/* Mobile navbar */}

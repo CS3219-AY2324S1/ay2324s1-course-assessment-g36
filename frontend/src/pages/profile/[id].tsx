@@ -9,7 +9,7 @@ import { deleteUser } from "@/services/users"
 import Link from "next/link"
 import { Status } from "@/enums"
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
-import { useJwt } from "@/utils/hooks"
+import { useJwt, useUserId } from "@/utils/hooks"
 
 export default function ProfileDetail() {
 
@@ -34,6 +34,7 @@ export default function ProfileDetail() {
   const userId = router.query.id as string
   const toast = useToast()
   const token = useJwt()
+  const currUserId = `${useUserId()}`;
 
   async function fetchData(id: string) {
 
@@ -98,11 +99,12 @@ export default function ProfileDetail() {
               <Text>Website: {profileData.website} </Text>
               <Text>Contact: {profileData.email} </Text>
               <HStack>
-                {/* <Link href={`/profile/${userId}/update`}>
+                {/* only allow update if it's the current user */}
+                {currUserId === userId && <Link href={`/profile/${userId}/update`}>
                   <Button colorScheme="teal">
                     Update Profile
                   </Button>
-                </Link> */}
+                </Link>}
                 <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
               </HStack>
             </Stack>
