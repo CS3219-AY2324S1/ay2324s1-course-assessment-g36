@@ -98,11 +98,11 @@ export default function ProfileDetail() {
               <Text>Website: {profileData.website} </Text>
               <Text>Contact: {profileData.email} </Text>
               <HStack>
-                <Link href={`/profile/${userId}/update`}>
+                {/* <Link href={`/profile/${userId}/update`}>
                   <Button colorScheme="teal">
                     Update Profile
                   </Button>
-                </Link>
+                </Link> */}
                 <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
               </HStack>
             </Stack>

@@ -1,22 +1,25 @@
-import { Button, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { IconButton, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from "@chakra-ui/react";
 
-import { Avatar } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import styles from "./Header.module.css";
 import { useIsAdmin } from "@/utils/hooks";
 import { useLocalStorage } from "usehooks-ts";
 import { useRouter } from "next/router";
+import ProfileMenu from "./ProfileMenu";
 
 const PATH_QUESTIONS = "/questions";
 const PATH_PROFILES = "/profiles";
 const PATH_MATCH = "/match";
-const PATH_HISTORY = "/history";
 
 export default function Header(): JSX.Element {
   const router = useRouter();
   const [_token, setToken] = useLocalStorage("token", "");
   const isAdmin = useIsAdmin();
+
+  function handleSignOut() {
+    setToken("");
+  }
 
   return (
     <header className={styles.container_header}>
@@ -34,15 +37,13 @@ export default function Header(): JSX.Element {
             View Profiles
           </Link>
         )}
-        <Link href={PATH_MATCH} className={styles.nav_link}>
+        {!isAdmin && <Link href={PATH_MATCH} className={styles.nav_link}>
           Practice with a peer
-        </Link>
-        {!isAdmin && (<Link href={PATH_HISTORY} className={styles.nav_link}>
-          My History
-        </Link>)}
-        <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
+        </Link>}
+        {/* <Link href="/" className={styles.nav_link} onClick={() => setToken("")}>
           Sign out
-        </Link>
+        </Link> */}
+        <ProfileMenu signOut={handleSignOut} isAdmin={isAdmin}/>
       </nav>
 
       {/* Mobile navbar */}
