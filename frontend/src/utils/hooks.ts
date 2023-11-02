@@ -48,13 +48,13 @@ export function useUsername(): string {
 
 export function useUserId(): number {
   const token = useJwt();
-  const [userId, setUserId] = useState<number>(0);
+  const [userId, setUserId] = useState<number>(-1);
   useEffect(() => {
     try {
       setUserId(jwt.decode(token).userId);
     } catch {
       // token might not be present
-      // we will return the default value 0
+      // we will return the default value -1
     }
   }, [token]);
   return userId;

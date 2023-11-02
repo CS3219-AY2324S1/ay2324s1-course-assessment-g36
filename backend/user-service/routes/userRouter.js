@@ -2,14 +2,13 @@ const express = require('express');
 const userController = require("../controllers/userController");
 const userRouter = express.Router();
 
-
-userRouter.use(userController.authenticate);
+userRouter.param('userId', userController.authenticateProfile);
 
 userRouter.post("/register", userController.addUser);
 
 userRouter.post("/login", userController.loginUser);
 
-userRouter.get("/", userController.getAllUsers)
+userRouter.get("/", userController.authenticateAdmin, userController.getAllUsers)
 
 userRouter.get("/:userId", userController.getUserById)
 
