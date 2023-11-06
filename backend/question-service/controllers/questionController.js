@@ -1,3 +1,4 @@
+const { Complexity } = require("../models/enums");
 const Questions = require("../models/questionModel");
 require('dotenv').config({path: "../.env"});
 
@@ -48,7 +49,7 @@ const addQuestion = async(req, res, next) => {
             return;
         }
 
-        if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
+        if (!Object.values(Complexity).includes(complexity)) {
                 res.status(400).json({error: "Invalid complexity"});
                 return;                
         }
@@ -95,9 +96,9 @@ const getRandomIdByComplexity = async (req, res, next) => {
     try {
         const complexity = req.params.complexity;
 
-        if (! ['Easy', 'Medium', 'Hard'].includes(complexity)) {
-                res.status(400).json({error: "Invalid complexity"});
-                return;                
+        if (!Object.values(Complexity).includes(complexity)) {
+            res.status(400).json({error: "Invalid complexity"});
+            return;                
         }
 
         const matchedId = await Questions.aggregate([
