@@ -9,7 +9,7 @@ import { fetchQuestion } from '@/services/questions';
 import { useJwt } from '@/utils/hooks';
 import CodeConsole from '@/components/CodeRoom/CodeConsole/CodeConsole';
 import styles from "./room.module.css"
-import Loader from '@/components/Loader/Loader';
+import SpinnerLoader from '@/components/Loader/SpinnerLoader';
 
 interface PageProps {
   id: string;
@@ -40,7 +40,6 @@ export default function CodeRoom({ id, questionId }: PageProps) {
   async function getQuestion() {
     try {
       const result = await fetchQuestion(questionId, token);
-      console.log(result);
       setQuestion(result);
       setIsQuestionLoaded(true);
     } catch (err) {
@@ -75,7 +74,7 @@ export default function CodeRoom({ id, questionId }: PageProps) {
   }, [isDomLoaded, id])
 
   if (!isQuestionLoaded) {
-    return <Loader/>;
+    return <SpinnerLoader/>;
   }
 
   return (
