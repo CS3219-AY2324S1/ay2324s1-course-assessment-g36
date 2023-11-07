@@ -29,7 +29,7 @@ export default function QuestionsTable(): JSX.Element {
 
   async function fetchData() {
     try {
-      const results = await fetchAllQuestions(token);
+      const results = await fetchAllQuestions();
       setQuestions(results);
     } catch (error) {
       console.log("Error fetching questions")

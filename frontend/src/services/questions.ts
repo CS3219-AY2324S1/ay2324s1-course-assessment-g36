@@ -17,27 +17,13 @@ export async function addQuestion(
   return fetchDataOrThrowError(QUESTIONS_API, requestOptions)
 }
 
-export async function fetchAllQuestions(token: string): Promise<QuestionObject[]> {
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }
-  return fetchDataOrThrowError(QUESTIONS_API, requestOptions)
+export async function fetchAllQuestions(): Promise<QuestionObject[]> {
+  return fetchDataOrThrowError(QUESTIONS_API)
 }
 
-export async function fetchQuestion(id: number, token: string): Promise<QuestionObject> {
+export async function fetchQuestion(id: number): Promise<QuestionObject> {
   const fetchSingleQuestionApi = `${QUESTIONS_API}/id/${id}`
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }
-  return fetchDataOrThrowError(fetchSingleQuestionApi, requestOptions)
+  return fetchDataOrThrowError(fetchSingleQuestionApi)
 }
 
 export async function deleteQuestion(id: number, token: string): Promise<void> {

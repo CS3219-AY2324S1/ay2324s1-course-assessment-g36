@@ -6,14 +6,12 @@ import { Grid, GridItem } from '@chakra-ui/react'
 import { QuestionObject } from '@/interfaces';
 import io from "socket.io-client";
 import { fetchQuestion } from '@/services/questions';
-import { useJwt } from '@/utils/hooks';
 import CodeConsole from '@/components/CodeRoom/CodeConsole/CodeConsole';
 import styles from "./room.module.css"
-import SpinnerLoader from '@/components/Loader/SpinnerLoader';
 
 interface PageProps {
   id: string;
-  questionId: number;
+  question: QuestionObject;
 }
 
 const socket = io("http://localhost:5173")
@@ -23,13 +21,10 @@ const GET_LATEST_PROGRAMMING_LANGUAGE_EVENT = "programming_language:get"
 const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update"
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive"
 
-export default function CodeRoom({ id, questionId }: PageProps) {
+export default function CodeRoom({ id, question }: PageProps) {
   const [isDomLoaded, setIsDomLoaded] = useState(false)
-  const [isQuestionLoaded, setIsQuestionLoaded] = useState(false)
   const [programmingLanguage, setProgrammingLanguage] = useState("python")
-  const [question, setQuestion] = useState<QuestionObject>({} as QuestionObject);
 
-  const token = useJwt();
   const [codeFromEditor, setCodeFromEditor] = useState("")
 
   function onProgrammingLanguageChange(language: string) {
@@ -37,16 +32,6 @@ export default function CodeRoom({ id, questionId }: PageProps) {
     socket.emit(UPDATE_PROGRAMMING_LANGUAGE_EVENT, { language: language, room: id })
   }
 
-  async function getQuestion() {
-    try {
-      const result = await fetchQuestion(questionId, token);
-      setQuestion(result);
-      setIsQuestionLoaded(true);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-    
   function onCodeChange(code: string) {
     setCodeFromEditor(code)
   }
@@ -56,8 +41,6 @@ export default function CodeRoom({ id, questionId }: PageProps) {
       socket.emit(JOIN_ROOM_EVENT, id)
       setIsDomLoaded(true);
     }
-
-    getQuestion();
 
     // Handles the scenario where a user refreshes his page
     // It should display the latest programming language if it was changed earlier
@@ -72,10 +55,6 @@ export default function CodeRoom({ id, questionId }: PageProps) {
       console.info(data)
     })
   }, [isDomLoaded, id])
-
-  if (!isQuestionLoaded) {
-    return <SpinnerLoader/>;
-  }
 
   return (
     <>
@@ -130,10 +109,12 @@ export async function getServerSideProps(context: any) {
 
   const { id, questionId } = query;
 
+  const question = await fetchQuestion(questionId);
+
   return {
     props: {
       id,
-      questionId
+      question
     },
   };
 }
