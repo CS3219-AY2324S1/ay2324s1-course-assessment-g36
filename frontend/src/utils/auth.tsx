@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { decode } from "jsonwebtoken";
 
 type User = {
@@ -14,6 +21,7 @@ type AuthState =
 
 const AuthContext = createContext({
   state: { state: "uninitialized" } as AuthState,
+  setToken: (_token: string) => {},
 });
 
 export function AuthProvider(props: { children: React.ReactNode }) {
@@ -22,6 +30,24 @@ export function AuthProvider(props: { children: React.ReactNode }) {
     token: null,
     user: null,
   });
+
+  const setToken = useCallback((token: string) => {
+    if (token === "") {
+      setAuthState({
+        state: "unauthenticated",
+        token: null,
+        user: null,
+      });
+      localStorage.removeItem("token");
+      return;
+    }
+
+    try {
+      const user = decode(token) as User;
+      setAuthState({ state: "authenticated" as const, token, user });
+      localStorage.setItem("token", token);
+    } catch (err) {}
+  }, []);
 
   useEffect(() => {
     let user: User | null = null;
@@ -40,7 +66,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ state: authState }}>
+    <AuthContext.Provider value={{ state: authState, setToken }}>
       {props.children}
     </AuthContext.Provider>
   );
@@ -48,6 +74,16 @@ export function AuthProvider(props: { children: React.ReactNode }) {
 
 export function useAuth() {
   const authContext = useContext(AuthContext);
+  const { state: authState, setToken } = authContext;
+  const { state, user, token } = authState;
 
-  return authContext.state;
+  return useMemo(
+    () => ({
+      state,
+      user,
+      token,
+      setToken,
+    }),
+    [setToken, state, token, user],
+  );
 }
