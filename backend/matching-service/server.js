@@ -8,17 +8,19 @@ import { MatchService } from "./match-service.js";
 import { generateCodeRoomId } from "./utils/generateRoomId.js";
 import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
-import jwt from 'jsonwebtoken';
-import dotenv from "dotenv"
-dotenv.config({path: "../.env"})
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config({ path: "../.env" });
 
 const app = express();
-app.use(cors({
-  origin: ["http://localhost:3000"],
-  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-  allowedHeaders: "Content-Type",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+    allowedHeaders: "Content-Type",
+    credentials: true,
+  }),
+);
 
 const httpServer = createServer(app);
 
@@ -35,13 +37,15 @@ wss.on("connection", (ws) => {
   ws.on("close", () => {
     const removedUser = matchService.removeUserFromQueue(ws);
     if (removedUser) {
-      console.info(`Connection closed; "${ws.complexity}": Removed user ${ws.username}`);
+      console.info(
+        `Connection closed; "${ws.complexity}": Removed user ${ws.username}`,
+      );
     } else {
       console.info(`Connection closed: User ${ws.username}`);
     }
   });
 
-  ws.on("message", async function(_message) {
+  ws.on("message", async function (_message) {
     const message = JSON.parse(_message.toString());
     console.log("Received message: %s", _message);
 
@@ -54,7 +58,7 @@ wss.on("connection", (ws) => {
         } = message;
 
         // Authenticate users
-        let user
+        let user;
         try {
           user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
         } catch (error) {
@@ -63,7 +67,11 @@ wss.on("connection", (ws) => {
           return;
         }
 
-        if (complexity !== "Easy" && complexity !== "Medium" && complexity !== "Hard") {
+        if (
+          complexity !== "Easy" &&
+          complexity !== "Medium" &&
+          complexity !== "Hard"
+        ) {
           console.error("Invalid complexity");
           ws.close();
           return;
@@ -87,9 +95,25 @@ wss.on("connection", (ws) => {
           matchedUser.matchedUser = ws;
           const uniqueRoomId = generateCodeRoomId();
           getRandomQuestionId(ws.complexity).then((questionId) => {
-            ws.send(JSON.stringify({ status: "matched", username: matchedUser.username, room_id: uniqueRoomId, question_id: questionId }));
-            matchedUser.send(JSON.stringify({ status: "matched", username: ws.username, room_id: uniqueRoomId, question_id: questionId }));
-            console.info(`"${complexity}": Matched user ${matchedUser.username} to user ${user.username} with question ${questionId}`);
+            ws.send(
+              JSON.stringify({
+                status: "matched",
+                username: matchedUser.username,
+                room_id: uniqueRoomId,
+                question_id: questionId,
+              }),
+            );
+            matchedUser.send(
+              JSON.stringify({
+                status: "matched",
+                username: ws.username,
+                room_id: uniqueRoomId,
+                question_id: questionId,
+              }),
+            );
+            console.info(
+              `"${complexity}": Matched user ${matchedUser.username} to user ${user.username} with question ${questionId}`,
+            );
             ws.close();
             matchedUser.close();
           });
