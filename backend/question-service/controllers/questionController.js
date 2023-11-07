@@ -1,27 +1,19 @@
 const { Complexity } = require("../models/enums");
 const Questions = require("../models/questionModel");
-require('dotenv').config({path: "../.env"});
+const jwt = require('jsonwebtoken');
 
-const authenticate = async (req, res, next) => {
-    try {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
-    } catch {
-        return res.sendStatus(401);
-    }
-    next();
-};
+require('dotenv').config({path: "../.env"});
 
 const authenticateAdmin = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
-        const { user } = jwt.verify(token, process.env.JWT_TOKEN_SECRET);
+        const user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
         if (!user.isAdmin) {
             return res.sendStatus(401);
         }
-    } catch {
+    } catch (err) {
+        console.log(err)
         return res.sendStatus(401);
     }
     next();
@@ -177,7 +169,6 @@ const deleteQuestion = async (req, res, next) => {
 }
 
 module.exports = {
-    authenticate,
     authenticateAdmin,
     addQuestion,
     getAllQuestions,
