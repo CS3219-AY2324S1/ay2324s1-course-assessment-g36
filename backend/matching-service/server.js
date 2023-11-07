@@ -1,16 +1,16 @@
 import { createServer } from "http";
 
-import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import jwt from "jsonwebtoken";
 import { WebSocketServer } from "ws";
 
 import { MatchService } from "./match-service.js";
 import { generateCodeRoomId } from "./utils/generateRoomId.js";
 import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config({ path: "../.env" });
+dotenv.config();
 
 const app = express();
 app.use(
