@@ -51,7 +51,7 @@ export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {
 
   const attemptListPromises = data.map(async (item: any) => {
     try {
-      const question = await fetchQuestion(item.questionId, token);
+      const question = await fetchQuestion(item.questionId);
 
       return {
         id: item.attemptId,

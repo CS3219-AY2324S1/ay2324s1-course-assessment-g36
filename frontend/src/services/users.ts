@@ -59,5 +59,9 @@ export async function deleteUser(id: string, token: string): Promise<void> {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   };
-  fetchDataOrThrowError(deleteUserApi, requestOptions)
+  const response = await fetch(deleteUserApi, requestOptions)
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.error)
+  }
 }
