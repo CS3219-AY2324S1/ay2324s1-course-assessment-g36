@@ -3,8 +3,6 @@ const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 
-require("dotenv").config({ path: "../.env" });
-
 const authenticateAdmin = async (req, res, next) => {
   if (["/login", "/register"].includes(req.path)) {
     next();
