@@ -2,8 +2,6 @@ const { Complexity } = require("../models/enums");
 const Questions = require("../models/questionModel");
 const jwt = require("jsonwebtoken");
 
-require("dotenv").config({ path: "../.env" });
-
 const authenticateAdmin = async (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
