@@ -2,6 +2,8 @@
 
 ## Getting started
 
+Note: Please use Node.js v18 and above. E.g. v18.12.0
+
 1. Run `npm install` to install dependencies.
 1. Run `npm start` to start the server. Use the `PORT` environment variable to customize the port. (default: 3002)
 
