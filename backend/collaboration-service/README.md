@@ -8,9 +8,8 @@
    npm install
    ```
 
-3. Run the server:
+2. Run the server:
 
    ```
    npm start
    ```
-
