@@ -3,24 +3,22 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  Box
-} from '@chakra-ui/react'
+  Box,
+} from "@chakra-ui/react";
 
 interface IOwnProps {
   title: string;
   message: string;
 }
 
-export default function AlertBanner({ title, message}: IOwnProps) {
+export default function AlertBanner({ title, message }: IOwnProps) {
   return (
-    <Alert status='error'>
+    <Alert status="error">
       <AlertIcon />
       <Box>
-        <AlertTitle>{ title }</AlertTitle>
-        <AlertDescription>
-          { message }
-        </AlertDescription>
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{message}</AlertDescription>
       </Box>
     </Alert>
-  )
+  );
 }

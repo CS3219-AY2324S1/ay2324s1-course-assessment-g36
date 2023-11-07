@@ -32,7 +32,10 @@ export default function LoginForm(): JSX.Element {
 
   const handlePasswordClick = () => setShow(!show);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: string,
+  ) => {
     setLoginForm({ ...loginForm, [fieldName]: e.target.value });
   };
 
@@ -56,7 +59,9 @@ export default function LoginForm(): JSX.Element {
   };
 
   function isDisabled(): boolean {
-    return loginForm.username == "" || loginForm.password == "" || isFormSubmitting;
+    return (
+      loginForm.username == "" || loginForm.password == "" || isFormSubmitting
+    );
   }
 
   return (
@@ -92,7 +97,11 @@ export default function LoginForm(): JSX.Element {
         </InputGroup>
       </FormControl>
 
-      <Button colorScheme="blue" isDisabled={isDisabled()} onClick={(e) => handleSubmit(loginForm)}>
+      <Button
+        colorScheme="blue"
+        isDisabled={isDisabled()}
+        onClick={(e) => handleSubmit(loginForm)}
+      >
         Continue
       </Button>
       <Text align={"center"}>

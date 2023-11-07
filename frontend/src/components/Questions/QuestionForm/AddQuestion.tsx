@@ -7,18 +7,17 @@ import {
   ModalBody,
   ModalFooter,
   ModalCloseButton,
-  useDisclosure
-} from '@chakra-ui/react'
-import QuestionForm from './QuestionForm';
-import { QuestionObject } from '@/interfaces';
+  useDisclosure,
+} from "@chakra-ui/react";
+import QuestionForm from "./QuestionForm";
+import { QuestionObject } from "@/interfaces";
 
 interface IOwnProps {
-  addQuestion: (newQuestion: QuestionObject) => void
+  addQuestion: (newQuestion: QuestionObject) => void;
 }
 
 export default function AddQuestion({ addQuestion }: IOwnProps): JSX.Element {
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -31,10 +30,9 @@ export default function AddQuestion({ addQuestion }: IOwnProps): JSX.Element {
           <ModalBody>
             <QuestionForm onModalClose={onClose} addQuestion={addQuestion} />
           </ModalBody>
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

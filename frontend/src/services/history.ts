@@ -4,38 +4,44 @@ import { HISTORY_API } from "./api";
 import { fetchDataOrThrowError } from "./utils";
 
 function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('default', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+  return new Date(date).toLocaleDateString("default", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
   });
 }
 
-export async function createHistory(attempt: AttemptForm, token: string): Promise<Attempt> {
+export async function createHistory(
+  attempt: AttemptForm,
+  token: string,
+): Promise<Attempt> {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(attempt)
+    body: JSON.stringify(attempt),
   };
-  return fetchDataOrThrowError(HISTORY_API, requestOptions)
+  return fetchDataOrThrowError(HISTORY_API, requestOptions);
 }
 
-export async function updateHistory(attempt: Attempt, token: string): Promise<Attempt> {
+export async function updateHistory(
+  attempt: Attempt,
+  token: string,
+): Promise<Attempt> {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(attempt)
+    body: JSON.stringify(attempt),
   };
-  return fetchDataOrThrowError(HISTORY_API, requestOptions)
+  return fetchDataOrThrowError(HISTORY_API, requestOptions);
 }
 
 export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {
@@ -47,7 +53,7 @@ export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {
     },
   };
 
-  const data = await fetchDataOrThrowError(HISTORY_API, requestOptions)
+  const data = await fetchDataOrThrowError(HISTORY_API, requestOptions);
 
   const attemptListPromises = data.map(async (item: any) => {
     try {
@@ -64,27 +70,30 @@ export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {
         description: question.description,
         attempt: item.attempt,
         language: item.language,
-        date: formatDate(item.updatedAt)
+        date: formatDate(item.updatedAt),
       };
     } catch (err) {
       return null;
     }
-  })
+  });
 
   const attemptList = await Promise.all(attemptListPromises);
 
   return attemptList.filter((item: any) => item !== null);
 }
 
-export async function deleteHistory(attemptId: number, token: string): Promise<void> {
-  const deleteHistoryApi = `${HISTORY_API}/${attemptId}`
+export async function deleteHistory(
+  attemptId: number,
+  token: string,
+): Promise<void> {
+  const deleteHistoryApi = `${HISTORY_API}/${attemptId}`;
   const requestOptions = {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   };
-  const response = await fetch(deleteHistoryApi, requestOptions)
+  const response = await fetch(deleteHistoryApi, requestOptions);
   if (!response.ok) {
-    const data = await response.json()
-    throw new Error(data.error)
+    const data = await response.json();
+    throw new Error(data.error);
   }
 }

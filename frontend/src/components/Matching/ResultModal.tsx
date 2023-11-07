@@ -1,42 +1,44 @@
 import { MAX_MATCH_WAIT_S } from "@/constants";
-import { MatchCriteria } from "@/interfaces"
+import { MatchCriteria } from "@/interfaces";
 import { useJwt } from "@/utils/hooks";
 import {
   Modal,
   ModalBody,
   ModalContent,
   ModalOverlay,
-  Text
-} from '@chakra-ui/react'
+  Text,
+} from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
 interface IOwnProps {
-  criteria: MatchCriteria
-  isModalOpen: boolean
-  onModalClose: () => void
+  criteria: MatchCriteria;
+  isModalOpen: boolean;
+  onModalClose: () => void;
 }
 
-const SECOND = 1000
+const SECOND = 1000;
 
 type MatchState =
   | { status: "not-matching" }
   | {
-    status: "matching";
-    secondsRemaining: number;
-  }
+      status: "matching";
+      secondsRemaining: number;
+    }
   | {
-    status: "matched";
-    username: string;
-    room_id: string;
-    question_id: number;
-  }
+      status: "matched";
+      username: string;
+      room_id: string;
+      question_id: number;
+    }
   | { status: "timed-out" };
 
 function useMatcher() {
   const wsRef = useRef<WebSocket>();
-  const [matchState, setMatchState] = useState<MatchState>({ status: "not-matching" });
+  const [matchState, setMatchState] = useState<MatchState>({
+    status: "not-matching",
+  });
   const intervalIdRef = useRef<NodeJS.Timeout>();
-  const token = useJwt()
+  const token = useJwt();
 
   function match(criteria: MatchCriteria) {
     function cleanup() {
@@ -59,13 +61,12 @@ function useMatcher() {
             // No-op
             break;
           case "matched":
-            setMatchState(
-              {
-                status: "matched",
-                username: message.username,
-                room_id: message.room_id,
-                question_id: message.question_id
-              });
+            setMatchState({
+              status: "matched",
+              username: message.username,
+              room_id: message.room_id,
+              question_id: message.question_id,
+            });
             cleanup();
         }
       });
@@ -78,11 +79,13 @@ function useMatcher() {
       });
       // Send initial matching request.
       wsRef.current.addEventListener("open", () => {
-        wsRef.current?.send(JSON.stringify({
-          type: "initialization",
-          question_complexity: criteria.difficulty,
-          token: token,
-        }));
+        wsRef.current?.send(
+          JSON.stringify({
+            type: "initialization",
+            question_complexity: criteria.difficulty,
+            token: token,
+          }),
+        );
       });
     }
 
@@ -120,22 +123,25 @@ function useMatcher() {
 }
 
 function redirectToCodeRoom(room_id: string, question_id: number): void {
-
   const queryParams = new URLSearchParams();
 
-  queryParams.append('questionId', question_id.toString());
+  queryParams.append("questionId", question_id.toString());
 
-  const queryString = queryParams.toString()
+  const queryString = queryParams.toString();
   const redirectUrl = `/room/${room_id}?${queryString}`;
-  window.location.href = redirectUrl
+  window.location.href = redirectUrl;
 }
 
-export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
+export default function ResultModal({
+  criteria,
+  isModalOpen,
+  onModalClose,
+}: IOwnProps) {
   const { matchState, match } = useMatcher();
 
   // Begin matching once modal opens.
   useEffect(() => {
-    const cleanup = isModalOpen ? match(criteria) : () => { };
+    const cleanup = isModalOpen ? match(criteria) : () => {};
 
     return cleanup;
   }, [isModalOpen]);
@@ -144,17 +150,27 @@ export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOw
     redirectToCodeRoom(matchState.room_id, matchState.question_id);
   }
 
-  return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>
-    <ModalOverlay />
-    <ModalContent>
-      <ModalBody>
-        {matchState.status === "matching"
-          ? <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
-          : matchState.status === "matched"
-            ? <Text>{`Matched with: ${matchState.username}`}</Text>
-            : <Text>Failed to find match</Text>
-        }
-      </ModalBody>
-    </ModalContent>
-  </Modal>
+  return (
+    <Modal
+      isOpen={isModalOpen}
+      closeOnOverlayClick={matchState.status !== "matching"}
+      closeOnEsc={matchState.status !== "matching"}
+      onClose={onModalClose}
+      size="3xl"
+      isCentered
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalBody>
+          {matchState.status === "matching" ? (
+            <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
+          ) : matchState.status === "matched" ? (
+            <Text>{`Matched with: ${matchState.username}`}</Text>
+          ) : (
+            <Text>Failed to find match</Text>
+          )}
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
 }

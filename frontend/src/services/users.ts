@@ -8,26 +8,26 @@ export async function createUser(userForm: UserForm): Promise<User> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(userForm)
+    body: JSON.stringify(userForm),
   };
-  return fetchDataOrThrowError(CREATE_USER_API, requestOptions)
+  return fetchDataOrThrowError(CREATE_USER_API, requestOptions);
 }
 
 export async function updateUser(
   id: string,
   updateUserForm: UpdateUserProfileForm,
-  token: string
+  token: string,
 ): Promise<User> {
-  const updateUserApi = `${USERS_API}/${id}`
+  const updateUserApi = `${USERS_API}/${id}`;
   const requestOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(updateUserForm)
+    body: JSON.stringify(updateUserForm),
   };
-  return fetchDataOrThrowError(updateUserApi, requestOptions)
+  return fetchDataOrThrowError(updateUserApi, requestOptions);
 }
 
 export async function fetchAllUsers(token: string): Promise<User[]> {
@@ -37,8 +37,8 @@ export async function fetchAllUsers(token: string): Promise<User[]> {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  }
-  return fetchDataOrThrowError(USERS_API, requestOptions)
+  };
+  return fetchDataOrThrowError(USERS_API, requestOptions);
 }
 
 export async function fetchUser(id: string, token: string): Promise<User> {
@@ -48,20 +48,20 @@ export async function fetchUser(id: string, token: string): Promise<User> {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  }
-  const fetchUserApi = `${USERS_API}/${id}`
-  return fetchDataOrThrowError(fetchUserApi, requestOptions)
+  };
+  const fetchUserApi = `${USERS_API}/${id}`;
+  return fetchDataOrThrowError(fetchUserApi, requestOptions);
 }
 
 export async function deleteUser(id: string, token: string): Promise<void> {
-  const deleteUserApi = `${USERS_API}/${id}`
+  const deleteUserApi = `${USERS_API}/${id}`;
   const requestOptions = {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   };
-  const response = await fetch(deleteUserApi, requestOptions)
+  const response = await fetch(deleteUserApi, requestOptions);
   if (!response.ok) {
-    const data = await response.json()
-    throw new Error(data.error)
+    const data = await response.json();
+    throw new Error(data.error);
   }
 }

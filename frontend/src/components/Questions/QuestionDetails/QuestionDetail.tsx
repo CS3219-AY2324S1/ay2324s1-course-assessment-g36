@@ -1,4 +1,4 @@
-import { QuestionObject } from "@/interfaces"
+import { QuestionObject } from "@/interfaces";
 import {
   Modal,
   ModalOverlay,
@@ -7,18 +7,22 @@ import {
   ModalBody,
   ModalFooter,
   ModalCloseButton,
-  Button
-} from '@chakra-ui/react'
-import Link from "next/link"
-import QuestionDescription from "../QuestionDescription/QuestionDescription"
+  Button,
+} from "@chakra-ui/react";
+import Link from "next/link";
+import QuestionDescription from "../QuestionDescription/QuestionDescription";
 
 interface IOwnProps {
-  question: QuestionObject
+  question: QuestionObject;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function QuestionDetail({ question, isOpen, onClose }: IOwnProps): JSX.Element {
+export default function QuestionDetail({
+  question,
+  isOpen,
+  onClose,
+}: IOwnProps): JSX.Element {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
@@ -31,9 +35,11 @@ export default function QuestionDetail({ question, isOpen, onClose }: IOwnProps)
           <QuestionDescription description={question.description} />
         </ModalBody>
         <ModalFooter>
-          <Link href={question.link}><Button colorScheme="green">Check out here</Button></Link>
+          <Link href={question.link}>
+            <Button colorScheme="green">Check out here</Button>
+          </Link>
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
+  );
 }

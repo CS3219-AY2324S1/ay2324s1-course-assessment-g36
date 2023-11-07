@@ -1,4 +1,11 @@
-import { IconButton, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from "@chakra-ui/react";
+import {
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
@@ -12,7 +19,7 @@ const PATH_QUESTIONS = "/questions";
 const PATH_PROFILES = "/profiles";
 const PATH_MATCH = "/match";
 const PATH_HISTORY = "/history";
-const PATH_MY_PROFILE = "/profile"
+const PATH_MY_PROFILE = "/profile";
 
 export default function Header(): JSX.Element {
   const router = useRouter();
@@ -41,10 +48,17 @@ export default function Header(): JSX.Element {
             View Profiles
           </Link>
         )}
-        {!isAdmin && <Link href={PATH_MATCH} className={styles.nav_link}>
-          Practice with a peer
-        </Link>}
-        <AccountMenu signOut={handleSignOut} isAdmin={isAdmin} username={username} userId={userId}/>
+        {!isAdmin && (
+          <Link href={PATH_MATCH} className={styles.nav_link}>
+            Practice with a peer
+          </Link>
+        )}
+        <AccountMenu
+          signOut={handleSignOut}
+          isAdmin={isAdmin}
+          username={username}
+          userId={userId}
+        />
       </nav>
 
       {/* Mobile navbar */}
@@ -57,17 +71,29 @@ export default function Header(): JSX.Element {
             variant="outline"
           />
           <MenuList>
-            <MenuItem onClick={() => router.push(PATH_QUESTIONS)}>Questions</MenuItem>
+            <MenuItem onClick={() => router.push(PATH_QUESTIONS)}>
+              Questions
+            </MenuItem>
             {isAdmin && (
-              <MenuItem onClick={() => router.push(PATH_PROFILES)}>View Profiles</MenuItem>
+              <MenuItem onClick={() => router.push(PATH_PROFILES)}>
+                View Profiles
+              </MenuItem>
             )}
             {!isAdmin && (
-            <MenuItem onClick={() => router.push(PATH_MATCH)}>Practice with a peer</MenuItem>
+              <MenuItem onClick={() => router.push(PATH_MATCH)}>
+                Practice with a peer
+              </MenuItem>
             )}
             {!isAdmin && (
-            <MenuItem onClick={() => router.push(PATH_HISTORY)}>My History</MenuItem>
+              <MenuItem onClick={() => router.push(PATH_HISTORY)}>
+                My History
+              </MenuItem>
             )}
-            <MenuItem onClick={() => router.push(PATH_MY_PROFILE + `/${userId}`)}>My Profile</MenuItem>
+            <MenuItem
+              onClick={() => router.push(PATH_MY_PROFILE + `/${userId}`)}
+            >
+              My Profile
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 setToken("");
