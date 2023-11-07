@@ -11,6 +11,8 @@ import AccountMenu from "./AccountMenu";
 const PATH_QUESTIONS = "/questions";
 const PATH_PROFILES = "/profiles";
 const PATH_MATCH = "/match";
+const PATH_HISTORY = "/history";
+const PATH_MY_PROFILE = "/profile"
 
 export default function Header(): JSX.Element {
   const router = useRouter();
@@ -59,7 +61,13 @@ export default function Header(): JSX.Element {
             {isAdmin && (
               <MenuItem onClick={() => router.push(PATH_PROFILES)}>View Profiles</MenuItem>
             )}
+            {!isAdmin && (
             <MenuItem onClick={() => router.push(PATH_MATCH)}>Practice with a peer</MenuItem>
+            )}
+            {!isAdmin && (
+            <MenuItem onClick={() => router.push(PATH_HISTORY)}>My History</MenuItem>
+            )}
+            <MenuItem onClick={() => router.push(PATH_MY_PROFILE + `/${userId}`)}>My Profile</MenuItem>
             <MenuItem
               onClick={() => {
                 setToken("");
