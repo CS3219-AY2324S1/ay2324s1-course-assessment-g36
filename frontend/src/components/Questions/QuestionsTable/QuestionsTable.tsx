@@ -10,7 +10,7 @@ import {
 import QuestionRow from '../QuestionRow/QuestionRow'
 import { QuestionObject } from '@/interfaces';
 import styles from "./QuestionsTable.module.css"
-import { fetchAllQuestions, addQuestion, fetchQuestion, deleteQuestion } from '@/services/questions';
+import { fetchAllQuestions, addQuestion, deleteQuestion } from '@/services/questions';
 import AddQuestion from '../QuestionForm/AddQuestion';
 import SkeletonLoader from '@/components/Loader/SkeletonLoader';
 import { useIsAdmin, useJwt } from '@/utils/hooks';
@@ -29,7 +29,7 @@ export default function QuestionsTable(): JSX.Element {
 
   async function fetchData() {
     try {
-      const results = await fetchAllQuestions(token);
+      const results = await fetchAllQuestions();
       setQuestions(results);
     } catch (error) {
       console.log("Error fetching questions")
@@ -45,10 +45,10 @@ export default function QuestionsTable(): JSX.Element {
     }
   }
 
-  async function removeQuestion(questionTitle: string) {
+  async function removeQuestion(questionId: number) {
     try {
-      await deleteQuestion(questionTitle, token);
-      const filteredQuestions = questions.filter(question => question.title != questionTitle);
+      await deleteQuestion(questionId, token);
+      const filteredQuestions = questions.filter(question => question.id != questionId);
       setQuestions(filteredQuestions)
     } catch (error) {
       console.log(error);

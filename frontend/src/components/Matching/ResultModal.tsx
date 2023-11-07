@@ -26,13 +26,13 @@ type MatchState =
   }
   | {
     status: "matched";
-    user_id: number;
     username: string;
     room_id: string;
+    question_id: number;
   }
   | { status: "timed-out" };
 
-function useMatcher({ userId }: { userId: number }) {
+function useMatcher() {
   const wsRef = useRef<WebSocket>();
   const [matchState, setMatchState] = useState<MatchState>({ status: "not-matching" });
   const intervalIdRef = useRef<NodeJS.Timeout>();
@@ -62,9 +62,9 @@ function useMatcher({ userId }: { userId: number }) {
             setMatchState(
               {
                 status: "matched",
-                user_id: message.user_id,
-                username: `User ${message.user_id}`,
-                room_id: message.room_id
+                username: message.username,
+                room_id: message.room_id,
+                question_id: message.question_id
               });
             cleanup();
         }
@@ -81,7 +81,6 @@ function useMatcher({ userId }: { userId: number }) {
         wsRef.current?.send(JSON.stringify({
           type: "initialization",
           question_complexity: criteria.difficulty,
-          user_id: userId,
           token: token,
         }));
       });
@@ -120,25 +119,19 @@ function useMatcher({ userId }: { userId: number }) {
   };
 }
 
-function redirectToCodeRoom(room_id: string, criteria: MatchCriteria): void {
+function redirectToCodeRoom(room_id: string, question_id: number): void {
 
   const queryParams = new URLSearchParams();
 
-  for (const key in criteria) {
-    if (criteria.hasOwnProperty(key)) {
-      queryParams.append(key, criteria[key as keyof MatchCriteria]);
-    }
-  }
+  queryParams.append('questionId', question_id.toString());
 
   const queryString = queryParams.toString()
-  const redirectUrl = `/room/${room_id}?${queryString}`
+  const redirectUrl = `/room/${room_id}?${queryString}`;
   window.location.href = redirectUrl
 }
 
 export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOwnProps) {
-  // TODO: replace with current user ID.
-  const [userId] = useState(() => Math.round(Math.random() * 1000));
-  const { matchState, match } = useMatcher({ userId });
+  const { matchState, match } = useMatcher();
 
   // Begin matching once modal opens.
   useEffect(() => {
@@ -148,7 +141,7 @@ export default function ResultModal({ criteria, isModalOpen, onModalClose }: IOw
   }, [isModalOpen]);
 
   if (matchState.status === "matched") {
-    redirectToCodeRoom(matchState.room_id, criteria);
+    redirectToCodeRoom(matchState.room_id, matchState.question_id);
   }
 
   return <Modal isOpen={isModalOpen} closeOnOverlayClick={matchState.status !== "matching"} closeOnEsc={matchState.status !== "matching"} onClose={onModalClose} size="3xl" isCentered>

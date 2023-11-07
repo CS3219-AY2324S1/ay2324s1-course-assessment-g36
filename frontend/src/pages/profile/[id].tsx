@@ -4,12 +4,13 @@ import Layout from '@/components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { User } from "@/interfaces"
 import { fetchUser } from "@/services/users"
-import { Heading, HStack, Stack, Text, Button, useToast } from '@chakra-ui/react'
+import { Heading, HStack, Stack, Text, Button, useToast, Tooltip } from '@chakra-ui/react'
 import { deleteUser } from "@/services/users"
 import Link from "next/link"
 import { Status } from "@/enums"
 import SkeletonLoader from "@/components/Loader/SkeletonLoader"
-import { useJwt } from "@/utils/hooks"
+import { useUserId } from "@/utils/hooks"
+import { useLocalStorage } from "usehooks-ts";
 
 export default function ProfileDetail() {
 
@@ -33,12 +34,14 @@ export default function ProfileDetail() {
   const router = useRouter()
   const userId = router.query.id as string
   const toast = useToast()
-  const token = useJwt()
+  const [_token, setToken] = useLocalStorage("token", "");
+  const currUserId = `${useUserId()}`;
+  const isCurrUser = userId == currUserId;
 
   async function fetchData(id: string) {
 
     try {
-      const results = await fetchUser(id, token);
+      const results = await fetchUser(id, _token);
       setProfileData(results)
       setStatus(Status.Success)
     } catch (error: any) {
@@ -54,8 +57,12 @@ export default function ProfileDetail() {
 
   async function handleDelete() {
     try {
-      await deleteUser(userId, token)
-      window.location.href = "/profiles";
+      await deleteUser(userId, _token)
+      if (isCurrUser) {
+        setToken(""); // sign out
+      } else {
+        window.location.href = "/profiles";
+      }
     } catch (error: any) {
       toast({
         title: error.message,
@@ -98,12 +105,17 @@ export default function ProfileDetail() {
               <Text>Website: {profileData.website} </Text>
               <Text>Contact: {profileData.email} </Text>
               <HStack>
-                <Link href={`/profile/${userId}/update`}>
+                {/* only allow update if it's the current user */}
+                {isCurrUser && <Link href={`/profile/${userId}/update`}>
                   <Button colorScheme="teal">
                     Update Profile
                   </Button>
-                </Link>
-                <Button colorScheme="red" onClick={handleDelete}>Delete Account</Button>
+                </Link>}
+                <Tooltip hasArrow label="This action is irreversible!" placement="right" aria-label="A tooltip about deleting account">
+                  <Button colorScheme="red" onClick={handleDelete}>
+                    Delete Account
+                  </Button>
+                </Tooltip>
               </HStack>
             </Stack>
             : <></>}

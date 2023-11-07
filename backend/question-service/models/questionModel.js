@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Complexity } = require("./enums");
 const Schema = mongoose.Schema;
 
 const questionSchema = new Schema ({
@@ -11,7 +12,10 @@ const questionSchema = new Schema ({
         unique: true,
     },
     categories: [String],
-    complexity: String,
+    complexity: {
+        type: String,
+        enum: Object.values(Complexity)
+    },
     link: String,
     description: String,
 })

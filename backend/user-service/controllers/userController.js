@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config({path: "../.env"});
 
-const authenticate = async (req, res, next) => {
+const authenticateAdmin = async (req, res, next) => {
     if (['/login', '/register'].includes(req.path)) {
         next();
         return;
@@ -14,8 +14,25 @@ const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
-        console.log()
         if (!jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET).isAdmin) {
+            return res.sendStatus(401);
+        }
+    } catch {
+        return res.sendStatus(401);
+    }
+    next();
+};
+
+const authenticateProfile = async (req, res, next, value) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        const user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET)
+
+        const requestType = req.method;
+
+        if (`${user.userId}` !== value 
+            && !(user.isAdmin && requestType !== 'PUT')) {
             return res.sendStatus(401);
         }
     } catch {
@@ -86,6 +103,7 @@ const loginUser = async (req, res, next) => {
 
         const token = jwt.sign(
             {
+                userId: user.userId,
                 username: user.username,
                 isAdmin: user.isAdmin,
             },
@@ -134,7 +152,6 @@ const updateUser = async (req, res, next) => {
 
         const { username, password, firstName, lastName, summary, education, work, github, website } = req.body;
 
-        // TODO: make this nicer?
         if (username && typeof username == 'string') {
             const existingUser = await Users.findOne({ where: { username: username }});
     
@@ -203,7 +220,8 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
-    authenticate,
+    authenticateAdmin,
+    authenticateProfile,
     addUser,
     loginUser,
     getAllUsers,

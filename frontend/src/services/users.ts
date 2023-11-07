@@ -1,19 +1,6 @@
 import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
-
-const CREATE_USER_API = 'http://localhost:8000/users/register'
-const USERS_API = 'http://localhost:8000/users'
-
-async function fetchDataOrThrowError(api: string, requestOptions = {}): Promise<any> {
-  const response = await fetch(api, requestOptions).then((response) => {
-    if (response.status === 401) {
-      throw new Error("unauthorized")
-    }
-    return response
-  })
-  const results = await response.json()
-  if (!response.ok) throw new Error(results.error)
-  return results.res
-}
+import { USERS_API, CREATE_USER_API } from "./api";
+import { fetchDataOrThrowError } from "./utils";
 
 export async function createUser(userForm: UserForm): Promise<User> {
   const requestOptions = {
@@ -72,5 +59,9 @@ export async function deleteUser(id: string, token: string): Promise<void> {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   };
-  fetchDataOrThrowError(deleteUserApi, requestOptions)
+  const response = await fetch(deleteUserApi, requestOptions)
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.error)
+  }
 }

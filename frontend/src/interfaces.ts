@@ -46,6 +46,25 @@ export interface User {
   updatedAt: string;
 }
 
+export interface Attempt {
+  id: number;
+  questionId: number;
+  title: string;
+  categories: string[];
+  complexity: string;
+  link: string;
+  description: string;
+  attempt: string;
+  language: string;
+  date: string;
+}
+
+export interface AttemptForm {
+  questionId: number;
+  attempt: string;
+  language: string;
+}
+
 // extensible if we want to add criteria
 export interface MatchCriteria {
   difficulty: string;

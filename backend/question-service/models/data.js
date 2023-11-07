@@ -80,12 +80,70 @@ const dummyQuestions = [
       "description": "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement the LRUCache class:\n\nLRUCache(int capacity) Initialize the LRU cache with positive size capacity. int get(int key) Return the value of the key if the key exists, otherwise return 1.\n\nvoid put(int key, int value) Update the value of the key if the key exists. \n\nOtherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key. The functions get and put must each run in O(1) average time complexity."
     },
     {
-      "id": 15,
+      "id": 11,
+      "title": "Zigzag Conversion",
+      "categories": ["String"],
+      "complexity": "Medium",
+      "link": "https://leetcode.com/problems/zigzag-conversion/",
+      "description": "The string 'PAYPALISHIRING' is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)\n\nP   A   H   N\nA P L S I I G\nY   I   R\nAnd then read line by line: 'PAHNAPLSIIGYIR'\n\nWrite the code that will take a string and make this conversion given a number of rows:\n\nstring convert(string s, int numRows);"
+    },
+    {
+      "id": 12,
+      "title": "Search in Rotated Sorted Array",
+      "categories": [
+        "Array",
+        "Binary Search"
+      ],
+      "complexity": "Medium",
+      "link": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "description": "There is an integer array nums sorted in ascending order (with distinct values).\n\nPrior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length) such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed). For example, [0,1,2,4,5,6,7] might be rotated at pivot index 3 and become [4,5,6,7,0,1,2].\n\nGiven the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.\n\nYou must write an algorithm with O(log n) runtime complexity."
+    },
+    {
+      "id": 13,
+      "title": "Median of Two Sorted Arrays",
+      "categories": ["Array"],
+      "complexity": "Hard",
+      "link": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+      "description": "Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.\n\nThe overall run time complexity should be O(log (m+n))."
+    },
+    {
+      "id": 14,
       "title": "Sliding Window Maximum",
-      "categories": ["Arrays, Algorithms"],
+      "categories": ["Arrays", "Algorithms"],
       "complexity": "Hard",
       "link": "https://leetcode.com/problems/sliding-window-maximum/",
       "description": "You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.\n\n Return the max sliding window."
+    },
+    {
+      "id": 15,
+      "title": "Soduku Solver",
+      "categories": ["Array", "Hash Table", "Backtracking", "Matrix"],
+      "complexity": "Hard",
+      "link": "https://leetcode.com/problems/sudoku-solver/",
+      "description": "Write a program to solve a Sudoku puzzle by filling the empty cells.\n\nA sudoku solution must satisfy all of the following rules:\n\nEach of the digits 1-9 must occur exactly once in each row.\nEach of the digits 1-9 must occur exactly once in each column.\nEach of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.\nThe '.' character indicates empty cells."
+    },
+    {
+      "id": 16,
+      "title": "Substring with Concatenation of All Words",
+      "categories": [
+        "String",
+        "Hash Table"
+      ],
+      "complexity": "Hard",
+      "link": "https://leetcode.com/problems/substring-with-concatenation-of-all-words/",
+      "description": "You are given a string s and an array of strings words. All the strings of words are of the same length.\n\nA concatenated substring in s is a substring that contains all the strings of any permutation of words concatenated.\n\nFor example, if words = [\"ab\",\"cd\",\"ef\"], then \"abcdef\", \"abefcd\", \"cdabef\", \"cdefab\", \"efabcd\", and \"efcdab\" are all concatenated strings. \"acdbef\" is not a concatenated substring because it is not the concatenation of any permutation of words.\nReturn the starting indices of all the concatenated substrings in s. You can return the answer in any order."
+    },
+    {
+      "id": 17,
+      "title": "Regular Expression Matching",
+      "categories": [
+        "String",
+        "Dynamic Programming",
+        "Recursion"
+      ],
+      "complexity": "Hard",
+      "link": "https://leetcode.com/problems/regular-expression-matching/",
+      "description": "Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:\n\n'.' Matches any single character.​​​​\n'*' Matches zero or more of the preceding element.\nThe matching should cover the entire input string (not partial)."
     }
   ]
 

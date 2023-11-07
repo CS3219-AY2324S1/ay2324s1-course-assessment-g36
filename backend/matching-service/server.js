@@ -6,6 +6,7 @@ import { WebSocketServer } from "ws";
 
 import { MatchService } from "./match-service.js";
 import { generateCodeRoomId } from "./utils/generateRoomId.js";
+import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv"
@@ -34,27 +35,28 @@ wss.on("connection", (ws) => {
   ws.on("close", () => {
     const removedUser = matchService.removeUserFromQueue(ws);
     if (removedUser) {
-      console.info(`Connection closed; "${ws.complexity}": Removed user ${ws.userId}`);
+      console.info(`Connection closed; "${ws.complexity}": Removed user ${ws.username}`);
     } else {
-      console.info(`Connection closed: User ${ws.userId}`);
+      console.info(`Connection closed: User ${ws.username}`);
     }
   });
 
-  ws.on("message", function(_message) {
+  ws.on("message", async function(_message) {
     const message = JSON.parse(_message.toString());
     console.log("Received message: %s", _message);
 
     switch (message.type) {
       case "initialization": {
         const {
-          user_id: userId,
+          // user_id: userId,
           question_complexity: complexity,
           token,
         } = message;
 
         // Authenticate users
+        let user
         try {
-          jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
+          user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
         } catch (error) {
           console.error("Unauthenticated");
           ws.close();
@@ -67,7 +69,8 @@ wss.on("connection", (ws) => {
           return;
         }
 
-        ws.userId = userId;
+        // ws.userId = userId;
+        ws.username = user.username;
         ws.complexity = complexity;
 
         const matchedUser = matchService.getUserFromQueue(complexity);
@@ -76,18 +79,20 @@ wss.on("connection", (ws) => {
         if (!matchedUser) {
           matchService.addUserToQueue(ws);
           ws.send(JSON.stringify({ status: "initialized" }));
-          console.info(`"${complexity}": Added user ${userId}`);
+          console.info(`"${complexity}": Added user ${user.username}`);
         }
         // Otherwise, send "matched" messages to both users, and close both connections.
         else {
           ws.matchedUser = matchedUser;
           matchedUser.matchedUser = ws;
           const uniqueRoomId = generateCodeRoomId();
-          ws.send(JSON.stringify({ status: "matched", user_id: matchedUser.userId, room_id: uniqueRoomId }));
-          matchedUser.send(JSON.stringify({ status: "matched", user_id: ws.userId, room_id: uniqueRoomId }));
-          console.info(`"${complexity}": Matched user ${matchedUser.userId} to user ${userId}`);
-          ws.close();
-          matchedUser.close();
+          getRandomQuestionId(ws.complexity).then((questionId) => {
+            ws.send(JSON.stringify({ status: "matched", username: matchedUser.username, room_id: uniqueRoomId, question_id: questionId }));
+            matchedUser.send(JSON.stringify({ status: "matched", username: ws.username, room_id: uniqueRoomId, question_id: questionId }));
+            console.info(`"${complexity}": Matched user ${matchedUser.username} to user ${user.username} with question ${questionId}`);
+            ws.close();
+            matchedUser.close();
+          });
         }
 
         return;

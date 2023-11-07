@@ -2,14 +2,16 @@ const express = require('express');
 const questionController = require("../controllers/questionController");
 const questionRouter = express.Router();
 
-questionRouter.post("/", questionController.addQuestion, questionController.authenticateAdmin);
+questionRouter.post("/", questionController.authenticateAdmin, questionController.addQuestion);
 
-questionRouter.get("/", questionController.getAllQuestions, questionController.authenticate);
+questionRouter.get("/", questionController.getAllQuestions);
 
-questionRouter.get("/:questionId", questionController.getQuestionById, questionController.authenticate);
+questionRouter.get("/id/:questionId", questionController.getQuestionById);
 
-questionRouter.put("/:questionId", questionController.updateQuestion, questionController.authenticateAdmin)
+questionRouter.get("/complexity/:complexity", questionController.getRandomIdByComplexity);
 
-questionRouter.delete("/:questionTitle", questionController.deleteQuestion, questionController.authenticateAdmin);
+questionRouter.put("/id/:questionId", questionController.updateQuestion)
+
+questionRouter.delete("/:questionId", questionController.authenticateAdmin, questionController.deleteQuestion);
 
 module.exports = questionRouter;

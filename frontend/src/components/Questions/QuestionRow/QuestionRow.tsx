@@ -11,7 +11,7 @@ import { useIsAdmin } from '@/utils/hooks'
 
 interface IOwnProps {
   question: QuestionObject
-  deleteQuestion: (questionTitle: string) => void
+  deleteQuestion: (questionId: number) => void
 }
 
 export default function QuestionRow({ question, deleteQuestion }: IOwnProps): JSX.Element {
@@ -21,7 +21,7 @@ export default function QuestionRow({ question, deleteQuestion }: IOwnProps): JS
       <Td><QuestionTitle question={question} /></Td>
       <Td><QuestionComplexity complexity={question.complexity}/></Td>
       <Td><QuestionTopic categories={question.categories}/></Td>
-      {isAdmin && <Td><Button size="xs" colorScheme="red" onClick={() => deleteQuestion(question.title)}>X</Button></Td>}
+      {isAdmin && <Td><Button size="xs" colorScheme="red" onClick={() => deleteQuestion(question.id)}>X</Button></Td>}
     </Tr>
 
   )
