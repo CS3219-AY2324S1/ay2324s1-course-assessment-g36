@@ -9,7 +9,6 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import styles from "./Header.module.css";
-import { useLocalStorage } from "usehooks-ts";
 import { useRouter } from "next/router";
 import AccountMenu from "./AccountMenu";
 import { useAuth } from "@/utils/auth";
@@ -22,8 +21,7 @@ const PATH_MY_PROFILE = "/profile";
 
 export default function Header(): JSX.Element {
   const router = useRouter();
-  const [_token, setToken] = useLocalStorage("token", "");
-  const { user } = useAuth();
+  const { user, setToken } = useAuth();
   const { username = "", userId = -1, isAdmin = false } = user ?? {};
 
   function handleSignOut() {
