@@ -1,19 +1,21 @@
 import Head from "next/head";
 import LoginForm from "@/components/Users/Login/LoginForm";
 import { useEffect } from "react";
-import { useLocalStorage } from "usehooks-ts";
 import { useRouter } from "next/router";
 import LoginLayout from "@/components/Layout/LoginLayout";
+import { useAuth } from "@/utils/auth";
 
 export default function Login() {
-  const [token, _setToken] = useLocalStorage("token", "");
   const router = useRouter();
+  const auth = useAuth();
+
+  // Redirect authenticated users to questions page.
   useEffect(() => {
-    // redirect authenticated users to questions page
-    if (!!token) {
-      router.push("/questions");
+    if (auth.state === "authenticated") {
+      router.replace("/questions");
     }
-  });
+  }, [auth]);
+
   return (
     <>
       <Head>
