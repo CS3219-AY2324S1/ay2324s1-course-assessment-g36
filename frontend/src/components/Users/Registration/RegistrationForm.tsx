@@ -12,6 +12,7 @@ import {
   Heading,
   useToast,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import styles from "./RegistrationForm.module.css";
 import { UserForm } from "@/interfaces";
 import { createUser } from "@/services/users";
@@ -51,7 +52,8 @@ export default function RegistrationForm(): JSX.Element {
     return validEmail && validPassword;
   };
 
-  const handleSubmit = async (userForm: UserForm): Promise<void> => {
+  const handleSubmit = async (event: React.FormEvent): Promise<void> => {
+    event.preventDefault();
     if (!validateForm()) return;
     setIsFormSubmitting(true);
 
@@ -81,7 +83,12 @@ export default function RegistrationForm(): JSX.Element {
   }
 
   return (
-    <Stack className={styles.form_container} spacing="20px">
+    <Stack
+      as="form"
+      className={styles.form_container}
+      spacing="20px"
+      onSubmit={handleSubmit}
+    >
       <Heading as="h2" size="xl" textAlign="center">
         User Registration
       </Heading>
@@ -135,16 +142,12 @@ export default function RegistrationForm(): JSX.Element {
         </InputGroup>
       </FormControl>
 
-      <Button
-        colorScheme="blue"
-        isDisabled={isDisabled()}
-        onClick={(e) => handleSubmit(userForm)}
-      >
+      <Button type="submit" colorScheme="blue" isDisabled={isDisabled()}>
         {isFormSubmitting ? "Creating..." : "Create Account"}
       </Button>
-      <Text align={"center"}>
+      <Text align="center">
         Already a user?{" "}
-        <Link href="/login" color="blue.400">
+        <Link as={NextLink} href="/login" color="blue.400">
           Login
         </Link>
       </Text>
