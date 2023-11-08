@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { Status } from "@/enums";
 import { validatePassword } from "@/utils/validators";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 export default function ProfileUpdate() {
   const [status, setStatus] = useState<Status>(Status.Loading);
@@ -30,7 +30,8 @@ export default function ProfileUpdate() {
   const router = useRouter();
   const userId = router.query.id as string;
   const toast = useToast();
-  const token = useJwt();
+  const auth = useAuth();
+  const token = auth.token ?? "";
 
   const [userProfileData, setUserProfileData] = useState<UpdateUserProfileForm>(
     {

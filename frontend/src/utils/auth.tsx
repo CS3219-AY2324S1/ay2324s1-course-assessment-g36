@@ -34,6 +34,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
         throw new Error("Could not read token from local storage");
       }
     } catch (err) {
+      console.error(err);
       setAuthState({ state: "unauthenticated", token: null, user: null });
     }
   }, []);

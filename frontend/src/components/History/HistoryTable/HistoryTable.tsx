@@ -5,7 +5,7 @@ import styles from "./HistoryTable.module.css";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { deleteHistory } from "@/services/history";
 import HistoryRow from "../HistoryRow/HistoryRow";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 interface IOwnProps {
   history: Attempt[];
@@ -14,7 +14,8 @@ interface IOwnProps {
 export default function HistoryTable({ history }: IOwnProps): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [historyList, setHistoryList] = useState<Attempt[]>(history);
-  const token = useJwt();
+  const auth = useAuth();
+  const token = auth.token ?? "";
 
   async function deleteAttempt(attemptId: number) {
     try {

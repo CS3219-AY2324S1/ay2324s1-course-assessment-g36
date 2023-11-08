@@ -5,13 +5,14 @@ import ProfileCard from "../ProfileCard/ProfileCard";
 import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { Status } from "@/enums";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 export default function ProfileList(): JSX.Element {
   const [users, setUsers] = useState<User[]>([]);
   const [status, setStatus] = useState<Status>(Status.Loading);
   const [error, setError] = useState<string>("");
-  const token = useJwt();
+  const auth = useAuth();
+  const token = auth.token ?? "";
 
   async function fetchData() {
     try {

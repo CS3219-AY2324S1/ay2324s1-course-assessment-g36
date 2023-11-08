@@ -15,7 +15,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 interface IOwnProps {
   attempt: Attempt;
@@ -30,7 +30,8 @@ export default function HistoryEditor({
 }: IOwnProps): JSX.Element {
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
-  const token = useJwt();
+  const auth = useAuth();
+  const token = auth.token ?? "";
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUpdatedAttempt((prevAttempt) => ({

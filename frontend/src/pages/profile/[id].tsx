@@ -17,8 +17,8 @@ import { deleteUser } from "@/services/users";
 import Link from "next/link";
 import { Status } from "@/enums";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
-import { useUserId } from "@/utils/hooks";
 import { useLocalStorage } from "usehooks-ts";
+import { useAuth } from "@/utils/auth";
 
 export default function ProfileDetail() {
   const [status, setStatus] = useState<Status>(Status.Loading);
@@ -42,7 +42,8 @@ export default function ProfileDetail() {
   const userId = router.query.id as string;
   const toast = useToast();
   const [_token, setToken] = useLocalStorage("token", "");
-  const currUserId = `${useUserId()}`;
+  const { user } = useAuth();
+  const { userId: currUserId = "" } = user ?? {};
   const isCurrUser = userId == currUserId;
 
   async function fetchData(id: string) {

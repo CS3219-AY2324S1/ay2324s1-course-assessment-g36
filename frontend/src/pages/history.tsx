@@ -7,13 +7,15 @@ import { Status } from "@/enums";
 import { Attempt } from "@/interfaces";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { Text } from "@chakra-ui/react";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 export default function History() {
+  const auth = useAuth();
+  const token = auth.token ?? "";
+
   const [status, setStatus] = useState<Status>(Status.Loading);
   const [error, setError] = useState<string>("");
   const [history, setHistory] = useState<Attempt[]>([]);
-  const token = useJwt();
 
   async function fetchData() {
     try {
