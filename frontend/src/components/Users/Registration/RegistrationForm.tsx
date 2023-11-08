@@ -13,10 +13,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import styles from "./RegistrationForm.module.css";
-import { User, UserForm } from "@/interfaces";
+import { UserForm } from "@/interfaces";
 import { createUser } from "@/services/users";
 import AlertBanner from "@/components/Feedback/AlertBanner";
 import { validateEmail, validatePassword } from "@/utils/validators";
+import { useAuth } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function RegistrationForm(): JSX.Element {
   const [show, setShow] = useState<boolean>(false);
@@ -29,6 +31,8 @@ export default function RegistrationForm(): JSX.Element {
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true);
   const toast = useToast();
+  const router = useRouter();
+  const { setToken } = useAuth();
 
   const handlePasswordClick = () => setShow(!show);
 
@@ -52,8 +56,9 @@ export default function RegistrationForm(): JSX.Element {
     setIsFormSubmitting(true);
 
     try {
-      const results: User = await createUser(userForm);
-      window.location.href = `/profile/${results.userId}`;
+      const results = await createUser(userForm);
+      setToken(results.token);
+      router.replace(`/profile/${results.user.userId}`);
     } catch (error: any) {
       toast({
         title: error.message,

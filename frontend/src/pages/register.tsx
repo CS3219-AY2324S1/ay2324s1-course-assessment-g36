@@ -1,21 +1,8 @@
 import Head from "next/head";
 import LoginLayout from "@/components/Layout/LoginLayout";
 import RegistrationForm from "@/components/Users/Registration/RegistrationForm";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useAuth } from "@/utils/auth";
 
 export default function Register() {
-  const { state } = useAuth();
-  const router = useRouter();
-
-  // Redirect authenticated users to questions page
-  useEffect(() => {
-    if (state === "authenticated") {
-      router.push("/questions");
-    }
-  }, [state]);
-
   return (
     <>
       <Head>

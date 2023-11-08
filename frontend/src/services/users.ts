@@ -16,7 +16,9 @@ export async function loginUser(loginForm: LoginForm): Promise<string> {
   return results.res;
 }
 
-export async function createUser(userForm: UserForm): Promise<User> {
+export async function createUser(
+  userForm: UserForm,
+): Promise<{ user: User; token: string }> {
   const requestOptions = {
     method: "POST",
     headers: {
