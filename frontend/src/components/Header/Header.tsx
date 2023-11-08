@@ -22,10 +22,11 @@ const PATH_MY_PROFILE = "/profile";
 export default function Header(): JSX.Element {
   const router = useRouter();
   const { user, setToken } = useAuth();
-  const { username = "", userId = -1, isAdmin = false } = user ?? {};
+  const { username, userId, isAdmin = false } = user ?? {};
 
   function handleSignOut() {
     setToken("");
+    router.push("/");
   }
 
   return (
@@ -49,12 +50,14 @@ export default function Header(): JSX.Element {
             Practice with a peer
           </Link>
         )}
-        <AccountMenu
-          signOut={handleSignOut}
-          isAdmin={isAdmin}
-          username={username}
-          userId={userId}
-        />
+        {typeof userId === "number" && typeof username === "string" && (
+          <AccountMenu
+            signOut={handleSignOut}
+            isAdmin={isAdmin}
+            username={username}
+            userId={userId}
+          />
+        )}
       </nav>
 
       {/* Mobile navbar */}
@@ -67,35 +70,45 @@ export default function Header(): JSX.Element {
             variant="outline"
           />
           <MenuList>
-            <MenuItem onClick={() => router.push(PATH_QUESTIONS)}>
-              Questions
-            </MenuItem>
+            <Link href={PATH_QUESTIONS} passHref legacyBehavior>
+              <MenuItem as="a">Questions</MenuItem>
+            </Link>
             {isAdmin && (
-              <MenuItem onClick={() => router.push(PATH_PROFILES)}>
-                View Profiles
-              </MenuItem>
+              <Link href={PATH_PROFILES} passHref legacyBehavior>
+                <MenuItem as="a">View Profiles</MenuItem>
+              </Link>
             )}
             {!isAdmin && (
-              <MenuItem onClick={() => router.push(PATH_MATCH)}>
-                Practice with a peer
-              </MenuItem>
+              <Link href={PATH_MATCH} passHref legacyBehavior>
+                <MenuItem as="a">Practice with a peer</MenuItem>
+              </Link>
             )}
-            {!isAdmin && (
-              <MenuItem onClick={() => router.push(PATH_HISTORY)}>
-                My History
-              </MenuItem>
+            {typeof userId === "number" && !isAdmin && (
+              <Link href={PATH_HISTORY} passHref legacyBehavior>
+                <MenuItem as="a">My History</MenuItem>
+              </Link>
             )}
-            <MenuItem
-              onClick={() => router.push(PATH_MY_PROFILE + `/${userId}`)}
-            >
-              My Profile
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setToken("");
-                router.push("/");
-              }}
-            >
+            {typeof userId === "number" && !isAdmin && (
+              <Link
+                href={PATH_MY_PROFILE + `/${userId}`}
+                passHref
+                legacyBehavior
+              >
+                <MenuItem as="a">My Profile</MenuItem>
+              </Link>
+            )}
+            <MenuItem onClick={handleSignOut}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="20"
+                viewBox="0 -960 960 960"
+                width="20"
+              >
+                <path
+                  fill="#000000b3"
+                  d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"
+                />
+              </svg>
               Sign out
             </MenuItem>
           </MenuList>
