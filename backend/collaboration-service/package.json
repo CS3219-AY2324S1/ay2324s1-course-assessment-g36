@@ -1,12 +1,12 @@
 {
   "name": "collaboration-service",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -18,5 +18,8 @@
     "socket.io": "^4.7.2",
     "ws": "^8.14.2",
     "y-websocket": "^1.5.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
   }
 }

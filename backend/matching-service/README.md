@@ -5,7 +5,7 @@
 Note: Please use Node.js v18 and above. E.g. v18.12.0
 
 1. Run `npm install` to install dependencies.
-1. Run `npm start` to start the server. Use the `PORT` environment variable to customize the port. (default: 3002)
+1. Run `npm start` to start the server.
 
 ## Overview
 
@@ -49,3 +49,12 @@ When a can be matched to another user, each user will receive the following mess
   question_id: "<uid>",
 }
 ```
+
+## Configuration
+
+The following environment variables can be used to configure the service:
+
+- `JSON_WEB_TOKEN_SECRET`: Secret used to verify JWTs
+- `PORT`: Port number to run service on (default: 3002)
+
+They can be configured by creating a `.env` file as well (see `.env.local` for a copyable template).

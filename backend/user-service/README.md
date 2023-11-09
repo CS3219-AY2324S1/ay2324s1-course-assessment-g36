@@ -19,20 +19,17 @@
 ## Setting up MySql
 
 1. Ensure that you have downloaded [MySql](https://www.mysql.com/downloads/) on your device.
-2. In your terminal, run the following command to connect to a MySql server and enter your password when prompted.
+2. In your terminal, run the following command to create the database:
 
    ```
-   mysql -u <username> -p
+   npx sequelize-cli db:create
    ```
 
-3. Create an empty Users database with the following command in the MySql server:
+## Configuration
 
-   ```
-   CREATE DATABASE Users;
-   ```
+The following environment variables can be used to configure the service:
 
-4. You can check that the database has been successfully created with the command:
+- `JSON_WEB_TOKEN_SECRET`: Secret used to verify JWTs
+- `PORT`: Port number to run service on
 
-   ```
-   SHOW DATABASES;
-   ```
+They can be configured by creating a `.env` file as well (see `.env.local` for a copyable template).

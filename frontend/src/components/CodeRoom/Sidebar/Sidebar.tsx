@@ -1,8 +1,8 @@
-import { QuestionObject } from "@/interfaces"
+import { QuestionObject } from "@/interfaces";
 import { Badge, Heading, Stack, HStack, Select } from "@chakra-ui/react";
 import QuestionComplexity from "../../Questions/QuestionComplexity/QuestionComplexity";
 import QuestionDescription from "../../Questions/QuestionDescription/QuestionDescription";
-import styles from "./Sidebar.module.css"
+import styles from "./Sidebar.module.css";
 import { PROGRAMMING_LANGUAGES } from "@/types";
 
 interface IOwnProps {
@@ -18,44 +18,42 @@ export default function Sidebar({
   programmingLanguage,
   onProgrammingLanguageChange,
 }: IOwnProps): JSX.Element {
+  return (
+    <div className={styles.sidebar_container}>
+      <Stack spacing="14px">
+        <HStack>
+          <span className={styles.live_glowing_icon}></span>
+          <span>LIVE</span>
+        </HStack>
 
-  return <div className={styles.sidebar_container}>
-    <Stack spacing='14px'>
+        <HStack>
+          <Badge colorScheme="blue">Room ID: {roomId}</Badge>
+        </HStack>
 
-      <HStack>
-        <span className={styles.live_glowing_icon}></span>
-        <span>LIVE</span>
-      </HStack>
+        <Select
+          placeholder="Choose programming language"
+          value={programmingLanguage}
+          variant={"flushed"}
+          onChange={(e) => onProgrammingLanguageChange(e.target.value)}
+        >
+          {PROGRAMMING_LANGUAGES.map((language) => {
+            const _key = Object.keys(language)[0];
+            return (
+              <option key={_key} value={Object.values(language)[0]}>
+                {_key}
+              </option>
+            );
+          })}
+        </Select>
 
-      <HStack>
-        <Badge colorScheme="blue">Room ID: {roomId}</Badge>
-      </HStack>
+        <Heading size="md">
+          {question.id}. {question.title}
+        </Heading>
 
-      <Select
-        placeholder='Choose programming language'
-        value={programmingLanguage} variant={"flushed"}
-        onChange={e => onProgrammingLanguageChange(e.target.value)}
-      >
-        {PROGRAMMING_LANGUAGES
-          .map(language => {
-            const _key = Object.keys(language)[0]
-            return <option
-              key={_key}
-              value={Object.values(language)[0]}>{_key}
-            </option>
-          }
-          )
-        }
-      </Select>
+        <QuestionComplexity complexity={question.complexity} />
 
-      <Heading size='md'>
-        {question.id}. {question.title}
-      </Heading>
-
-      <QuestionComplexity complexity={question.complexity} />
-
-      <QuestionDescription description={question.description} />
-
-    </Stack>
-  </div>
+        <QuestionDescription description={question.description} />
+      </Stack>
+    </div>
+  );
 }
