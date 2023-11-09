@@ -8,19 +8,13 @@ import { Attempt } from "@/interfaces";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { Text } from "@chakra-ui/react";
 import { useAuth } from "@/utils/auth";
-import { useRouter } from "next/router";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function History() {
-  const router = useRouter();
   const auth = useAuth();
   const token = auth.token ?? "";
 
-  // Redirect unauthenticated users to login page.
-  useEffect(() => {
-    if (auth.state === "unauthenticated") {
-      router.replace("/login");
-    }
-  }, [auth]);
+  const authRedirect = useRedirectUnauthenticatedUser();
 
   const [status, setStatus] = useState<Status>(Status.Loading);
   const [error, setError] = useState<string>("");
@@ -36,13 +30,11 @@ export default function History() {
       setStatus(Status.Error);
     }
   }
-
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Loading.
-  if (auth.state === "uninitialized") return <></>;
+  if (authRedirect.isLoading) return <></>;
 
   return (
     <>

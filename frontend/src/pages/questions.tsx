@@ -1,23 +1,12 @@
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
 import QuestionsTable from "@/components/Questions/QuestionsTable/QuestionsTable";
-import { useAuth } from "@/utils/auth";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function Questions() {
-  const router = useRouter();
-  const auth = useAuth();
+  const authRedirect = useRedirectUnauthenticatedUser();
 
-  // Redirect unauthenticated users to login page.
-  useEffect(() => {
-    if (auth.state === "unauthenticated") {
-      router.replace("/login");
-    }
-  }, [auth]);
-
-  // Loading.
-  if (auth.state === "uninitialized") return <></>;
+  if (authRedirect.isLoading) return <></>;
 
   return (
     <>

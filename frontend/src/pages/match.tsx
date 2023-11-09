@@ -3,23 +3,12 @@ import Layout from "@/components/Layout/Layout";
 import MatchingForm from "@/components/Matching/MatchingForm";
 import { Flex } from "@chakra-ui/react";
 import Image from "next/image";
-import { useEffect } from "react";
-import { useAuth } from "@/utils/auth";
-import { useRouter } from "next/router";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function Matching() {
-  const router = useRouter();
-  const auth = useAuth();
+  const authRedirect = useRedirectUnauthenticatedUser();
 
-  // Redirect unauthenticated users to login page.
-  useEffect(() => {
-    if (auth.state === "unauthenticated") {
-      router.replace("/login");
-    }
-  }, [auth]);
-
-  // Loading.
-  if (auth.state === "uninitialized") return <></>;
+  if (authRedirect.isLoading) return <></>;
 
   return (
     <>
