@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -9,8 +11,8 @@ const db = require("./models");
 
 // Routers
 const userRouter = require("./routes/userRouter");
-const historyRouter = require("./routes/historyRouter")
-const {errorHandler} = require("./middleware/errorHandler");
+const historyRouter = require("./routes/historyRouter");
+const { errorHandler } = require("./middleware/errorHandler");
 app.use("/users", userRouter);
 app.use("/history", historyRouter);
 app.use(errorHandler);
