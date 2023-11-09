@@ -41,7 +41,7 @@ const authenticateProfile = async (req, res, next, value) => {
   next();
 };
 
-const addUser = async (req, res, next) => {
+const registerUser = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
@@ -69,7 +69,17 @@ const addUser = async (req, res, next) => {
       password: hash,
     });
 
-    res.status(201).json({ res: user });
+    const token = jwt.sign(
+      {
+        userId: user.userId,
+        username: user.username,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JSON_WEB_TOKEN_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    res.status(201).json({ res: { user, token } });
   } catch (err) {
     next(err);
   }
@@ -227,7 +237,7 @@ const deleteUser = async (req, res, next) => {
 module.exports = {
   authenticateAdmin,
   authenticateProfile,
-  addUser,
+  registerUser,
   loginUser,
   getAllUsers,
   getUserById,

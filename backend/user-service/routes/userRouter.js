@@ -4,7 +4,7 @@ const userRouter = express.Router();
 
 userRouter.param("userId", userController.authenticateProfile);
 
-userRouter.post("/register", userController.addUser);
+userRouter.post("/register", userController.registerUser);
 
 userRouter.post("/login", userController.loginUser);
 
