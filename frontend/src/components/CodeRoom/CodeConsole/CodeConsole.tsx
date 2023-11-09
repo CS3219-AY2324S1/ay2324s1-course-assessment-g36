@@ -13,9 +13,9 @@ import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { AttemptForm, CodeResult, QuestionObject } from "@/interfaces";
 import CodeResultOutput from "../CodeResultOutput/CodeResultOutput";
 import { executeCode } from "@/services/code_execution";
-import { useJwt } from "@/utils/hooks";
 import { createHistory } from "@/services/history";
 import { PROGRAMMING_LANGUAGES } from "@/types";
+import { useAuth } from "@/utils/auth";
 
 interface IOwnProps {
   programmingLanguage: string;
@@ -33,7 +33,7 @@ export default function CodeConsole({
   const [isResultsLoading, setIsResultsLoading] = useState(false);
   const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult);
   const toast = useToast();
-  const token = useJwt();
+  const { token } = useAuth();
 
   async function onRunCode() {
     setIsResultsLoading(true);

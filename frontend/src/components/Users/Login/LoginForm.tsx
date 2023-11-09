@@ -15,12 +15,10 @@ import { LoginForm } from "@/interfaces";
 
 import styles from "./LoginForm.module.css";
 import { useState } from "react";
-import { useRouter } from "next/router";
-import { useLocalStorage } from "usehooks-ts";
-import { loginUser } from "@/utils/auth";
+import { loginUser } from "@/services/users";
+import { useAuth } from "@/utils/auth";
 
 export default function LoginForm(): JSX.Element {
-  const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false);
   const [loginForm, setLoginForm] = useState<LoginForm>({
@@ -28,7 +26,7 @@ export default function LoginForm(): JSX.Element {
     password: "",
   });
   const toast = useToast();
-  const [_token, setToken] = useLocalStorage("token", "");
+  const { setToken } = useAuth();
 
   const handlePasswordClick = () => setShow(!show);
 
@@ -45,7 +43,6 @@ export default function LoginForm(): JSX.Element {
     try {
       const token = await loginUser(userForm);
       setToken(token);
-      router.push("/questions");
     } catch (error: any) {
       toast({
         title: error.message,

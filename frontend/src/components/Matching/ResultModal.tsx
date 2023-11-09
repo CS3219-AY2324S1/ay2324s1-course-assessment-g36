@@ -1,6 +1,6 @@
 import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 import {
   Modal,
   ModalBody,
@@ -38,7 +38,7 @@ function useMatcher() {
     status: "not-matching",
   });
   const intervalIdRef = useRef<NodeJS.Timeout>();
-  const token = useJwt();
+  const { token } = useAuth();
 
   function match(criteria: MatchCriteria) {
     function cleanup() {

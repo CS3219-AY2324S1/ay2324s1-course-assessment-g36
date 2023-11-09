@@ -3,7 +3,7 @@ import QuestionTitle from "../QuestionTitle/QuestionTitle";
 import QuestionTopic from "../QuestionTopic/QuestionTopic";
 import QuestionComplexity from "../QuestionComplexity/QuestionComplexity";
 import { QuestionObject } from "@/interfaces";
-import { useIsAdmin } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 interface IOwnProps {
   question: QuestionObject;
@@ -14,7 +14,8 @@ export default function QuestionRow({
   question,
   deleteQuestion,
 }: IOwnProps): JSX.Element {
-  const isAdmin = useIsAdmin();
+  const { user } = useAuth();
+
   return (
     <Tr>
       <Td>
@@ -26,7 +27,7 @@ export default function QuestionRow({
       <Td>
         <QuestionTopic categories={question.categories} />
       </Td>
-      {isAdmin && (
+      {user?.isAdmin && (
         <Td>
           <Button
             size="xs"

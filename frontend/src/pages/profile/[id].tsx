@@ -17,8 +17,7 @@ import { deleteUser } from "@/services/users";
 import Link from "next/link";
 import { Status } from "@/enums";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
-import { useUserId } from "@/utils/hooks";
-import { useLocalStorage } from "usehooks-ts";
+import { useAuth } from "@/utils/auth";
 
 export default function ProfileDetail() {
   const [status, setStatus] = useState<Status>(Status.Loading);
@@ -41,13 +40,13 @@ export default function ProfileDetail() {
   const router = useRouter();
   const userId = router.query.id as string;
   const toast = useToast();
-  const [_token, setToken] = useLocalStorage("token", "");
-  const currUserId = `${useUserId()}`;
+  const { user, token, setToken } = useAuth();
+  const { userId: currUserId = "" } = user ?? {};
   const isCurrUser = userId == currUserId;
 
   async function fetchData(id: string) {
     try {
-      const results = await fetchUser(id, _token);
+      const results = await fetchUser(id, token);
       setProfileData(results);
       setStatus(Status.Success);
     } catch (error: any) {
@@ -62,7 +61,7 @@ export default function ProfileDetail() {
 
   async function handleDelete() {
     try {
-      await deleteUser(userId, _token);
+      await deleteUser(userId, token);
       if (isCurrUser) {
         setToken(""); // sign out
       } else {

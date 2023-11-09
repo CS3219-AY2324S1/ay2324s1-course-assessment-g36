@@ -1,17 +1,18 @@
 import { useEffect } from "react";
-import { useReadLocalStorage } from "usehooks-ts";
 import { useRouter } from "next/router";
+import { useAuth } from "@/utils/auth";
 
 export default function Index() {
-  const token = useReadLocalStorage<string>("token");
+  const { state } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (token) {
+    if (state === "authenticated") {
       router.replace("/questions");
-    } else {
+    } else if (state === "unauthenticated") {
       router.replace("/login");
     }
-  });
+  }, [state]);
+
   return <></>;
 }

@@ -7,13 +7,17 @@ import { Status } from "@/enums";
 import { Attempt } from "@/interfaces";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import { Text } from "@chakra-ui/react";
-import { useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function History() {
+  const { token } = useAuth();
+
+  const authRedirect = useRedirectUnauthenticatedUser();
+
   const [status, setStatus] = useState<Status>(Status.Loading);
   const [error, setError] = useState<string>("");
   const [history, setHistory] = useState<Attempt[]>([]);
-  const token = useJwt();
 
   async function fetchData() {
     try {
@@ -25,10 +29,11 @@ export default function History() {
       setStatus(Status.Error);
     }
   }
-
   useEffect(() => {
     fetchData();
   }, []);
+
+  if (authRedirect.isLoading) return <></>;
 
   return (
     <>

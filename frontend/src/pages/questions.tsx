@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
 import QuestionsTable from "@/components/Questions/QuestionsTable/QuestionsTable";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function Questions() {
+  const authRedirect = useRedirectUnauthenticatedUser();
+
+  if (authRedirect.isLoading) return <></>;
+
   return (
     <>
       <Head>

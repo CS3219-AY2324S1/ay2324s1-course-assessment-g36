@@ -10,13 +10,12 @@ import {
 } from "@/services/questions";
 import AddQuestion from "../QuestionForm/AddQuestion";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
-import { useIsAdmin, useJwt } from "@/utils/hooks";
+import { useAuth } from "@/utils/auth";
 
 export default function QuestionsTable(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<QuestionObject[]>([]);
-  const token = useJwt();
-  const isAdmin = useIsAdmin();
+  const { user, token } = useAuth();
 
   useEffect(() => {
     fetchData();
@@ -82,7 +81,7 @@ export default function QuestionsTable(): JSX.Element {
       </TableContainer>
       <br />
 
-      {isAdmin && <AddQuestion addQuestion={createQuestion} />}
+      {user?.isAdmin && <AddQuestion addQuestion={createQuestion} />}
     </div>
   );
 }
