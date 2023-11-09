@@ -8,7 +8,9 @@ export function useRedirectUnauthenticatedUser() {
 
   useEffect(() => {
     if (authState.state === "unauthenticated") {
-      router.replace("/login");
+      const queryParams = new URLSearchParams();
+      queryParams.append("redirect_to", router.asPath);
+      router.replace(`/login?${queryParams.toString()}`);
     }
   }, [authState]);
 

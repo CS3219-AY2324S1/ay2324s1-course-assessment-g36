@@ -9,10 +9,14 @@ export default function Login() {
   const router = useRouter();
   const auth = useAuth();
 
-  // Redirect authenticated users to questions page.
+  // Redirect authenticated users to page specified in `redirect_to`, or the questions page.
   useEffect(() => {
     if (auth.state === "authenticated") {
-      router.replace("/questions");
+      const redirectTo =
+        typeof router.query.redirect_to === "string"
+          ? router.query.redirect_to
+          : "/questions";
+      router.replace(redirectTo);
     }
   }, [auth]);
 
