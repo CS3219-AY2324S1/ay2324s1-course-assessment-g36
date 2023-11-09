@@ -11,8 +11,7 @@ import { useAuth } from "@/utils/auth";
 import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function History() {
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   const authRedirect = useRedirectUnauthenticatedUser();
 

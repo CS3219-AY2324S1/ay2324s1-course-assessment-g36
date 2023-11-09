@@ -14,8 +14,7 @@ interface IOwnProps {
 export default function HistoryTable({ history }: IOwnProps): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [historyList, setHistoryList] = useState<Attempt[]>(history);
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   async function deleteAttempt(attemptId: number) {
     try {

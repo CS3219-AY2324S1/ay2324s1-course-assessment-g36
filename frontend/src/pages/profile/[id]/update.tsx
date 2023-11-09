@@ -30,8 +30,7 @@ export default function ProfileUpdate() {
   const router = useRouter();
   const userId = router.query.id as string;
   const toast = useToast();
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   const [userProfileData, setUserProfileData] = useState<UpdateUserProfileForm>(
     {

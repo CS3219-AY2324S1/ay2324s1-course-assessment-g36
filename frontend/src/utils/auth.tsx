@@ -15,8 +15,8 @@ type User = {
 };
 
 type AuthState =
-  | { state: "uninitialized"; token: null; user: null }
-  | { state: "unauthenticated"; token: null; user: null }
+  | { state: "uninitialized"; token: string; user: null }
+  | { state: "unauthenticated"; token: string; user: null }
   | { state: "authenticated"; token: string; user: User };
 
 const AuthContext = createContext({
@@ -27,7 +27,7 @@ const AuthContext = createContext({
 export function AuthProvider(props: { children: React.ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({
     state: "uninitialized",
-    token: null,
+    token: "",
     user: null,
   });
 
@@ -35,7 +35,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
     if (token === "") {
       setAuthState({
         state: "unauthenticated",
-        token: null,
+        token: "",
         user: null,
       });
       localStorage.removeItem("token");
@@ -61,7 +61,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
       }
     } catch (err) {
       console.error(err);
-      setAuthState({ state: "unauthenticated", token: null, user: null });
+      setAuthState({ state: "unauthenticated", token: "", user: null });
     }
   }, []);
 

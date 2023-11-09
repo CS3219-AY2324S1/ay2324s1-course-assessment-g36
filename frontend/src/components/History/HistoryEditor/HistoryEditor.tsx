@@ -30,8 +30,7 @@ export default function HistoryEditor({
 }: IOwnProps): JSX.Element {
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUpdatedAttempt((prevAttempt) => ({

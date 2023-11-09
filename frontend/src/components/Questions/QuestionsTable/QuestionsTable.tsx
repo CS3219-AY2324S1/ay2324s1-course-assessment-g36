@@ -15,9 +15,7 @@ import { useAuth } from "@/utils/auth";
 export default function QuestionsTable(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<QuestionObject[]>([]);
-  const auth = useAuth();
-  const token = auth.token ?? "";
-  const { user } = auth;
+  const { user, token } = useAuth();
 
   useEffect(() => {
     fetchData();

@@ -38,8 +38,7 @@ function useMatcher() {
     status: "not-matching",
   });
   const intervalIdRef = useRef<NodeJS.Timeout>();
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   function match(criteria: MatchCriteria) {
     function cleanup() {

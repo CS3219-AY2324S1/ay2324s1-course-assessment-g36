@@ -40,9 +40,7 @@ export default function ProfileDetail() {
   const router = useRouter();
   const userId = router.query.id as string;
   const toast = useToast();
-  const auth = useAuth();
-  const { user, setToken } = auth;
-  const token = auth.token ?? "";
+  const { user, token, setToken } = useAuth();
   const { userId: currUserId = "" } = user ?? {};
   const isCurrUser = userId == currUserId;
 

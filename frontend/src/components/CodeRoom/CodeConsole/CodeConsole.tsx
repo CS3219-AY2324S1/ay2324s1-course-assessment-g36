@@ -33,8 +33,7 @@ export default function CodeConsole({
   const [isResultsLoading, setIsResultsLoading] = useState(false);
   const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult);
   const toast = useToast();
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   async function onRunCode() {
     setIsResultsLoading(true);

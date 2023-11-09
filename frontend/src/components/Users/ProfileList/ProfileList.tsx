@@ -11,8 +11,7 @@ export default function ProfileList(): JSX.Element {
   const [users, setUsers] = useState<User[]>([]);
   const [status, setStatus] = useState<Status>(Status.Loading);
   const [error, setError] = useState<string>("");
-  const auth = useAuth();
-  const token = auth.token ?? "";
+  const { token } = useAuth();
 
   async function fetchData() {
     try {
