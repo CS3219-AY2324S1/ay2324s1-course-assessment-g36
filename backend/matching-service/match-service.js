@@ -26,13 +26,19 @@ export class MatchService {
    * Gets the first user added to the queue with the corresponding complexity.
    *
    * @param {string} complexity
+   * @param {string} excludeUsername User to exclude if the username matches.
    * @returns {User | null}
    */
-  getUserFromQueue(complexity) {
+  getUserFromQueue(complexity, excludeUsername) {
+    let user;
     const usersSet = this._getUsersSet(complexity);
 
-    // Get first user inserted into the set.
-    const { value: user } = usersSet.values().next();
+    for (const _user of usersSet) {
+      if (_user.username !== excludeUsername) {
+        user = _user;
+        break;
+      }
+    }
     if (!user) return null;
 
     // Remove user from the set once matched.

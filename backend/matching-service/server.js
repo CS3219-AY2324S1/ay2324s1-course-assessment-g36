@@ -77,11 +77,10 @@ wss.on("connection", (ws) => {
           return;
         }
 
-        // ws.userId = userId;
         ws.username = user.username;
         ws.complexity = complexity;
 
-        const matchedUser = matchService.getUserFromQueue(complexity);
+        const matchedUser = matchService.getUserFromQueue(complexity, user.username);
 
         // If there are no existing users, add current user to queue and send "initialized" message.
         if (!matchedUser) {
