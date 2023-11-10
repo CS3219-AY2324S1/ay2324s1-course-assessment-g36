@@ -23,7 +23,6 @@
 
 .description {
   position: relative;
-  /* flex: 1; */
   margin-right: 10px;
   overflow:scroll;           
   text-overflow: ellipsis;
