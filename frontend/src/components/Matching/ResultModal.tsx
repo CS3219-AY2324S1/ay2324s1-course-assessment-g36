@@ -1,9 +1,15 @@
 import { MatchCriteria } from "@/interfaces";
+import { CheckCircleIcon, CloseIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
+  ModalHeader,
   ModalOverlay,
+  Spinner,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -60,14 +66,45 @@ export default function ResultModal({
     >
       <ModalOverlay />
       <ModalContent>
+        <ModalHeader>Finding you a match!</ModalHeader>
+        <ModalCloseButton />
         <ModalBody>
-          {matchState.status === "matching" ? (
-            <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
-          ) : matchState.status === "matched" ? (
-            <Text>{`Matched with: ${matchState.username}`}</Text>
-          ) : (
-            <Text>Failed to find match</Text>
-          )}
+          <Stack minH="200px" align="center" spacing="40px" paddingY="40px">
+            {matchState.status === "matching" ? (
+              <>
+                <Spinner size="xl" />
+                <Stack>
+                  <Text align="center">
+                    Finding match in {matchState.secondsRemaining}s...
+                  </Text>
+                  <Text align="center">
+                    {/* TODO: Retry */}
+                    <Button variant="link" colorScheme="red">
+                      Cancel
+                    </Button>
+                  </Text>
+                </Stack>
+              </>
+            ) : matchState.status === "matched" ? (
+              <>
+                <CheckCircleIcon boxSize={54} />
+                <Text align="center">Matched with: {matchState.username}</Text>
+              </>
+            ) : (
+              <>
+                <CloseIcon boxSize={54} />
+                <Stack>
+                  <Text align="center">Failed to find match.</Text>
+                  <Text align="center">
+                    {/* TODO: Retry */}
+                    <Button variant="link" colorScheme="teal">
+                      Retry?
+                    </Button>
+                  </Text>
+                </Stack>
+              </>
+            )}
+          </Stack>
         </ModalBody>
       </ModalContent>
     </Modal>
