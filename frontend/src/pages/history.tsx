@@ -20,6 +20,10 @@ export default function History() {
   const [history, setHistory] = useState<Attempt[]>([]);
 
   async function fetchData() {
+    if (!token) {
+      setStatus(Status.Loading);
+      return;
+    }
     try {
       const results = await fetchAllHistoryByUser(token);
       setHistory(results);
@@ -29,9 +33,10 @@ export default function History() {
       setStatus(Status.Error);
     }
   }
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]);
 
   if (authRedirect.isLoading) return <></>;
 
