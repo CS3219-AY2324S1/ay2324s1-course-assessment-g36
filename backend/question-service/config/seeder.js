@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const Questions = require("../models/questionModel");
 const { dummyQuestions } = require("../models/data");
 const mongoose = require("mongoose");
