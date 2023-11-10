@@ -16,6 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAuth } from "@/utils/auth";
+import Link from "next/link";
+import QuestionDescription from "@/components/Questions/QuestionDescription/QuestionDescription";
 
 interface IOwnProps {
   attempt: Attempt;
@@ -74,16 +76,17 @@ export default function HistoryEditor({
         <ModalHeader>{attempt.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody className={styles.body}>
-          <div className={styles.date}>{attempt.date}</div>
-          <div className={styles.bodyContainer}>
-            <div className={styles.description}>
-              {attempt.description.split("\n").map((desc, index) => (
-                <p key={index}>
-                  {desc}
-                  <br />
-                </p>
-              ))}
+            <div className={styles.bodyContainer}>
+              <div className={styles.detailsContainer}>
+                <div className={styles.date}>{attempt.date}</div>
+                <div className={styles.description}>
+                  <QuestionDescription description={attempt.description}/>
+                </div>
+                <Link href={attempt.link}>
+                  <Button colorScheme="gray" className={styles.checkout}>Check out here</Button>
+                </Link>
             </div>
+            
             <div className={styles.inputContainer}>
               <div className={styles.selectContainer}>
                 <Select
@@ -112,7 +115,7 @@ export default function HistoryEditor({
                 onChange={(e) => handleCodeChange(e)}
               />
             </div>
-          </div>
+          </div> 
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="green" onClick={() => updateAttempt()}>
