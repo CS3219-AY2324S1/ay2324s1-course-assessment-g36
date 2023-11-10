@@ -38,7 +38,10 @@ export default function ResultModal({
   onModalClose,
 }: IOwnProps) {
   const router = useRouter();
-  const matchState = useMatcher({ match: isModalOpen, criteria });
+  const { matchState, match, cancelMatch } = useMatcher({
+    match: isModalOpen,
+    criteria,
+  });
 
   // Redirect to code room after successful match.
   useEffect(() => {
@@ -78,8 +81,14 @@ export default function ResultModal({
                     Finding match in {matchState.secondsRemaining}s...
                   </Text>
                   <Text align="center">
-                    {/* TODO: Retry */}
-                    <Button variant="link" colorScheme="red">
+                    <Button
+                      variant="link"
+                      colorScheme="red"
+                      onClick={() => {
+                        cancelMatch();
+                        onModalClose();
+                      }}
+                    >
                       Cancel
                     </Button>
                   </Text>
@@ -87,17 +96,21 @@ export default function ResultModal({
               </>
             ) : matchState.status === "matched" ? (
               <>
-                <CheckCircleIcon boxSize={54} />
-                <Text align="center">Matched with: {matchState.username}</Text>
+                <CheckCircleIcon boxSize={12} />
+                <Stack>
+                  <Text align="center">
+                    Matched with: {matchState.username}
+                  </Text>
+                  <Text align="center">Redirecting to code room...</Text>
+                </Stack>
               </>
             ) : (
               <>
-                <CloseIcon boxSize={54} />
+                <CloseIcon boxSize={12} />
                 <Stack>
                   <Text align="center">Failed to find match.</Text>
                   <Text align="center">
-                    {/* TODO: Retry */}
-                    <Button variant="link" colorScheme="teal">
+                    <Button variant="link" colorScheme="teal" onClick={match}>
                       Retry?
                     </Button>
                   </Text>

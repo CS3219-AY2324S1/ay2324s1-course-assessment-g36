@@ -1,7 +1,7 @@
 import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces";
 import { useAuth } from "@/utils/auth";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const SECOND = 1000;
 
@@ -30,22 +30,25 @@ export function useMatcher({
     status: "not-matching",
   });
   const intervalIdRef = useRef<NodeJS.Timeout>();
+  const timeoutIdRef = useRef<NodeJS.Timeout>();
   const { token } = useAuth();
 
-  useEffect(() => {
-    function cleanup() {
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = undefined;
-      }
-      if (typeof intervalIdRef.current === "number") {
-        clearInterval(intervalIdRef.current);
-        intervalIdRef.current = undefined;
-      }
+  const cleanup = useCallback(() => {
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = undefined;
     }
+    if (typeof intervalIdRef.current === "number") {
+      clearInterval(intervalIdRef.current);
+      intervalIdRef.current = undefined;
+    }
+    if (typeof timeoutIdRef.current === "number") {
+      clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = undefined;
+    }
+  }, []);
 
-    if (!shouldMatch) return;
-
+  const match = useCallback(() => {
     if (!wsRef.current) {
       wsRef.current = new WebSocket("ws://localhost:3002/");
       wsRef.current.addEventListener("message", (event) => {
@@ -100,15 +103,22 @@ export function useMatcher({
     }, SECOND);
 
     // Close connection after timeout period.
-    const timeoutId = setTimeout(() => {
+    timeoutIdRef.current = setTimeout(() => {
       cleanup();
     }, MAX_MATCH_WAIT_S * SECOND);
 
-    return () => {
-      cleanup();
-      clearTimeout(timeoutId);
-    };
-  }, [token, shouldMatch, criteria]);
+    return cleanup;
+  }, [cleanup, criteria.difficulty, token]);
 
-  return matchState;
+  useEffect(() => {
+    if (shouldMatch) {
+      return match();
+    } else {
+      setMatchState({
+        status: "not-matching",
+      });
+    }
+  }, [shouldMatch]);
+
+  return { matchState, match, cancelMatch: cleanup };
 }
