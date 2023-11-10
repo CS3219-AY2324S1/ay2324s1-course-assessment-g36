@@ -6,8 +6,9 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useMatcher } from "./useMatcher";
+import { SECOND, useMatcher } from "./useMatcher";
 
 interface IOwnProps {
   criteria: MatchCriteria;
@@ -15,14 +16,14 @@ interface IOwnProps {
   onModalClose: () => void;
 }
 
-function redirectToCodeRoom(room_id: string, question_id: number): void {
+function getCodeRoomUrl(room_id: string, question_id: number) {
   const queryParams = new URLSearchParams();
-
   queryParams.append("questionId", question_id.toString());
 
   const queryString = queryParams.toString();
   const redirectUrl = `/room/${room_id}?${queryString}`;
-  window.location.href = redirectUrl;
+
+  return redirectUrl;
 }
 
 export default function ResultModal({
@@ -30,12 +31,21 @@ export default function ResultModal({
   isModalOpen,
   onModalClose,
 }: IOwnProps) {
+  const router = useRouter();
   const matchState = useMatcher({ match: isModalOpen, criteria });
 
   // Redirect to code room after successful match.
   useEffect(() => {
     if (matchState.status === "matched") {
-      redirectToCodeRoom(matchState.room_id, matchState.question_id);
+      const codeRoomUrl = getCodeRoomUrl(
+        matchState.room_id,
+        matchState.question_id,
+      );
+
+      // Redirect after a specific timeout to allow the user to read the message.
+      setTimeout(() => {
+        router.push(codeRoomUrl);
+      }, SECOND);
     }
   }, [matchState]);
 
