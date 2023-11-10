@@ -41,7 +41,9 @@ export async function updateHistory(
     },
     body: JSON.stringify(attempt),
   };
-  return fetchDataOrThrowError(HISTORY_API, requestOptions);
+  const result = await fetchDataOrThrowError(HISTORY_API, requestOptions);
+  const updatedAttempt = { ...attempt, date: formatDate(result.updatedAt) };
+  return updatedAttempt;
 }
 
 export async function fetchAllHistoryByUser(token: string): Promise<Attempt[]> {

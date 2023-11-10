@@ -1,4 +1,4 @@
-import { createHistory, updateHistory } from "@/services/history";
+import { updateHistory } from "@/services/history";
 import styles from "./HistoryEditor.module.css";
 import { Attempt } from "@/interfaces";
 import { PROGRAMMING_LANGUAGES } from "@/types";
@@ -13,6 +13,7 @@ import {
   Button,
   useToast,
   Select,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAuth } from "@/utils/auth";
@@ -42,15 +43,27 @@ export default function HistoryEditor({
   };
 
   const handleLanguageChange = (e: string) => {
-    setUpdatedAttempt((prevAttempt) => ({
-      ...prevAttempt,
-      language: e,
-    }));
+    if (e == attempt.language) {    // if language is the same as previously saved attempt, restore saved code
+      setUpdatedAttempt((prevAttempt) => ({
+        ...prevAttempt,
+        language: e,
+        attempt: attempt.attempt
+      }))
+    } else {
+      setUpdatedAttempt((prevAttempt) => ({
+        ...prevAttempt,
+        language: e,
+        attempt: "",
+      }));
+    }
   };
 
   async function updateAttempt() {
     try {
-      await updateHistory(updatedAttempt, token);
+      if (updatedAttempt.attempt == "") {
+        throw new Error("Attempt cannot be empty.")
+      }
+      const result = await updateHistory(updatedAttempt, token);
       toast({
         position: "top",
         title: "Attempt updated",
@@ -58,6 +71,10 @@ export default function HistoryEditor({
         duration: 5000,
         isClosable: true,
       });
+      setUpdatedAttempt((prevAttempt) => ({
+        ...prevAttempt,
+        date: result.date
+      }))
     } catch (error: any) {
       toast({
         position: "top",
@@ -78,7 +95,7 @@ export default function HistoryEditor({
         <ModalBody className={styles.body}>
             <div className={styles.bodyContainer}>
               <div className={styles.detailsContainer}>
-                <div className={styles.date}>{attempt.date}</div>
+                <div className={styles.date}>{updatedAttempt.date}</div>
                 <div className={styles.description}>
                   <QuestionDescription description={attempt.description}/>
                 </div>
@@ -89,17 +106,22 @@ export default function HistoryEditor({
             
             <div className={styles.inputContainer}>
               <div className={styles.selectContainer}>
+                <Tooltip
+                  hasArrow
+                  label="Unsaved changes may be lost upon switching languages!"
+                  placement="right"
+                  aria-label="A tooltip to warn about unsaved attempts"
+                >
                 <Select
                   variant={"flushed"}
                   size="xs"
-                  placeholder={attempt.language}
+                  value={updatedAttempt.language}
                   maxWidth="50%"
                   textUnderlineOffset="none"
                   onChange={(e) => handleLanguageChange(e.target.value)}
                 >
-                  {PROGRAMMING_LANGUAGES.filter(
-                    (language) => Object.keys(language)[0] != attempt.language,
-                  ).map((language) => {
+                  {PROGRAMMING_LANGUAGES
+                  .map((language) => {
                     const _key = Object.keys(language)[0];
                     return (
                       <option key={_key} value={_key}>
@@ -108,6 +130,7 @@ export default function HistoryEditor({
                     );
                   })}
                 </Select>
+                </Tooltip>
               </div>
               <textarea
                 className={styles.inputField}
