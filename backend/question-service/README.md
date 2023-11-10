@@ -16,7 +16,7 @@
    npm run seed
    ```
 
-   Ensure that you only run this command **once** after setting up the Questions database. Otherwise, an error will be thrown.
+   Ensure that you only run this command **once** after setting up the Questions database, or if the database is empty. Otherwise, an error might be thrown.
 
 4. Run the project with:
 
