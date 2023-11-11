@@ -11,19 +11,33 @@
 .bodyContainer {
   position: absolute;
   display: flex;
-  height: 70%;
+  height: 80%;
   width: 95%;
 }
 
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  flex:0.5;
+}
+
 .description {
-  flex: 0.5;
+  position: relative;
   margin-right: 10px;
+  overflow:scroll;           
+  text-overflow: ellipsis;
+}
+
+.checkout {
+  position: absolute;
+  margin-top: 15px;
 }
 
 .inputContainer {
   position: relative;
   flex: 1;
   resize: none;
+  height: 90%;
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: none;

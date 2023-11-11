@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
 import ProfileList from "@/components/Users/ProfileList/ProfileList";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function Profiles() {
+  const authRedirect = useRedirectUnauthenticatedUser();
+
+  if (authRedirect.isLoading) return <></>;
+
   return (
     <>
       <Head>

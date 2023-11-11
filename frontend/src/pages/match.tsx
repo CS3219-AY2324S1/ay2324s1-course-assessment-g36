@@ -3,8 +3,13 @@ import Layout from "@/components/Layout/Layout";
 import MatchingForm from "@/components/Matching/MatchingForm";
 import { Flex } from "@chakra-ui/react";
 import Image from "next/image";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 export default function Matching() {
+  const authRedirect = useRedirectUnauthenticatedUser();
+
+  if (authRedirect.isLoading) return <></>;
+
   return (
     <>
       <Head>

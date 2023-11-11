@@ -6,8 +6,6 @@ export const QUESTIONS_API = `${QUESTIONS_URI}/questions`;
 
 export const USERS_API = `${USERS_URI}/users`;
 
-export const LOGIN_USER_API = `${USERS_API}/login`;
-
 export const CREATE_USER_API = `${USERS_API}/register`;
 
 export const HISTORY_API = `${USERS_URI}/history`;

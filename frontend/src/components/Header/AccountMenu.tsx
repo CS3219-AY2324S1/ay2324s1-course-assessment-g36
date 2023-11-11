@@ -27,7 +27,7 @@ export default function AccountMenu({
 
   return (
     <>
-      <Menu>
+      <Menu placement="bottom-end">
         <MenuButton
           as={Avatar}
           transition="all 0.2s"
@@ -35,7 +35,7 @@ export default function AccountMenu({
           _expanded={{ bg: "blue.600" }}
           w="30px"
           h="30px"
-        ></MenuButton>
+        />
         <MenuList>
           <MenuGroup title={`Welcome, ${username}`}>
             {!isAdmin && (

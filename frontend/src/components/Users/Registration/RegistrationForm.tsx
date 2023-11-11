@@ -12,11 +12,14 @@ import {
   Heading,
   useToast,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import styles from "./RegistrationForm.module.css";
-import { User, UserForm } from "@/interfaces";
+import { UserForm } from "@/interfaces";
 import { createUser } from "@/services/users";
 import AlertBanner from "@/components/Feedback/AlertBanner";
 import { validateEmail, validatePassword } from "@/utils/validators";
+import { useAuth } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function RegistrationForm(): JSX.Element {
   const [show, setShow] = useState<boolean>(false);
@@ -29,6 +32,8 @@ export default function RegistrationForm(): JSX.Element {
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true);
   const toast = useToast();
+  const router = useRouter();
+  const { setToken } = useAuth();
 
   const handlePasswordClick = () => setShow(!show);
 
@@ -47,13 +52,15 @@ export default function RegistrationForm(): JSX.Element {
     return validEmail && validPassword;
   };
 
-  const handleSubmit = async (userForm: UserForm): Promise<void> => {
+  const handleSubmit = async (event: React.FormEvent): Promise<void> => {
+    event.preventDefault();
     if (!validateForm()) return;
     setIsFormSubmitting(true);
 
     try {
-      const results: User = await createUser(userForm);
-      window.location.href = `/profile/${results.userId}`;
+      const results = await createUser(userForm);
+      setToken(results.token);
+      router.replace(`/profile/${results.user.userId}`);
     } catch (error: any) {
       toast({
         title: error.message,
@@ -76,7 +83,12 @@ export default function RegistrationForm(): JSX.Element {
   }
 
   return (
-    <Stack className={styles.form_container} spacing="20px">
+    <Stack
+      as="form"
+      className={styles.form_container}
+      spacing="20px"
+      onSubmit={handleSubmit}
+    >
       <Heading as="h2" size="xl" textAlign="center">
         User Registration
       </Heading>
@@ -130,16 +142,12 @@ export default function RegistrationForm(): JSX.Element {
         </InputGroup>
       </FormControl>
 
-      <Button
-        colorScheme="blue"
-        isDisabled={isDisabled()}
-        onClick={(e) => handleSubmit(userForm)}
-      >
+      <Button type="submit" colorScheme="blue" isDisabled={isDisabled()}>
         {isFormSubmitting ? "Creating..." : "Create Account"}
       </Button>
-      <Text align={"center"}>
+      <Text align="center">
         Already a user?{" "}
-        <Link href="/login" color="blue.400">
+        <Link as={NextLink} href="/login" color="blue.400">
           Login
         </Link>
       </Text>

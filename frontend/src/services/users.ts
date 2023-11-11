@@ -1,8 +1,24 @@
-import { UserForm, UpdateUserProfileForm, User } from "@/interfaces";
+import { UserForm, UpdateUserProfileForm, User, LoginForm } from "@/interfaces";
 import { USERS_API, CREATE_USER_API } from "./api";
 import { fetchDataOrThrowError } from "./utils";
 
-export async function createUser(userForm: UserForm): Promise<User> {
+export async function loginUser(loginForm: LoginForm): Promise<string> {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(loginForm),
+  };
+  const response = await fetch(`${USERS_API}/login`, requestOptions);
+  const results = await response.json();
+  if (!response.ok) throw new Error(results.error);
+  return results.res;
+}
+
+export async function createUser(
+  userForm: UserForm,
+): Promise<{ user: User; token: string }> {
   const requestOptions = {
     method: "POST",
     headers: {
