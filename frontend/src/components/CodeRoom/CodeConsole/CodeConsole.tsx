@@ -20,6 +20,7 @@ import { useAuth } from "@/utils/auth";
 interface IOwnProps {
   programmingLanguage: string;
   codeFromEditor: string;
+  selectedCodeFromEditor: string;
   question: QuestionObject;
 }
 
@@ -28,6 +29,7 @@ const BTN_SIZE = "sm";
 export default function CodeConsole({
   programmingLanguage,
   codeFromEditor,
+  selectedCodeFromEditor,
   question,
 }: IOwnProps): JSX.Element {
   const [isResultsLoading, setIsResultsLoading] = useState(false);

@@ -26,6 +26,7 @@ export default function CodeRoom({ id, question }: PageProps) {
   const [programmingLanguage, setProgrammingLanguage] = useState("python");
 
   const [codeFromEditor, setCodeFromEditor] = useState("");
+  const [selectedCodeFromEditor, setSelectedCodeFromEditor] = useState("");
 
   function onProgrammingLanguageChange(language: string) {
     setProgrammingLanguage(language);
@@ -95,12 +96,14 @@ export default function CodeRoom({ id, question }: PageProps) {
                   roomId={id}
                   programmingLanguage={programmingLanguage}
                   onCodeChange={onCodeChange}
+                  onSelectedCodeChange={setSelectedCodeFromEditor}
                 />
               </GridItem>
               <GridItem area={"code-console"}>
                 <CodeConsole
                   programmingLanguage={programmingLanguage}
                   codeFromEditor={codeFromEditor}
+                  selectedCodeFromEditor={selectedCodeFromEditor}
                   question={question}
                 />
               </GridItem>
