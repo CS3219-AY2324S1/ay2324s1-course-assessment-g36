@@ -1,9 +1,5 @@
 version: "3"
 
-# networks:
-#   appnet:
-#     driver: bridge
-
 services:
   users-db:
     image: mysql:latest
@@ -11,8 +7,6 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_PASSWORD: null
       MYSQL_TCP_PORT: 3306
-    # networks:
-    #   - appnet
     ports:
       - 3306:3306
     expose:
@@ -28,8 +22,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
-    # networks:
-    #   - appnet
     depends_on:
       users-db:
         condition: service_healthy
@@ -38,8 +30,6 @@ services:
 
   questions-db:
     image: mongo
-    # networks:
-    #   - appnet
     ports:
       - 27017:27017
     healthcheck:
@@ -55,8 +45,6 @@ services:
       - MONGODB_URI=mongodb://questions-db:27017
     ports:
       - 3001:3001
-    # networks:
-    #   - appnet
     depends_on:
       questions-db:
         condition: service_healthy
@@ -69,12 +57,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:3000
-    # networks:
-    #   - appnet
     environment:
       - NEXT_PUBLIC_QUESTION_SERVICE_URI=http://question-service:3001
       - NEXT_PUBLIC_USER_SERVICE_URI=http://user-service:8000
-      - NEXT_PUBLIC_MATCHING_SERVICE_URI=ws://localhost:3002/
     depends_on:
       - user-service
       - question-service
