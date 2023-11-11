@@ -78,7 +78,7 @@ export default function HistoryEditor({
           <div className={styles.bodyContainer}>
             <div className={styles.description}>
               {attempt.description.split("\n").map((desc) => (
-                <p>
+                <p key={desc}>
                   {desc}
                   <br />
                 </p>

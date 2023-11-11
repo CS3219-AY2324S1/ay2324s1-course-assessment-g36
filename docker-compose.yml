@@ -1,0 +1,80 @@
+version: "3"
+
+# networks:
+#   appnet:
+#     driver: bridge
+
+services:
+  users-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_PASSWORD: null
+      MYSQL_TCP_PORT: 3306
+    # networks:
+    #   - appnet
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 3s
+      retries: 10
+
+  user-service:
+    build:
+      context: backend/user-service
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    # networks:
+    #   - appnet
+    depends_on:
+      users-db:
+        condition: service_healthy
+    command: >
+      bash -c "npx sequelize-cli db:create && npm start"
+
+  questions-db:
+    image: mongo
+    # networks:
+    #   - appnet
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      timeout: 3s
+      retries: 10
+
+  question-service:
+    build:
+      context: backend/question-service
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_URI=mongodb://questions-db:27017
+    ports:
+      - 3001:3001
+    # networks:
+    #   - appnet
+    depends_on:
+      questions-db:
+        condition: service_healthy
+    command: >
+      bash -c "npm run seed && npm start"
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    # networks:
+    #   - appnet
+    environment:
+      - NEXT_PUBLIC_QUESTION_SERVICE_URI=http://question-service:3001
+      - NEXT_PUBLIC_USER_SERVICE_URI=http://user-service:8000
+      - NEXT_PUBLIC_MATCHING_SERVICE_URI=ws://localhost:3002/
+    depends_on:
+      - user-service
+      - question-service

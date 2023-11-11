@@ -9,6 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
+import { MATCHING_URI } from "../../services/api";
 
 interface IOwnProps {
   criteria: MatchCriteria;
@@ -53,7 +54,7 @@ function useMatcher() {
     }
 
     if (!wsRef.current) {
-      wsRef.current = new WebSocket("ws://localhost:3002/");
+      wsRef.current = new WebSocket(MATCHING_URI);
       wsRef.current.addEventListener("message", (event) => {
         const message = JSON.parse(event.data);
         switch (message.status) {
