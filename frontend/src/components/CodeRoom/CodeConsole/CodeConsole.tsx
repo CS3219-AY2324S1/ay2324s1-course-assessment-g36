@@ -26,29 +26,51 @@ interface IOwnProps {
 
 const BTN_SIZE = "sm";
 
+type ConsoleState =
+  | { type: "none"; status: "done" }
+  | {
+      type: "execution";
+      status: "loading";
+    }
+  | {
+      type: "execution";
+      status: "done";
+      result: CodeResult;
+    }
+  | {
+      type: "explanation";
+      status: "loading";
+    }
+  | {
+      type: "explanation";
+      status: "done";
+      result: string;
+    };
+
 export default function CodeConsole({
   programmingLanguage,
   codeFromEditor,
   selectedCodeFromEditor,
   question,
 }: IOwnProps): JSX.Element {
-  const [isResultsLoading, setIsResultsLoading] = useState(false);
-  const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult);
+  const [consoleState, setConsoleState] = useState<ConsoleState>({
+    type: "none",
+    status: "done",
+  });
   const toast = useToast();
   const { token } = useAuth();
 
   async function onRunCode() {
-    setIsResultsLoading(true);
+    setConsoleState({ type: "execution", status: "loading" });
     try {
       const result: CodeResult = await executeCode(
         programmingLanguage,
         codeFromEditor,
       );
-      setCodeResult(result);
+      setConsoleState({ type: "execution", status: "done", result });
     } catch (e) {
       console.error(e);
-    } finally {
-      setIsResultsLoading(false);
+      setConsoleState({ type: "none", status: "done" });
     }
   }
 
@@ -87,7 +109,7 @@ export default function CodeConsole({
   }
 
   function isBtnDisabled(): boolean {
-    return !codeFromEditor || isResultsLoading;
+    return !codeFromEditor || consoleState.status === "loading";
   }
 
   return (
@@ -97,6 +119,13 @@ export default function CodeConsole({
           <Heading size="md">Console</Heading>
           <Spacer />
           <ButtonGroup gap="1">
+            <Button
+              colorScheme="whiteAlpha"
+              size={BTN_SIZE}
+              onClick={() => alert("TODO")}
+            >
+              Explain code
+            </Button>
             <Button
               colorScheme="whiteAlpha"
               size={BTN_SIZE}
@@ -115,10 +144,12 @@ export default function CodeConsole({
             </Button>
           </ButtonGroup>
         </Flex>
-        {isResultsLoading ? (
+        {consoleState.status === "loading" ? (
           <SkeletonLoader />
+        ) : consoleState.type === "execution" ? (
+          <CodeResultOutput codeResult={consoleState.result} />
         ) : (
-          <CodeResultOutput codeResult={codeResult} />
+          "TODO"
         )}
       </Stack>
     </div>
