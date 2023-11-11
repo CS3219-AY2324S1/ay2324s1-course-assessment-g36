@@ -1,9 +1,12 @@
+import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import { WebSocketServer } from "ws";
 import { setupWSConnection } from "y-websocket/bin/utils";
 import { Server } from "socket.io";
+
+dotenv.config();
 
 const DEFAULT_PORT = 5173;
 const ALLOWED_ORIGINS = ["http://localhost:3000"];
