@@ -1,14 +1,20 @@
-import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces";
-import { useAuth } from "@/utils/auth";
+import { CheckCircleIcon, CloseIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
+  ModalHeader,
   ModalOverlay,
+  Spinner,
+  Stack,
   Text,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { SECOND, useMatcher } from "./useMatcher";
 
 interface IOwnProps {
   criteria: MatchCriteria;
@@ -16,120 +22,14 @@ interface IOwnProps {
   onModalClose: () => void;
 }
 
-const SECOND = 1000;
-
-type MatchState =
-  | { status: "not-matching" }
-  | {
-      status: "matching";
-      secondsRemaining: number;
-    }
-  | {
-      status: "matched";
-      username: string;
-      room_id: string;
-      question_id: number;
-    }
-  | { status: "timed-out" };
-
-function useMatcher() {
-  const wsRef = useRef<WebSocket>();
-  const [matchState, setMatchState] = useState<MatchState>({
-    status: "not-matching",
-  });
-  const intervalIdRef = useRef<NodeJS.Timeout>();
-  const { token } = useAuth();
-
-  function match(criteria: MatchCriteria) {
-    function cleanup() {
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = undefined;
-      }
-      if (typeof intervalIdRef.current === "number") {
-        clearInterval(intervalIdRef.current);
-        intervalIdRef.current = undefined;
-      }
-    }
-
-    if (!wsRef.current) {
-      wsRef.current = new WebSocket("ws://localhost:3002/");
-      wsRef.current.addEventListener("message", (event) => {
-        const message = JSON.parse(event.data);
-        switch (message.status) {
-          case "initialized":
-            // No-op
-            break;
-          case "matched":
-            setMatchState({
-              status: "matched",
-              username: message.username,
-              room_id: message.room_id,
-              question_id: message.question_id,
-            });
-            cleanup();
-        }
-      });
-      // Update matching state once closed.
-      wsRef.current.addEventListener("close", () => {
-        setMatchState((matchState) => {
-          if (matchState.status !== "matching") return matchState;
-          return { status: "not-matching" };
-        });
-      });
-      // Send initial matching request.
-      wsRef.current.addEventListener("open", () => {
-        wsRef.current?.send(
-          JSON.stringify({
-            type: "initialization",
-            question_complexity: criteria.difficulty,
-            token: token,
-          }),
-        );
-      });
-    }
-
-    setMatchState({
-      status: "matching",
-      secondsRemaining: MAX_MATCH_WAIT_S,
-    });
-
-    intervalIdRef.current = setInterval(() => {
-      setMatchState((matchState) => {
-        if (matchState.status !== "matching") return matchState;
-
-        return {
-          ...matchState,
-          secondsRemaining: Math.max(0, matchState.secondsRemaining - 1),
-        };
-      });
-    }, SECOND);
-
-    // Close connection after timeout period.
-    const timeoutId = setTimeout(() => {
-      cleanup();
-    }, MAX_MATCH_WAIT_S * SECOND);
-
-    return () => {
-      cleanup();
-      clearTimeout(timeoutId);
-    };
-  }
-
-  return {
-    matchState,
-    match,
-  };
-}
-
-function redirectToCodeRoom(room_id: string, question_id: number): void {
+function getCodeRoomUrl(room_id: string, question_id: number) {
   const queryParams = new URLSearchParams();
-
   queryParams.append("questionId", question_id.toString());
 
   const queryString = queryParams.toString();
   const redirectUrl = `/room/${room_id}?${queryString}`;
-  window.location.href = redirectUrl;
+
+  return redirectUrl;
 }
 
 export default function ResultModal({
@@ -137,18 +37,26 @@ export default function ResultModal({
   isModalOpen,
   onModalClose,
 }: IOwnProps) {
-  const { matchState, match } = useMatcher();
+  const router = useRouter();
+  const { matchState, match, cancelMatch } = useMatcher({
+    match: isModalOpen,
+    criteria,
+  });
 
-  // Begin matching once modal opens.
+  // Redirect to code room after successful match.
   useEffect(() => {
-    const cleanup = isModalOpen ? match(criteria) : () => {};
+    if (matchState.status === "matched") {
+      const codeRoomUrl = getCodeRoomUrl(
+        matchState.room_id,
+        matchState.question_id,
+      );
 
-    return cleanup;
-  }, [isModalOpen]);
-
-  if (matchState.status === "matched") {
-    redirectToCodeRoom(matchState.room_id, matchState.question_id);
-  }
+      // Redirect after a specific timeout to allow the user to read the message.
+      setTimeout(() => {
+        router.push(codeRoomUrl);
+      }, SECOND);
+    }
+  }, [matchState]);
 
   return (
     <Modal
@@ -161,14 +69,55 @@ export default function ResultModal({
     >
       <ModalOverlay />
       <ModalContent>
+        <ModalHeader>Finding you a match!</ModalHeader>
+        <ModalCloseButton />
         <ModalBody>
-          {matchState.status === "matching" ? (
-            <Text>{`Finding match in ${matchState.secondsRemaining}s...`}</Text>
-          ) : matchState.status === "matched" ? (
-            <Text>{`Matched with: ${matchState.username}`}</Text>
-          ) : (
-            <Text>Failed to find match</Text>
-          )}
+          <Stack minH="200px" align="center" spacing="40px" paddingY="40px">
+            {matchState.status === "matching" ? (
+              <>
+                <Spinner size="xl" />
+                <Stack>
+                  <Text align="center">
+                    Finding match in {matchState.secondsRemaining}s...
+                  </Text>
+                  <Text align="center">
+                    <Button
+                      variant="link"
+                      colorScheme="red"
+                      onClick={() => {
+                        cancelMatch();
+                        onModalClose();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Text>
+                </Stack>
+              </>
+            ) : matchState.status === "matched" ? (
+              <>
+                <CheckCircleIcon boxSize={12} />
+                <Stack>
+                  <Text align="center">
+                    Matched with: {matchState.username}
+                  </Text>
+                  <Text align="center">Redirecting to code room...</Text>
+                </Stack>
+              </>
+            ) : (
+              <>
+                <CloseIcon boxSize={12} />
+                <Stack>
+                  <Text align="center">Failed to find match.</Text>
+                  <Text align="center">
+                    <Button variant="link" colorScheme="teal" onClick={match}>
+                      Retry?
+                    </Button>
+                  </Text>
+                </Stack>
+              </>
+            )}
+          </Stack>
         </ModalBody>
       </ModalContent>
     </Modal>
