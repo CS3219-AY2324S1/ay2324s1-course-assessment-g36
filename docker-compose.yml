@@ -51,6 +51,18 @@ services:
     command: >
       bash -c "npm run seed && npm start"
 
+  matching-service:
+    build:
+      context: backend/matching-service
+      dockerfile: Dockerfile
+    environment:
+      - QUESTION_SERVICE_URI=http://question-service:3001
+      - FRONTEND_URI=http://frontend:3000
+    ports:
+      - 3002:3002
+    depends_on:
+      - question-service
+
   frontend:
     build:
       context: frontend
