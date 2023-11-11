@@ -32,6 +32,7 @@ export default function HistoryEditor({
   onClose,
 }: IOwnProps): JSX.Element {
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
+  const [savedAttempt, setSavedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
   const { token } = useAuth();
 
@@ -42,20 +43,12 @@ export default function HistoryEditor({
     }));
   };
 
-  const handleLanguageChange = (e: string) => {
-    if (e == attempt.language) {    // if language is the same as previously saved attempt, restore saved code
+  const handleLanguageChange = (newLanguage: string) => {
       setUpdatedAttempt((prevAttempt) => ({
         ...prevAttempt,
-        language: e,
-        attempt: attempt.attempt
+        language: newLanguage,
+        attempt: newLanguage == savedAttempt.language ? savedAttempt.attempt : ""   
       }))
-    } else {
-      setUpdatedAttempt((prevAttempt) => ({
-        ...prevAttempt,
-        language: e,
-        attempt: "",
-      }));
-    }
   };
 
   async function updateAttempt() {
@@ -71,10 +64,7 @@ export default function HistoryEditor({
         duration: 5000,
         isClosable: true,
       });
-      setUpdatedAttempt((prevAttempt) => ({
-        ...prevAttempt,
-        date: result.date
-      }))
+      setSavedAttempt(result);
     } catch (error: any) {
       toast({
         position: "top",
@@ -90,16 +80,16 @@ export default function HistoryEditor({
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
       <ModalContent className={styles.contentContainer}>
-        <ModalHeader>{attempt.title}</ModalHeader>
+        <ModalHeader>{savedAttempt.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody className={styles.body}>
             <div className={styles.bodyContainer}>
               <div className={styles.detailsContainer}>
-                <div className={styles.date}>{updatedAttempt.date}</div>
+                <div className={styles.date}>{savedAttempt.date}</div>
                 <div className={styles.description}>
-                  <QuestionDescription description={attempt.description}/>
+                  <QuestionDescription description={savedAttempt.description}/>
                 </div>
-                <Link href={attempt.link}>
+                <Link href={savedAttempt.link}>
                   <Button colorScheme="gray" className={styles.checkout}>Check out here</Button>
                 </Link>
             </div>
