@@ -10,6 +10,5 @@ COPY . .
 
 ENV PORT=3001
 ENV JSON_WEB_TOKEN_SECRET=MkyAu6gLS5qRDDRczHbqoH44YfJk8TYTnWq3f/kCszdH60kbTrJWjw==
-ENV MONGODB_URI=mongodb+srv://fannyjian:pVLY72wmZEqYM1AX@questionrepo.8hl440u.mongodb.net/
 EXPOSE 3001
 CMD ["npm", "start"]
