@@ -1,4 +1,4 @@
-import { createHistory, updateHistory } from "@/services/history";
+import { updateHistory } from "@/services/history";
 import styles from "./HistoryEditor.module.css";
 import { Attempt } from "@/interfaces";
 import { PROGRAMMING_LANGUAGES } from "@/types";
@@ -13,6 +13,7 @@ import {
   Button,
   useToast,
   Select,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAuth } from "@/utils/auth";
@@ -31,6 +32,7 @@ export default function HistoryEditor({
   onClose,
 }: IOwnProps): JSX.Element {
   const [updatedAttempt, setUpdatedAttempt] = useState<Attempt>(attempt);
+  const [savedAttempt, setSavedAttempt] = useState<Attempt>(attempt);
   const toast = useToast();
   const { token } = useAuth();
 
@@ -41,16 +43,20 @@ export default function HistoryEditor({
     }));
   };
 
-  const handleLanguageChange = (e: string) => {
-    setUpdatedAttempt((prevAttempt) => ({
-      ...prevAttempt,
-      language: e,
-    }));
+  const handleLanguageChange = (newLanguage: string) => {
+      setUpdatedAttempt((prevAttempt) => ({
+        ...prevAttempt,
+        language: newLanguage,
+        attempt: newLanguage == savedAttempt.language ? savedAttempt.attempt : ""   
+      }))
   };
 
   async function updateAttempt() {
     try {
-      await updateHistory(updatedAttempt, token);
+      if (updatedAttempt.attempt == "") {
+        throw new Error("Attempt cannot be empty.")
+      }
+      const result = await updateHistory(updatedAttempt, token);
       toast({
         position: "top",
         title: "Attempt updated",
@@ -58,6 +64,7 @@ export default function HistoryEditor({
         duration: 5000,
         isClosable: true,
       });
+      setSavedAttempt(result);
     } catch (error: any) {
       toast({
         position: "top",
@@ -73,33 +80,38 @@ export default function HistoryEditor({
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
       <ModalContent className={styles.contentContainer}>
-        <ModalHeader>{attempt.title}</ModalHeader>
+        <ModalHeader>{savedAttempt.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody className={styles.body}>
             <div className={styles.bodyContainer}>
               <div className={styles.detailsContainer}>
-                <div className={styles.date}>{attempt.date}</div>
+                <div className={styles.date}>{savedAttempt.date}</div>
                 <div className={styles.description}>
-                  <QuestionDescription description={attempt.description}/>
+                  <QuestionDescription description={savedAttempt.description}/>
                 </div>
-                <Link href={attempt.link}>
+                <Link href={savedAttempt.link}>
                   <Button colorScheme="gray" className={styles.checkout}>Check out here</Button>
                 </Link>
             </div>
             
             <div className={styles.inputContainer}>
               <div className={styles.selectContainer}>
+                <Tooltip
+                  hasArrow
+                  label="Unsaved changes may be lost upon switching languages!"
+                  placement="right"
+                  aria-label="A tooltip to warn about unsaved attempts"
+                >
                 <Select
                   variant={"flushed"}
                   size="xs"
-                  placeholder={attempt.language}
+                  value={updatedAttempt.language}
                   maxWidth="50%"
                   textUnderlineOffset="none"
                   onChange={(e) => handleLanguageChange(e.target.value)}
                 >
-                  {PROGRAMMING_LANGUAGES.filter(
-                    (language) => Object.keys(language)[0] != attempt.language,
-                  ).map((language) => {
+                  {PROGRAMMING_LANGUAGES
+                  .map((language) => {
                     const _key = Object.keys(language)[0];
                     return (
                       <option key={_key} value={_key}>
@@ -108,6 +120,7 @@ export default function HistoryEditor({
                     );
                   })}
                 </Select>
+                </Tooltip>
               </div>
               <textarea
                 className={styles.inputField}
