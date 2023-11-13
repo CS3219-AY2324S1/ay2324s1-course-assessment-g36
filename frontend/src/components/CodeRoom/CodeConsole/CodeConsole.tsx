@@ -10,12 +10,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
-import { AttemptForm, CodeResult, QuestionObject } from "@/interfaces";
+import {
+  AttemptForm,
+  CodeExplanationResult,
+  CodeResult,
+  QuestionObject,
+} from "@/interfaces";
 import CodeResultOutput from "../CodeResultOutput/CodeResultOutput";
+import CodeExplanationOutput from "../CodeExplanationOutput/CodeExplanationOutput";
 import { executeCode } from "@/services/code_execution";
 import { createHistory } from "@/services/history";
 import { PROGRAMMING_LANGUAGES } from "@/types";
 import { useAuth } from "@/utils/auth";
+import { explainCode } from "@/services/collaboration";
 
 interface IOwnProps {
   programmingLanguage: string;
@@ -44,7 +51,7 @@ type ConsoleState =
   | {
       type: "explanation";
       status: "done";
-      result: string;
+      result: CodeExplanationResult;
     };
 
 export default function CodeConsole({
@@ -68,6 +75,21 @@ export default function CodeConsole({
         codeFromEditor,
       );
       setConsoleState({ type: "execution", status: "done", result });
+    } catch (e) {
+      console.error(e);
+      setConsoleState({ type: "none", status: "done" });
+    }
+  }
+
+  async function onExplainCode() {
+    setConsoleState({ type: "explanation", status: "loading" });
+    try {
+      const result = await explainCode(
+        programmingLanguage,
+        selectedCodeFromEditor === "" ? codeFromEditor : selectedCodeFromEditor,
+        token,
+      );
+      setConsoleState({ type: "explanation", status: "done", result });
     } catch (e) {
       console.error(e);
       setConsoleState({ type: "none", status: "done" });
@@ -122,9 +144,12 @@ export default function CodeConsole({
             <Button
               colorScheme="whiteAlpha"
               size={BTN_SIZE}
-              onClick={() => alert("TODO")}
+              onClick={onExplainCode}
+              isDisabled={isBtnDisabled()}
             >
-              Explain code
+              {selectedCodeFromEditor !== ""
+                ? "Explain selected code"
+                : "Explain code"}
             </Button>
             <Button
               colorScheme="whiteAlpha"
@@ -144,13 +169,17 @@ export default function CodeConsole({
             </Button>
           </ButtonGroup>
         </Flex>
-        {consoleState.status === "loading" ? (
-          <SkeletonLoader />
-        ) : consoleState.type === "execution" ? (
-          <CodeResultOutput codeResult={consoleState.result} />
-        ) : (
-          "TODO"
-        )}
+        {(() => {
+          if (consoleState.status === "loading") return <SkeletonLoader />;
+          switch (consoleState.type) {
+            case "execution":
+              return <CodeResultOutput codeResult={consoleState.result} />;
+            case "explanation":
+              return <CodeExplanationOutput result={consoleState.result} />;
+            case "none":
+              return <></>;
+          }
+        })()}
       </Stack>
     </div>
   );
