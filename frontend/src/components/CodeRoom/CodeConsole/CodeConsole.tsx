@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./CodeConsole.module.css";
 import {
   Stack,
@@ -7,7 +7,15 @@ import {
   Button,
   Spacer,
   ButtonGroup,
+  Textarea,
+  Portal,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
 import {
@@ -22,7 +30,8 @@ import { executeCode } from "@/services/code_execution";
 import { createHistory } from "@/services/history";
 import { PROGRAMMING_LANGUAGES } from "@/types";
 import { useAuth } from "@/utils/auth";
-import { explainCode } from "@/services/collaboration";
+import { explainCode, generateCode } from "@/services/collaboration";
+import CodeGenerationOutput from "../CodeGenerationOutput/CodeGenerationOutput";
 
 interface IOwnProps {
   programmingLanguage: string;
@@ -50,6 +59,15 @@ type ConsoleState =
     }
   | {
       type: "explanation";
+      status: "done";
+      result: CodeExplanationResult;
+    }
+  | {
+      type: "generation";
+      status: "loading";
+    }
+  | {
+      type: "generation";
       status: "done";
       result: CodeExplanationResult;
     };
@@ -90,6 +108,21 @@ export default function CodeConsole({
         token,
       );
       setConsoleState({ type: "explanation", status: "done", result });
+    } catch (e) {
+      console.error(e);
+      setConsoleState({ type: "none", status: "done" });
+    }
+  }
+
+  async function onGenerateCode(description: string) {
+    setConsoleState({ type: "generation", status: "loading" });
+    try {
+      const result = await generateCode(
+        programmingLanguage,
+        description,
+        token,
+      );
+      setConsoleState({ type: "generation", status: "done", result });
     } catch (e) {
       console.error(e);
       setConsoleState({ type: "none", status: "done" });
@@ -151,6 +184,7 @@ export default function CodeConsole({
                 ? "Explain selected code"
                 : "Explain code"}
             </Button>
+            <GenerateCodeButton onGenerate={onGenerateCode} />
             <Button
               colorScheme="whiteAlpha"
               size={BTN_SIZE}
@@ -176,11 +210,75 @@ export default function CodeConsole({
               return <CodeResultOutput codeResult={consoleState.result} />;
             case "explanation":
               return <CodeExplanationOutput result={consoleState.result} />;
+            case "generation":
+              return <CodeGenerationOutput result={consoleState.result} />;
             case "none":
               return <></>;
           }
         })()}
       </Stack>
     </div>
+  );
+}
+
+type GenerateCodeButtonProps = {
+  onGenerate: (description: string) => void;
+};
+
+function GenerateCodeButton({ onGenerate }: GenerateCodeButtonProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [description, setDescription] = useState("");
+  const { isOpen, onClose, onToggle } = useDisclosure();
+
+  return (
+    <Popover
+      isOpen={isOpen}
+      onClose={onClose}
+      placement="bottom-end"
+      initialFocusRef={textareaRef}
+      colorScheme="whiteAlpha"
+    >
+      <PopoverTrigger>
+        <Button colorScheme="whiteAlpha" size={BTN_SIZE} onClick={onToggle}>
+          Generate code
+        </Button>
+      </PopoverTrigger>
+      <Portal>
+        <PopoverContent minW="600px" bgColor="gray" color="white">
+          <PopoverArrow />
+          <PopoverBody>
+            <Stack
+              py={1}
+              direction="row"
+              spacing={2}
+              as="form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                onGenerate(description);
+                onClose();
+              }}
+            >
+              <Textarea
+                colorScheme="whiteAlpha"
+                _focus={{ borderColor: "white" }}
+                ref={textareaRef}
+                placeholder="Function that reverses a string"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+              <Button
+                type="submit"
+                colorScheme="blackAlpha"
+                size={BTN_SIZE}
+                disabled={description === ""}
+                p="20px"
+              >
+                Generate
+              </Button>
+            </Stack>
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
   );
 }
