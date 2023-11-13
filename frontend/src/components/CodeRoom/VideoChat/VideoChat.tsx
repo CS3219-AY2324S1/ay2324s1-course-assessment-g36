@@ -1,17 +1,20 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AgoraVideoPlayer, IAgoraRTCRemoteUser } from "agora-rtc-react";
-import { useMicrophoneAndCameraTracks, useClient } from "./AgoraUtils";
+import {
+  useMicrophoneAndCameraTracks,
+  useClient,
+  generateAccessToken,
+  AGORA_APP_ID,
+} from "./AgoraUtils";
 import { Controls } from "./Controls";
 import { Box } from "@chakra-ui/react";
 import styles from "./VideoChat.module.css";
 
-// TODO: dynamically set channel and token based on room number
-const AGORA_APP_ID = "07a3b6e024c94596ae016c0bb2646e38";
-const AGORA_TOKEN =
-  "007eJxTYCjo2/EwUL3wRnFZkJnllvnTOI8b2afZ6285diSJMa5oKYcCg4F5onGSWaqBkUmypYmppVliqoGhWbJBUpKRmYlZqrHFnw+BqQ2BjAyTbdcwMjJAIIjPyVCQmlqkW1CUWsDAAACBWSAX";
-const AGORA_CHANNEL = "peer-prep";
+interface IOwnProps {
+  roomId: string;
+}
 
-const VideoChat = (): JSX.Element => {
+const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
   const [users, setUsers] = useState<IAgoraRTCRemoteUser[]>([]);
   const [start, setStart] = useState<boolean>(false);
   const client = useClient();
@@ -48,7 +51,8 @@ const VideoChat = (): JSX.Element => {
         });
       });
 
-      await client.join(AGORA_APP_ID, AGORA_CHANNEL, AGORA_TOKEN, null);
+      const token = generateAccessToken(roomId);
+      await client.join(AGORA_APP_ID, roomId, token, "");
       if (tracks) {
         await client.publish([tracks[0], tracks[1]]);
       }
@@ -58,7 +62,7 @@ const VideoChat = (): JSX.Element => {
     if (ready && tracks) {
       init();
     }
-  }, [ready, tracks, client]);
+  }, [ready, tracks, client, roomId]);
 
   useEffect(() => {
     return () => {
@@ -67,20 +71,26 @@ const VideoChat = (): JSX.Element => {
   }, [tracks]);
 
   return (
-    <Box height={"25vh"} width={"25vw"}>
+    <Box
+      position="fixed"
+      bottom="0px"
+      right="0px"
+      margin="5px"
+      display="flex"
+      flexDir="row"
+      gap="10px"
+    >
       {start && tracks && (
         <>
           <AgoraVideoPlayer
             className={styles.agora_video}
             videoTrack={tracks[1]}
-            config={{ fit: "contain" }}
           />
           <Controls tracks={tracks} />
           {users.length > 0 && users[0].videoTrack && (
             <AgoraVideoPlayer
               className={styles.agora_video}
               videoTrack={users[0].videoTrack}
-              config={{ fit: "contain" }}
             />
           )}
         </>

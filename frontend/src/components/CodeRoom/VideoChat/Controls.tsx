@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
-import { IconButton } from "@chakra-ui/react";
+import { HStack, IconButton } from "@chakra-ui/react";
 import { ICameraVideoTrack, IMicrophoneAudioTrack } from "agora-rtc-react";
 
 interface IOwnProps {
@@ -25,21 +25,28 @@ export const Controls = ({ tracks }: IOwnProps): JSX.Element => {
   };
 
   return (
-    <>
+    <HStack
+      bottom={0}
+      justifyContent="space-between"
+      minH={7}
+      position="absolute"
+      px={2}
+      py={0.5}
+    >
       <IconButton
         aria-label="Audio"
-        color="white"
+        color="black"
         icon={trackState.audio ? <FiMic /> : <FiMicOff />}
         onClick={(): Promise<void> => toggle("audio")}
         size="xs"
       />
       <IconButton
         aria-label="Video"
-        color="white"
+        color="black"
         icon={trackState.video ? <FiVideo /> : <FiVideoOff />}
         onClick={(): Promise<void> => toggle("video")}
         size="xs"
       />
-    </>
+    </HStack>
   );
 };

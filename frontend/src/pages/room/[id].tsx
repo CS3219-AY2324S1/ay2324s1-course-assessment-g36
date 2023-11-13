@@ -78,7 +78,7 @@ export default function CodeRoom({ id, question }: PageProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* <main className={styles.room_container}>
+      <main className={styles.room_container}>
         <Grid
           templateAreas={`"sidebar code-editor"
                   "sidebar code-console"`}
@@ -116,8 +116,8 @@ export default function CodeRoom({ id, question }: PageProps) {
             </>
           )}
         </Grid>
-      </main> */}
-      <VideoChat />
+        <VideoChat roomId={id} />
+      </main>
     </>
   );
 }
