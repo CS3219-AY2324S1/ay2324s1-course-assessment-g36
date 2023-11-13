@@ -5,6 +5,7 @@ import cors from "cors";
 import { WebSocketServer } from "ws";
 import { setupWSConnection } from "y-websocket/bin/utils";
 import { Server } from "socket.io";
+import { apiRouter } from "./api.js";
 
 dotenv.config();
 
@@ -22,11 +23,12 @@ app.use(
   cors({
     origin: ALLOWED_ORIGINS,
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-    allowedHeaders: "Content-Type",
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
 app.use(express.json());
+app.use("/api", apiRouter);
 
 export const httpServer = createServer(app);
 
