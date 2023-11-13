@@ -12,7 +12,9 @@ app.use(cors());
 connectToDb();
 
 const questionRouter = require("./routes/questionRouter");
+const {errorHandler} = require('./middleware/errorHandler');
 app.use("/questions", questionRouter);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -1,8 +1,9 @@
 const express = require("express");
 const historyController = require("../controllers/historyController");
 const historyRouter = express.Router();
+const {authenticateHistory} = require("../middleware/authenticate")
 
-historyRouter.use(historyController.authenticate);
+historyRouter.use(authenticateHistory);
 
 historyRouter.post("/", historyController.addHistory);
 
