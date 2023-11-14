@@ -57,7 +57,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - QUESTION_SERVICE_URI=http://question-service:3001
-      - FRONTEND_URI=http://frontend:3000
+      - FRONTEND_URI=http://localhost:3000
     ports:
       - 3002:3002
     depends_on:
@@ -68,7 +68,7 @@ services:
       context: backend/collaboration-service
       dockerfile: Dockerfile
     environment:
-      - FRONTEND_URI=http://frontend:3000
+      - FRONTEND_URI=http://localhost:3000
     ports:
       - 5173:5173
 
@@ -79,9 +79,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - NEXT_PUBLIC_QUESTION_SERVICE_URI=http://question-service:3001
-      - NEXT_PUBLIC_USER_SERVICE_URI=http://user-service:8000
-      - NEXT_PUBLIC_MATCHING_SERVICE_URI=ws://matching-service:3002/
+      - QUESTION_SERVICE_URI=http://question-service:3001
     depends_on:
       - user-service
       - question-service
