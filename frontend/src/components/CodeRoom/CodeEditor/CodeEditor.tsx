@@ -14,12 +14,14 @@ interface IOwnProps {
   roomId: string;
   programmingLanguage: string;
   onCodeChange: (code: string) => void;
+  onSelectedCodeChange: (code: string) => void;
 }
 
 export default function CodeEditor({
   roomId,
   programmingLanguage,
   onCodeChange,
+  onSelectedCodeChange,
 }: IOwnProps): JSX.Element {
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
@@ -50,6 +52,14 @@ export default function CodeEditor({
     editorRef.current.onDidChangeModelContent(() => {
       const code = editorRef.current?.getValue();
       onCodeChange(code ?? "");
+    });
+
+    editorRef.current.onDidChangeCursorSelection((e) => {
+      const selection = editorRef.current!.getSelection();
+      const selectedCode = selection
+        ? editorRef.current!.getModel()?.getValueInRange(selection) ?? ""
+        : "";
+      onSelectedCodeChange(selectedCode);
     });
   }
 
