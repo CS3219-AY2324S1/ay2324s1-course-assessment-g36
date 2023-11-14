@@ -89,3 +89,5 @@ export interface CodeResult {
   message: string;
   status: CodeSubmissionStatus;
 }
+
+export type CodeExplanationResult = { response: string } | { error: string };

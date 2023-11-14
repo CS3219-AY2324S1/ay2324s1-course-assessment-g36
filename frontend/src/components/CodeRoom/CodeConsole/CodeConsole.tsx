@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./CodeConsole.module.css";
 import {
   Stack,
@@ -7,46 +7,125 @@ import {
   Button,
   Spacer,
   ButtonGroup,
+  Textarea,
+  Portal,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import SkeletonLoader from "@/components/Loader/SkeletonLoader";
-import { AttemptForm, CodeResult, QuestionObject } from "@/interfaces";
+import {
+  AttemptForm,
+  CodeExplanationResult,
+  CodeResult,
+  QuestionObject,
+} from "@/interfaces";
 import CodeResultOutput from "../CodeResultOutput/CodeResultOutput";
+import CodeExplanationOutput from "../CodeExplanationOutput/CodeExplanationOutput";
 import { executeCode } from "@/services/code_execution";
 import { createHistory } from "@/services/history";
 import { PROGRAMMING_LANGUAGES } from "@/types";
 import { useAuth } from "@/utils/auth";
+import { explainCode, generateCode } from "@/services/collaboration";
+import CodeGenerationOutput from "../CodeGenerationOutput/CodeGenerationOutput";
 
 interface IOwnProps {
   programmingLanguage: string;
   codeFromEditor: string;
+  selectedCodeFromEditor: string;
   question: QuestionObject;
 }
 
 const BTN_SIZE = "sm";
 
+type ConsoleState =
+  | { type: "none"; status: "done" }
+  | {
+      type: "execution";
+      status: "loading";
+    }
+  | {
+      type: "execution";
+      status: "done";
+      result: CodeResult;
+    }
+  | {
+      type: "explanation";
+      status: "loading";
+    }
+  | {
+      type: "explanation";
+      status: "done";
+      result: CodeExplanationResult;
+    }
+  | {
+      type: "generation";
+      status: "loading";
+    }
+  | {
+      type: "generation";
+      status: "done";
+      result: CodeExplanationResult;
+    };
+
 export default function CodeConsole({
   programmingLanguage,
   codeFromEditor,
+  selectedCodeFromEditor,
   question,
 }: IOwnProps): JSX.Element {
-  const [isResultsLoading, setIsResultsLoading] = useState(false);
-  const [codeResult, setCodeResult] = useState<CodeResult>({} as CodeResult);
+  const [consoleState, setConsoleState] = useState<ConsoleState>({
+    type: "none",
+    status: "done",
+  });
   const toast = useToast();
   const { token } = useAuth();
 
   async function onRunCode() {
-    setIsResultsLoading(true);
+    setConsoleState({ type: "execution", status: "loading" });
     try {
       const result: CodeResult = await executeCode(
         programmingLanguage,
         codeFromEditor,
       );
-      setCodeResult(result);
+      setConsoleState({ type: "execution", status: "done", result });
     } catch (e) {
       console.error(e);
-    } finally {
-      setIsResultsLoading(false);
+      setConsoleState({ type: "none", status: "done" });
+    }
+  }
+
+  async function onExplainCode() {
+    setConsoleState({ type: "explanation", status: "loading" });
+    try {
+      const result = await explainCode(
+        programmingLanguage,
+        selectedCodeFromEditor === "" ? codeFromEditor : selectedCodeFromEditor,
+        token,
+      );
+      setConsoleState({ type: "explanation", status: "done", result });
+    } catch (e) {
+      console.error(e);
+      setConsoleState({ type: "none", status: "done" });
+    }
+  }
+
+  async function onGenerateCode(description: string) {
+    setConsoleState({ type: "generation", status: "loading" });
+    try {
+      const result = await generateCode(
+        programmingLanguage,
+        description,
+        token,
+      );
+      setConsoleState({ type: "generation", status: "done", result });
+    } catch (e) {
+      console.error(e);
+      setConsoleState({ type: "none", status: "done" });
     }
   }
 
@@ -85,7 +164,7 @@ export default function CodeConsole({
   }
 
   function isBtnDisabled(): boolean {
-    return !codeFromEditor || isResultsLoading;
+    return !codeFromEditor || consoleState.status === "loading";
   }
 
   return (
@@ -95,6 +174,17 @@ export default function CodeConsole({
           <Heading size="md">Console</Heading>
           <Spacer />
           <ButtonGroup gap="1">
+            <Button
+              colorScheme="whiteAlpha"
+              size={BTN_SIZE}
+              onClick={onExplainCode}
+              isDisabled={isBtnDisabled()}
+            >
+              {selectedCodeFromEditor !== ""
+                ? "Explain selected code"
+                : "Explain code"}
+            </Button>
+            <GenerateCodeButton onGenerate={onGenerateCode} />
             <Button
               colorScheme="whiteAlpha"
               size={BTN_SIZE}
@@ -113,12 +203,82 @@ export default function CodeConsole({
             </Button>
           </ButtonGroup>
         </Flex>
-        {isResultsLoading ? (
-          <SkeletonLoader />
-        ) : (
-          <CodeResultOutput codeResult={codeResult} />
-        )}
+        {(() => {
+          if (consoleState.status === "loading") return <SkeletonLoader />;
+          switch (consoleState.type) {
+            case "execution":
+              return <CodeResultOutput codeResult={consoleState.result} />;
+            case "explanation":
+              return <CodeExplanationOutput result={consoleState.result} />;
+            case "generation":
+              return <CodeGenerationOutput result={consoleState.result} />;
+            case "none":
+              return <></>;
+          }
+        })()}
       </Stack>
     </div>
+  );
+}
+
+type GenerateCodeButtonProps = {
+  onGenerate: (description: string) => void;
+};
+
+function GenerateCodeButton({ onGenerate }: GenerateCodeButtonProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [description, setDescription] = useState("");
+  const { isOpen, onClose, onToggle } = useDisclosure();
+
+  return (
+    <Popover
+      isOpen={isOpen}
+      onClose={onClose}
+      placement="bottom-end"
+      initialFocusRef={textareaRef}
+      colorScheme="whiteAlpha"
+    >
+      <PopoverTrigger>
+        <Button colorScheme="whiteAlpha" size={BTN_SIZE} onClick={onToggle}>
+          Generate code
+        </Button>
+      </PopoverTrigger>
+      <Portal>
+        <PopoverContent minW="600px" bgColor="gray" color="white">
+          <PopoverArrow />
+          <PopoverBody>
+            <Stack
+              py={1}
+              direction="row"
+              spacing={2}
+              as="form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                onGenerate(description);
+                onClose();
+              }}
+            >
+              <Textarea
+                colorScheme="whiteAlpha"
+                _focus={{ borderColor: "white" }}
+                ref={textareaRef}
+                placeholder="Function that reverses a string"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+              <Button
+                type="submit"
+                colorScheme="blackAlpha"
+                size={BTN_SIZE}
+                disabled={description === ""}
+                p="20px"
+              >
+                Generate
+              </Button>
+            </Stack>
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
   );
 }

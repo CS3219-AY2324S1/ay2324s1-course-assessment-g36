@@ -1,9 +1,13 @@
+import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import { WebSocketServer } from "ws";
 import { setupWSConnection } from "y-websocket/bin/utils";
 import { Server } from "socket.io";
+import { apiRouter } from "./api.js";
+
+dotenv.config();
 
 const DEFAULT_PORT = 5173;
 const FRONTEND = process.env.FRONTEND_URI || "http://localhost:3000";
@@ -20,11 +24,12 @@ app.use(
   cors({
     origin: ALLOWED_ORIGINS,
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-    allowedHeaders: "Content-Type",
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
 app.use(express.json());
+app.use("/api", apiRouter);
 
 export const httpServer = createServer(app);
 
