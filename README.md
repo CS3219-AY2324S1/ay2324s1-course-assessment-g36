@@ -2,8 +2,12 @@
 
 # PeerPrep by Group 36
 
-## Getting started
+## Running locally
 
 1. Install Docker.
 1. Setup the environment variables by copying `.env.template` into `.env`.
 1. Run `docker-compose up --build --detach` to run the containers locally.
+
+## Accessing the hosted app
+
+The hosted app can be found [here](https://frontend-wlcbbioyfq-de.a.run.app/).
