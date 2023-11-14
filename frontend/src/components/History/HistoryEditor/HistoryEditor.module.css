@@ -18,13 +18,13 @@
 .detailsContainer {
   display: flex;
   flex-direction: column;
-  flex:0.5;
+  flex: 0.5;
 }
 
 .description {
   position: relative;
   margin-right: 10px;
-  overflow:scroll;           
+  overflow: scroll;
   text-overflow: ellipsis;
 }
 
