@@ -4,7 +4,6 @@ import {
   useMicrophoneAndCameraTracks,
   useClient,
   generateAccessToken,
-  AGORA_APP_ID,
 } from "./AgoraUtils";
 import { Controls } from "./Controls";
 import { Box } from "@chakra-ui/react";
@@ -52,7 +51,12 @@ const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
       });
 
       const token = generateAccessToken(roomId);
-      await client.join(AGORA_APP_ID, roomId, token, "");
+      await client.join(
+        process.env.NEXT_PUBLIC_AGORA_APP_ID || "",
+        roomId,
+        token,
+        "",
+      );
       if (tracks) {
         await client.publish([tracks[0], tracks[1]]);
       }
