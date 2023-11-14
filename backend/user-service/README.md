@@ -29,7 +29,10 @@
 
 The following environment variables can be used to configure the service:
 
-- `JSON_WEB_TOKEN_SECRET`: Secret used to verify JWTs
-- `PORT`: Port number to run service on
+| Environment Variable    | Value                                         |
+| ----------------------- | --------------------------------------------- |
+| `JSON_WEB_TOKEN_SECRET` | Secret used to create and verify JWTs         |
+| `USER_DB_URI`           | URI of the production database                |
+| `PORT`                  | Port number to run service on (default: 8000) |
 
-They can be configured by creating a `.env` file as well (see `.env.local` for a copyable template).
+In development, they can be set by creating a `.env` file. See `.env.template` for a copyable template.
