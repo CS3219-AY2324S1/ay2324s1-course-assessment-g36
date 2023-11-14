@@ -9,6 +9,9 @@ npm install
 Create a file with environment variables in the root directory: `.env.local`
 | Variable | Value |
 | ------------- |-------------|
+| NEXT_PUBLIC_QUESTION_SERVICE_URI | URI for the question service |
+| NEXT_PUBLIC_USER_SERVICE_URI | URI for the user service |
+| NEXT_PUBLIC_MATCHING_SERVICE_URI | URI for the matching service |
 | NEXT_PUBLIC_CODE_EXECUTION_API_KEY | Sign up for an API key at <br/> https://rapidapi.com/judge0-official/api/judge0-ce/pricing |
 | NEXT_PUBLIC_AGORA_APP_ID | Sign up for an app ID at <br/> https://console.agora.io/ |
 | NEXT_PUBLIC_AGORA_APP_CERTIFICATE | Sign up and retrieve the primary certificate at <br/> https://console.agora.io/ |
@@ -16,6 +19,8 @@ Create a file with environment variables in the root directory: `.env.local`
 The content of `.env.local` should look like this:
 
 ```
+NEXT_PUBLIC_QUESTION_SERVICE_URI=http://localhost:3001
+NEXT_PUBLIC_USER_SERVICE_URI=http://localhost:8000
 NEXT_PUBLIC_CODE_EXECUTION_API_KEY='YOUR_API_KEY'
 NEXT_PUBLIC_AGORA_APP_ID='YOUR_AGORA_APP_ID'
 NEXT_PUBLIC_AGORA_APP_CERTIFICATE='YOUR_AGORA_APP_CERT'
