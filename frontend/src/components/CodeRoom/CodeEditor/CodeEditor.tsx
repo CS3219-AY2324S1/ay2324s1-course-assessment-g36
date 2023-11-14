@@ -4,8 +4,9 @@ import { editor } from "monaco-editor";
 import dynamic from "next/dynamic";
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
+import { COLLABORATION_WS } from "@/services/api";
 
-const serverWsUrl = "ws://localhost:5173";
+const serverWsUrl = COLLABORATION_WS;
 const VS_THEME = "vs-dark";
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });

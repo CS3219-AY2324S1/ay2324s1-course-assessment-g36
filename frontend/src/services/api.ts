@@ -6,6 +6,11 @@ const USERS_URI =
   process.env.NEXT_PUBLIC_USER_SERVICE_URI || "http://localhost:8000";
 export const MATCHING_URI =
   process.env.NEXT_PUBLIC_MATCHING_SERVICE_URI || "ws://localhost:3002";
+
+
+export const COLLABORATION_WS =
+  process.env.NEXT_PUBLIC_COLLABORATION_SERVICE_WS || "ws://localhost:5173";
+
 export const COLLABORATION_URI =
   process.env.NEXT_PUBLIC_COLLABORATION_SERVICE_URI || "http://localhost:5173";
 
