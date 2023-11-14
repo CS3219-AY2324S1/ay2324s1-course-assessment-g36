@@ -1,19 +1,4 @@
 const { Users, Histories } = require("../models");
-const jwt = require("jsonwebtoken");
-
-require("dotenv").config({ path: "../.env" });
-
-const authenticate = async (req, res, next) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
-    req.user = user;
-  } catch {
-    return res.sendStatus(401);
-  }
-  next();
-};
 
 const addHistory = async (req, res, next) => {
   try {
@@ -155,7 +140,6 @@ const deleteQuestionHistory = async (req, res, next) => {
 };
 
 module.exports = {
-  authenticate,
   addHistory,
   getHistoryByUser,
   getHistoryByQuestion,

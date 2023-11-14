@@ -3,44 +3,6 @@ const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 
-const authenticateAdmin = async (req, res, next) => {
-  if (["/login", "/register"].includes(req.path)) {
-    next();
-    return;
-  }
-
-  try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    if (!jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET).isAdmin) {
-      return res.sendStatus(401);
-    }
-  } catch {
-    return res.sendStatus(401);
-  }
-  next();
-};
-
-const authenticateProfile = async (req, res, next, value) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
-
-    const requestType = req.method;
-
-    if (
-      `${user.userId}` !== value &&
-      !(user.isAdmin && requestType !== "PUT")
-    ) {
-      return res.sendStatus(401);
-    }
-  } catch {
-    return res.sendStatus(401);
-  }
-  next();
-};
-
 const registerUser = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -235,8 +197,6 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
-  authenticateAdmin,
-  authenticateProfile,
   registerUser,
   loginUser,
   getAllUsers,
