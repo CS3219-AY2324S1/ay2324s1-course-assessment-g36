@@ -14,7 +14,7 @@ app.use(cors());
 connectToDb();
 
 const questionRouter = require("./routes/questionRouter");
-const {errorHandler} = require('./middleware/errorHandler');
+const { errorHandler } = require("./middleware/errorHandler");
 app.use("/questions", questionRouter);
 app.use(errorHandler);
 
