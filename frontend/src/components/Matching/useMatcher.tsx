@@ -1,5 +1,6 @@
 import { MAX_MATCH_WAIT_S } from "@/constants";
 import { MatchCriteria } from "@/interfaces";
+import { MATCHING_URI } from "@/services/api";
 import { useAuth } from "@/utils/auth";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -50,7 +51,7 @@ export function useMatcher({
 
   const match = useCallback(() => {
     if (!wsRef.current) {
-      wsRef.current = new WebSocket("ws://localhost:3002/");
+      wsRef.current = new WebSocket(MATCHING_URI);
       wsRef.current.addEventListener("message", (event) => {
         const message = JSON.parse(event.data);
         switch (message.status) {

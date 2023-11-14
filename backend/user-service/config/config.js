@@ -1,4 +1,4 @@
-{
+const config = {
   "development": {
     "username": "root",
     "password": null,
@@ -17,7 +17,9 @@
     "username": "root",
     "password": null,
     "database": "Users",
-    "host": "127.0.0.1",
+    "host": process.env.USER_DB_URI,
     "dialect": "mysql"
   }
 }
+
+module.exports = config;

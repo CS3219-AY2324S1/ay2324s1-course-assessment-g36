@@ -12,10 +12,12 @@ import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
 dotenv.config();
 
+const FRONTEND_URI = process.env.FRONTEND_URI || "http://localhost:3000";
+
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [FRONTEND_URI],
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
     allowedHeaders: "Content-Type",
     credentials: true,
