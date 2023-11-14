@@ -10,7 +10,8 @@ import { apiRouter } from "./api.js";
 dotenv.config();
 
 const DEFAULT_PORT = 5173;
-const ALLOWED_ORIGINS = ["http://localhost:3000"];
+const FRONTEND = process.env.FRONTEND_URI || "http://localhost:3000";
+const ALLOWED_ORIGINS = [FRONTEND];
 
 const JOIN_ROOM_EVENT = "room:join";
 const GET_LATEST_PROGRAMMING_LANGUAGE_EVENT = "programming_language:get";

@@ -51,6 +51,27 @@ services:
     command: >
       bash -c "npm run seed && npm start"
 
+  matching-service:
+    build:
+      context: backend/matching-service
+      dockerfile: Dockerfile
+    environment:
+      - QUESTION_SERVICE_URI=http://question-service:3001
+      - FRONTEND_URI=http://localhost:3000
+    ports:
+      - 3002:3002
+    depends_on:
+      - question-service
+
+  collab-service:
+    build:
+      context: backend/collaboration-service
+      dockerfile: Dockerfile
+    environment:
+      - FRONTEND_URI=http://localhost:3000
+    ports:
+      - 5173:5173
+
   frontend:
     build:
       context: frontend
@@ -58,8 +79,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - NEXT_PUBLIC_QUESTION_SERVICE_URI=http://question-service:3001
-      - NEXT_PUBLIC_USER_SERVICE_URI=http://user-service:8000
+      - QUESTION_SERVICE_URI=http://question-service:3001
     depends_on:
       - user-service
       - question-service
