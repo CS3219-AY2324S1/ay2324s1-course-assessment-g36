@@ -1,18 +1,16 @@
 import { createServer } from "http";
 
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { WebSocketServer } from "ws";
 
+import env from "./env.js";
 import { MatchService } from "./match-service.js";
 import { generateCodeRoomId } from "./utils/generateRoomId.js";
 import { getRandomQuestionId } from "./utils/getRandomQuestion.js";
 
-dotenv.config();
-
-const FRONTEND_URI = process.env.FRONTEND_URI || "http://localhost:3000";
+const FRONTEND_URI = env.FRONTEND_URI || "http://localhost:3000";
 
 const app = express();
 app.use(
@@ -62,7 +60,7 @@ wss.on("connection", (ws) => {
         // Authenticate users
         let user;
         try {
-          user = jwt.verify(token, process.env.JSON_WEB_TOKEN_SECRET);
+          user = jwt.verify(token, env.JSON_WEB_TOKEN_SECRET);
         } catch (error) {
           console.error("Unauthenticated");
           ws.close();
@@ -82,7 +80,10 @@ wss.on("connection", (ws) => {
         ws.username = user.username;
         ws.complexity = complexity;
 
-        const matchedUser = matchService.getUserFromQueue(complexity, user.username);
+        const matchedUser = matchService.getUserFromQueue(
+          complexity,
+          user.username,
+        );
 
         // If there are no existing users, add current user to queue and send "initialized" message.
         if (!matchedUser) {
@@ -130,7 +131,7 @@ wss.on("connection", (ws) => {
   });
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = env.PORT || 3002;
 
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

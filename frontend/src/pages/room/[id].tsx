@@ -5,7 +5,7 @@ import Sidebar from "@/components/CodeRoom/Sidebar/Sidebar";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { QuestionObject } from "@/interfaces";
 import io from "socket.io-client";
-import { fetchQuestion } from "@/services/questions";
+import { serverSideFetchQuestion } from "@/services/questions";
 import CodeConsole from "@/components/CodeRoom/CodeConsole/CodeConsole";
 import styles from "./room.module.css";
 import dynamic from "next/dynamic";
@@ -128,7 +128,7 @@ export async function getServerSideProps(context: any) {
 
   const { id, questionId } = query;
 
-  const question = await fetchQuestion(questionId);
+  const question = await serverSideFetchQuestion(questionId);
 
   return {
     props: {

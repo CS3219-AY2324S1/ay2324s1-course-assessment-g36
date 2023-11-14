@@ -1,7 +1,10 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const userRouter = express.Router();
-const { authenticateAdmin, authenticateProfile } = require("../middleware/authenticate")
+const {
+  authenticateAdmin,
+  authenticateProfile,
+} = require("../middleware/authenticate");
 
 userRouter.param("userId", authenticateProfile);
 
@@ -9,11 +12,7 @@ userRouter.post("/register", userController.registerUser);
 
 userRouter.post("/login", userController.loginUser);
 
-userRouter.get(
-  "/",
-  authenticateAdmin,
-  userController.getAllUsers,
-);
+userRouter.get("/", authenticateAdmin, userController.getAllUsers);
 
 userRouter.get("/:userId", userController.getUserById);
 
