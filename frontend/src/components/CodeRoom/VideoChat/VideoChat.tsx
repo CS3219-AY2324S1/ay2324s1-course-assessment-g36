@@ -16,6 +16,7 @@ interface IOwnProps {
 const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
   const [users, setUsers] = useState<IAgoraRTCRemoteUser[]>([]);
   const [start, setStart] = useState<boolean>(false);
+  const [hasInitialised, setHasInitialised] = useState<boolean>(false);
   const client = useClient();
   const { ready, tracks } = useMicrophoneAndCameraTracks();
 
@@ -63,10 +64,18 @@ const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
       setStart(true);
     };
 
-    if (ready && tracks) {
+    if (ready && tracks && !hasInitialised) {
+      setHasInitialised(true);
       init();
     }
-  }, [ready, tracks, client, roomId]);
+
+    return () => {
+      if (hasInitialised) {
+        client.unpublish();
+        client.leave();
+      }
+    };
+  }, [ready, tracks, client, roomId, hasInitialised]);
 
   useEffect(() => {
     return () => {
