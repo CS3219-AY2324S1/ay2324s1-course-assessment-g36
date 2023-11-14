@@ -18,7 +18,6 @@ export async function addQuestion(
 }
 
 export async function fetchAllQuestions(): Promise<QuestionObject[]> {
-  console.log(QUESTIONS_API);
   return fetchDataOrThrowError(QUESTIONS_API);
 }
 
