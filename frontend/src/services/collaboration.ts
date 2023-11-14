@@ -1,4 +1,5 @@
 import { CodeExplanationResult } from "@/interfaces";
+import { COLLABORATION_API } from "./api";
 
 export async function explainCode(
   language: string,
@@ -19,7 +20,7 @@ export async function explainCode(
     }),
   };
   try {
-    const response = await fetch("http://localhost:5173/api/explain", options);
+    const response = await fetch(`${COLLABORATION_API}/explain`, options);
     if (!response.body) {
       throw new Error("Response has no body");
     }
@@ -56,7 +57,7 @@ export async function generateCode(
     }),
   };
   try {
-    const response = await fetch("http://localhost:5173/api/generate", options);
+    const response = await fetch(`${COLLABORATION_API}/generate`, options);
     if (!response.body) {
       throw new Error("Response has no body");
     }

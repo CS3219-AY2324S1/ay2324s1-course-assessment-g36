@@ -9,6 +9,7 @@ import { fetchQuestion } from "@/services/questions";
 import CodeConsole from "@/components/CodeRoom/CodeConsole/CodeConsole";
 import styles from "./room.module.css";
 import dynamic from "next/dynamic";
+import { COLLABORATION_URI } from "@/services/api";
 
 const VideoChat = dynamic(
   () => import("@/components/CodeRoom/VideoChat/VideoChat"),
@@ -20,7 +21,7 @@ interface PageProps {
   question: QuestionObject;
 }
 
-const socket = io("http://localhost:5173");
+const socket = io(COLLABORATION_URI);
 
 const JOIN_ROOM_EVENT = "room:join";
 const GET_LATEST_PROGRAMMING_LANGUAGE_EVENT = "programming_language:get";
