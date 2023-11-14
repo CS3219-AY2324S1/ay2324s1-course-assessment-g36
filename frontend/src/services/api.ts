@@ -1,7 +1,7 @@
 const QUESTIONS_URI =
-  process.env.QUESTION_SERVICE_URI ||
-  process.env.NEXT_PUBLIC_QUESTION_SERVICE_URI ||
-  "http://localhost:3001";
+  process.env.NEXT_PUBLIC_QUESTION_SERVICE_URI || "http://localhost:3001";
+const PRIVATE_QUESTIONS_URI =
+  process.env.QUESTION_SERVICE_URI || "http://localhost:3001";
 const USERS_URI =
   process.env.NEXT_PUBLIC_USER_SERVICE_URI || "http://localhost:8000";
 export const MATCHING_URI =
@@ -10,6 +10,7 @@ export const COLLABORATION_URI =
   process.env.NEXT_PUBLIC_COLLABORATION_SERVICE_URI || "http://localhost:5173";
 
 export const QUESTIONS_API = `${QUESTIONS_URI}/questions`;
+export const PRIVATE_QUESTIONS_API = `${PRIVATE_QUESTIONS_URI}/questions`;
 
 export const USERS_API = `${USERS_URI}/users`;
 
