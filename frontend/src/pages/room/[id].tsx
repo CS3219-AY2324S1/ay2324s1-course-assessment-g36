@@ -8,6 +8,12 @@ import io from "socket.io-client";
 import { fetchQuestion } from "@/services/questions";
 import CodeConsole from "@/components/CodeRoom/CodeConsole/CodeConsole";
 import styles from "./room.module.css";
+import dynamic from "next/dynamic";
+
+const VideoChat = dynamic(
+  () => import("@/components/CodeRoom/VideoChat/VideoChat"),
+  { ssr: false },
+);
 
 interface PageProps {
   id: string;
@@ -110,6 +116,7 @@ export default function CodeRoom({ id, question }: PageProps) {
             </>
           )}
         </Grid>
+        <VideoChat roomId={id} />
       </main>
     </>
   );
