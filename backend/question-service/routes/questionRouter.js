@@ -1,13 +1,9 @@
 const express = require("express");
 const questionController = require("../controllers/questionController");
 const questionRouter = express.Router();
-const {authenticateAdmin} = require("../middleware/authenticateAdmin");
+const { authenticateAdmin } = require("../middleware/authenticateAdmin");
 
-questionRouter.post(
-  "/",
-  authenticateAdmin,
-  questionController.addQuestion,
-);
+questionRouter.post("/", authenticateAdmin, questionController.addQuestion);
 
 questionRouter.get("/", questionController.getAllQuestions);
 

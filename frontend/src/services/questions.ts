@@ -1,5 +1,5 @@
 import { QuestionObject } from "@/interfaces";
-import { QUESTIONS_API, HISTORY_API } from "./api";
+import { QUESTIONS_API, HISTORY_API, PRIVATE_QUESTIONS_API } from "./api";
 import { fetchDataOrThrowError } from "./utils";
 
 export async function addQuestion(
@@ -23,6 +23,13 @@ export async function fetchAllQuestions(): Promise<QuestionObject[]> {
 
 export async function fetchQuestion(id: number): Promise<QuestionObject> {
   const fetchSingleQuestionApi = `${QUESTIONS_API}/id/${id}`;
+  return fetchDataOrThrowError(fetchSingleQuestionApi);
+}
+
+export async function serverSideFetchQuestion(
+  id: number,
+): Promise<QuestionObject> {
+  const fetchSingleQuestionApi = `${PRIVATE_QUESTIONS_API}/id/${id}`;
   return fetchDataOrThrowError(fetchSingleQuestionApi);
 }
 

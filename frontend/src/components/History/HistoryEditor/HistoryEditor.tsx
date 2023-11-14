@@ -44,17 +44,17 @@ export default function HistoryEditor({
   };
 
   const handleLanguageChange = (newLanguage: string) => {
-      setUpdatedAttempt((prevAttempt) => ({
-        ...prevAttempt,
-        language: newLanguage,
-        attempt: newLanguage == savedAttempt.language ? savedAttempt.attempt : ""   
-      }))
+    setUpdatedAttempt((prevAttempt) => ({
+      ...prevAttempt,
+      language: newLanguage,
+      attempt: newLanguage == savedAttempt.language ? savedAttempt.attempt : "",
+    }));
   };
 
   async function updateAttempt() {
     try {
       if (updatedAttempt.attempt == "") {
-        throw new Error("Attempt cannot be empty.")
+        throw new Error("Attempt cannot be empty.");
       }
       const result = await updateHistory(updatedAttempt, token);
       toast({
@@ -83,17 +83,19 @@ export default function HistoryEditor({
         <ModalHeader>{savedAttempt.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody className={styles.body}>
-            <div className={styles.bodyContainer}>
-              <div className={styles.detailsContainer}>
-                <div className={styles.date}>{savedAttempt.date}</div>
-                <div className={styles.description}>
-                  <QuestionDescription description={savedAttempt.description}/>
-                </div>
-                <Link href={savedAttempt.link}>
-                  <Button colorScheme="gray" className={styles.checkout}>Check out here</Button>
-                </Link>
+          <div className={styles.bodyContainer}>
+            <div className={styles.detailsContainer}>
+              <div className={styles.date}>{savedAttempt.date}</div>
+              <div className={styles.description}>
+                <QuestionDescription description={savedAttempt.description} />
+              </div>
+              <Link href={savedAttempt.link}>
+                <Button colorScheme="gray" className={styles.checkout}>
+                  Check out here
+                </Button>
+              </Link>
             </div>
-            
+
             <div className={styles.inputContainer}>
               <div className={styles.selectContainer}>
                 <Tooltip
@@ -102,24 +104,23 @@ export default function HistoryEditor({
                   placement="right"
                   aria-label="A tooltip to warn about unsaved attempts"
                 >
-                <Select
-                  variant={"flushed"}
-                  size="xs"
-                  value={updatedAttempt.language}
-                  maxWidth="50%"
-                  textUnderlineOffset="none"
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                >
-                  {PROGRAMMING_LANGUAGES
-                  .map((language) => {
-                    const _key = Object.keys(language)[0];
-                    return (
-                      <option key={_key} value={_key}>
-                        {_key}
-                      </option>
-                    );
-                  })}
-                </Select>
+                  <Select
+                    variant={"flushed"}
+                    size="xs"
+                    value={updatedAttempt.language}
+                    maxWidth="50%"
+                    textUnderlineOffset="none"
+                    onChange={(e) => handleLanguageChange(e.target.value)}
+                  >
+                    {PROGRAMMING_LANGUAGES.map((language) => {
+                      const _key = Object.keys(language)[0];
+                      return (
+                        <option key={_key} value={_key}>
+                          {_key}
+                        </option>
+                      );
+                    })}
+                  </Select>
                 </Tooltip>
               </div>
               <textarea
@@ -128,7 +129,7 @@ export default function HistoryEditor({
                 onChange={(e) => handleCodeChange(e)}
               />
             </div>
-          </div> 
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="green" onClick={() => updateAttempt()}>

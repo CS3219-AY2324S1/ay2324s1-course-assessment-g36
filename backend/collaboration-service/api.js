@@ -1,8 +1,9 @@
+import env from "./env.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { getCodeExplanation, getCodeGeneration } from "./openai.js";
 
-const { JSON_WEB_TOKEN_SECRET } = process.env;
+const { JSON_WEB_TOKEN_SECRET } = env;
 
 const apiRouter = express();
 
@@ -28,8 +29,14 @@ apiRouter.post(
   async (req, res, next) => {
     try {
       const { code, language } = req.body;
-      const response = await getCodeExplanation(code, language);
-      res.status(200).json({ response });
+      res.header("Content-Type", "text/plain");
+
+      // Stream content to user.
+      const stream = await getCodeExplanation(code, language);
+      for await (const chunk of stream) {
+        res.write(chunk.choices[0]?.delta.content || "");
+      }
+      res.end();
     } catch (err) {
       next(err);
     }
@@ -42,8 +49,14 @@ apiRouter.post(
   async (req, res, next) => {
     try {
       const { description, language } = req.body;
-      const response = await getCodeGeneration(language, description);
-      res.status(200).json({ response });
+      res.header("Content-Type", "text/plain");
+
+      // Stream content to user.
+      const stream = await getCodeGeneration(language, description);
+      for await (const chunk of stream) {
+        res.write(chunk.choices[0]?.delta.content || "");
+      }
+      res.end();
     } catch (err) {
       next(err);
     }

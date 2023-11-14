@@ -9,17 +9,19 @@ services:
       MYSQL_TCP_PORT: 3306
     ports:
       - 3306:3306
-    expose:
-      - 3306
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 3s
       retries: 10
+    volumes:
+      - users-db-data:/var/lib/mysql
 
   user-service:
     build:
       context: backend/user-service
-      dockerfile: Dockerfile
+    environment:
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
+      USER_DB_URI: users-db
     ports:
       - 8000:8000
     depends_on:
@@ -36,13 +38,15 @@ services:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       timeout: 3s
       retries: 10
+    volumes:
+      - questions-db-data:/data/db
 
   question-service:
     build:
       context: backend/question-service
-      dockerfile: Dockerfile
     environment:
-      - MONGODB_URI=mongodb://questions-db:27017
+      MONGODB_URI: mongodb://questions-db:27017
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
     ports:
       - 3001:3001
     depends_on:
@@ -54,10 +58,10 @@ services:
   matching-service:
     build:
       context: backend/matching-service
-      dockerfile: Dockerfile
     environment:
-      - QUESTION_SERVICE_URI=http://question-service:3001
-      - FRONTEND_URI=http://localhost:3000
+      QUESTION_SERVICE_URI: http://question-service:3001
+      FRONTEND_URI: ${PUBLIC_FRONTEND_URI}
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
     ports:
       - 3002:3002
     depends_on:
@@ -66,20 +70,35 @@ services:
   collab-service:
     build:
       context: backend/collaboration-service
-      dockerfile: Dockerfile
     environment:
-      - FRONTEND_URI=http://localhost:3000
+      FRONTEND_URI: ${PUBLIC_FRONTEND_URI}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
     ports:
       - 5173:5173
 
   frontend:
     build:
       context: frontend
-      dockerfile: Dockerfile
+      # Customize Docker image at build time
+      args:
+        NEXT_PUBLIC_QUESTION_SERVICE_URI: ${PUBLIC_QUESTION_SERVICE_URI}
+        NEXT_PUBLIC_USER_SERVICE_URI: ${PUBLIC_USER_SERVICE_URI}
+        NEXT_PUBLIC_MATCHING_SERVICE_URI: ${PUBLIC_MATCHING_SERVICE_URI}
+        NEXT_PUBLIC_COLLABORATION_SERVICE_URI: ${PUBLIC_COLLABORATION_SERVICE_URI}
+        NEXT_PUBLIC_AGORA_APP_ID: ${AGORA_APP_ID}
+        NEXT_PUBLIC_AGORA_APP_CERTIFICATE: ${AGORA_APP_CERTIFICATE}
+        NEXT_PUBLIC_CODE_EXECUTION_API_KEY: ${CODE_EXECUTION_API_KEY}
     ports:
       - 3000:3000
     environment:
-      - QUESTION_SERVICE_URI=http://question-service:3001
+      QUESTION_SERVICE_URI: http://question-service:3001
     depends_on:
       - user-service
       - question-service
+      - matching-service
+      - collab-service
+
+volumes:
+  questions-db-data:
+  users-db-data:

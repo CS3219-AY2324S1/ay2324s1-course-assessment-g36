@@ -6,20 +6,20 @@ Install dependencies
 npm install
 ```
 
-Create a file with environment variables in the root directory: `.env.local`
-| Variable | Value |
-| ------------- |-------------|
-| NEXT_PUBLIC_CODE_EXECUTION_API_KEY | Sign up for an API key at <br/> https://rapidapi.com/judge0-official/api/judge0-ce/pricing |
-| NEXT_PUBLIC_AGORA_APP_ID | Sign up for an app ID at <br/> https://console.agora.io/ |
-| NEXT_PUBLIC_AGORA_APP_CERTIFICATE | Sign up and retrieve the primary certificate at <br/> https://console.agora.io/ |
+Create a `.env.local` file in this directory with the following environment variables:
 
-The content of `.env.local` should look like this:
+| Variable                                | Value                                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `NEXT_PUBLIC_QUESTION_SERVICE_URI`      | URI for the question service, publicly accessible                                          |
+| `NEXT_PUBLIC_USER_SERVICE_URI`          | URI for the user service, publicly accessible                                              |
+| `NEXT_PUBLIC_MATCHING_SERVICE_URI`      | URI for the matching service, publicly accessible                                          |
+| `NEXT_PUBLIC_COLLABORATION_SERVICE_URI` | URI for the matching service, publicly accessible                                          |
+| `NEXT_PUBLIC_AGORA_APP_ID`              | Sign up for an app ID at <br/> https://console.agora.io/                                   |
+| `NEXT_PUBLIC_AGORA_APP_CERTIFICATE`     | Sign up and retrieve the primary certificate at <br/> https://console.agora.io/            |
+| `NEXT_PUBLIC_CODE_EXECUTION_API_KEY`    | Sign up for an API key at <br/> https://rapidapi.com/judge0-official/api/judge0-ce/pricing |
+| `QUESTION_SERVICE_URI`                  | URI of the question service, accessible from the server                                    |
 
-```
-NEXT_PUBLIC_CODE_EXECUTION_API_KEY='YOUR_API_KEY'
-NEXT_PUBLIC_AGORA_APP_ID='YOUR_AGORA_APP_ID'
-NEXT_PUBLIC_AGORA_APP_CERTIFICATE='YOUR_AGORA_APP_CERT'
-```
+See `.env.template` for a copyable template.
 
 Run the development server:
 

@@ -59,12 +59,22 @@ type ConsoleState =
     }
   | {
       type: "explanation";
+      status: "streaming";
+      result: CodeExplanationResult;
+    }
+  | {
+      type: "explanation";
       status: "done";
       result: CodeExplanationResult;
     }
   | {
       type: "generation";
       status: "loading";
+    }
+  | {
+      type: "generation";
+      status: "streaming";
+      result: CodeExplanationResult;
     }
   | {
       type: "generation";
@@ -102,12 +112,15 @@ export default function CodeConsole({
   async function onExplainCode() {
     setConsoleState({ type: "explanation", status: "loading" });
     try {
-      const result = await explainCode(
+      await explainCode(
         programmingLanguage,
         selectedCodeFromEditor === "" ? codeFromEditor : selectedCodeFromEditor,
         token,
+        (result) =>
+          setConsoleState({ type: "explanation", status: "streaming", result }),
+        (result) =>
+          setConsoleState({ type: "explanation", status: "done", result }),
       );
-      setConsoleState({ type: "explanation", status: "done", result });
     } catch (e) {
       console.error(e);
       setConsoleState({ type: "none", status: "done" });
@@ -117,12 +130,15 @@ export default function CodeConsole({
   async function onGenerateCode(description: string) {
     setConsoleState({ type: "generation", status: "loading" });
     try {
-      const result = await generateCode(
+      await generateCode(
         programmingLanguage,
         description,
         token,
+        (result) =>
+          setConsoleState({ type: "generation", status: "streaming", result }),
+        (result) =>
+          setConsoleState({ type: "generation", status: "done", result }),
       );
-      setConsoleState({ type: "generation", status: "done", result });
     } catch (e) {
       console.error(e);
       setConsoleState({ type: "none", status: "done" });

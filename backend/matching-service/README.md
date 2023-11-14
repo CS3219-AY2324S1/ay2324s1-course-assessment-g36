@@ -45,8 +45,8 @@ When a can be matched to another user, each user will receive the following mess
 {
   status: "matched",
   user_id: "<uid>",
-  // TODO:
   question_id: "<uid>",
+  room_id: "<uid>",
 }
 ```
 
@@ -54,7 +54,11 @@ When a can be matched to another user, each user will receive the following mess
 
 The following environment variables can be used to configure the service:
 
-- `JSON_WEB_TOKEN_SECRET`: Secret used to verify JWTs
-- `PORT`: Port number to run service on (default: 3002)
+| Environment Variable    | Value                                                   |
+| ----------------------- | ------------------------------------------------------- |
+| `JSON_WEB_TOKEN_SECRET` | Secret used to verify JWTs                              |
+| `QUESTION_SERVICE_URI`  | URI of the question service, accessible from the server |
+| `FRONTEND_URI`          | URI of the frontend, publicly accessible                |
+| `PORT`                  | Port number to run service on (default: 3002)           |
 
-They can be configured by creating a `.env` file as well (see `.env.local` for a copyable template).
+In development, they can be set by creating a `.env` file. See `.env.template` for a copyable template.
