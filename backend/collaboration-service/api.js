@@ -1,8 +1,9 @@
+import env from "./env.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { getCodeExplanation, getCodeGeneration } from "./openai.js";
 
-const { JSON_WEB_TOKEN_SECRET } = process.env;
+const { JSON_WEB_TOKEN_SECRET } = env;
 
 const apiRouter = express();
 

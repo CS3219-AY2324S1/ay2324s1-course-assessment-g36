@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import env from "./env.js";
 import express from "express";
 import { createServer } from "http";
 import cors from "cors";
@@ -7,10 +7,8 @@ import { setupWSConnection } from "y-websocket/bin/utils";
 import { Server } from "socket.io";
 import { apiRouter } from "./api.js";
 
-dotenv.config();
-
 const DEFAULT_PORT = 5173;
-const FRONTEND = process.env.FRONTEND_URI || "http://localhost:3000";
+const FRONTEND = env.FRONTEND_URI || "http://localhost:3000";
 const ALLOWED_ORIGINS = [FRONTEND];
 
 const JOIN_ROOM_EVENT = "room:join";
@@ -73,7 +71,7 @@ wss.on("connection", (ws, req) => {
   setupWSConnection(ws, req);
 });
 
-const port = process.env.PORT || DEFAULT_PORT;
+const port = env.PORT || DEFAULT_PORT;
 httpServer.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

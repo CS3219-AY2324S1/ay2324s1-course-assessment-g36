@@ -1,10 +1,8 @@
-import dotenv from "dotenv";
+import env from "./env.js";
 import OpenAI from "openai";
 
-dotenv.config();
-
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: env.OPENAI_API_KEY,
 });
 
 export async function getCodeExplanation(code, language) {
