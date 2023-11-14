@@ -6,7 +6,7 @@ import {
   generateAccessToken,
 } from "./AgoraUtils";
 import { Controls } from "./Controls";
-import { Box } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import styles from "./VideoChat.module.css";
 
 interface IOwnProps {
@@ -18,6 +18,7 @@ const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
   const [start, setStart] = useState<boolean>(false);
   const [hasInitialised, setHasInitialised] = useState<boolean>(false);
   const client = useClient();
+  const toast = useToast();
   const { ready, tracks } = useMicrophoneAndCameraTracks();
 
   useEffect(() => {
@@ -50,7 +51,6 @@ const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
           return prevUsers.filter((User) => User.uid !== user.uid);
         });
       });
-
       const token = generateAccessToken(roomId);
       await client.join(
         process.env.NEXT_PUBLIC_AGORA_APP_ID || "",
@@ -66,7 +66,18 @@ const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
 
     if (ready && tracks && !hasInitialised) {
       setHasInitialised(true);
-      init();
+      init().catch((error) => {
+        console.log(error);
+        toast({
+          position: "bottom-left",
+          title: "Failed to initialise video chat",
+          description:
+            "Please make sure you allow camera access and try refreshing the page!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
     }
 
     return () => {
@@ -75,7 +86,7 @@ const VideoChat = ({ roomId }: IOwnProps): JSX.Element => {
         client.leave();
       }
     };
-  }, [ready, tracks, client, roomId, hasInitialised]);
+  }, [ready, tracks, client, roomId, hasInitialised, toast]);
 
   useEffect(() => {
     return () => {
