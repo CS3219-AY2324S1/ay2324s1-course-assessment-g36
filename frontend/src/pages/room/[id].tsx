@@ -10,6 +10,7 @@ import CodeConsole from "@/components/CodeRoom/CodeConsole/CodeConsole";
 import styles from "./room.module.css";
 import dynamic from "next/dynamic";
 import { COLLABORATION_URI } from "@/services/api";
+import { useRedirectUnauthenticatedUser } from "@/utils/hooks";
 
 const VideoChat = dynamic(
   () => import("@/components/CodeRoom/VideoChat/VideoChat"),
@@ -29,6 +30,9 @@ const UPDATE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:update";
 const RECEIVE_PROGRAMMING_LANGUAGE_EVENT = "programming_language:receive";
 
 export default function CodeRoom({ id, question }: PageProps) {
+  
+  const authRedirect = useRedirectUnauthenticatedUser();
+
   const [isDomLoaded, setIsDomLoaded] = useState(false);
   const [programmingLanguage, setProgrammingLanguage] = useState("python");
 
