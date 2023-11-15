@@ -10,4 +10,4 @@
 
 ## Accessing the hosted app
 
-The hosted app can be found [here](https://frontend-wlcbbioyfq-de.a.run.app/).
+The hosted app can be found [here](https://peerprep-wlcbbioyfq-de.a.run.app).
