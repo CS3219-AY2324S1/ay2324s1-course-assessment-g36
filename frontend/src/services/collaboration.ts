@@ -27,7 +27,7 @@ export async function explainCode(
 
     const decoder = new TextDecoder();
     let result = "";
-    for await (const chunk of response.body as any) {
+    for await (const chunk of streamAsyncIterator(response.body)) {
       result += decoder.decode(chunk);
       onContent({ response: result });
     }
@@ -64,7 +64,7 @@ export async function generateCode(
 
     let result = "";
     const decoder = new TextDecoder();
-    for await (const chunk of response.body as any) {
+    for await (const chunk of streamAsyncIterator(response.body) ) {
       result += decoder.decode(chunk);
       onContent({ response: result });
     }
@@ -72,5 +72,25 @@ export async function generateCode(
   } catch (error) {
     console.error(error);
     onFinished({ error: String(error) });
+  }
+}
+
+// See https://jakearchibald.com/2017/async-iterators-and-generators/#making-streams-iterate.
+async function* streamAsyncIterator(stream: ReadableStream) {
+  // Get a lock on the stream
+  const reader = stream.getReader();
+
+  try {
+    while (true) {
+      // Read from the stream
+      const {done, value} = await reader.read();
+      // Exit if we're done
+      if (done) return;
+      // Else yield the chunk
+      yield value;
+    }
+  }
+  finally {
+    reader.releaseLock();
   }
 }
