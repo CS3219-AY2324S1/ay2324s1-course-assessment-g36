@@ -1,0 +1,104 @@
+version: "3"
+
+services:
+  users-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_PASSWORD: null
+      MYSQL_TCP_PORT: 3306
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 3s
+      retries: 10
+    volumes:
+      - users-db-data:/var/lib/mysql
+
+  user-service:
+    build:
+      context: backend/user-service
+    environment:
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
+      USER_DB_URI: users-db
+    ports:
+      - 8000:8000
+    depends_on:
+      users-db:
+        condition: service_healthy
+    command: >
+      bash -c "npx sequelize-cli db:create && npm start"
+
+  questions-db:
+    image: mongo
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      timeout: 3s
+      retries: 10
+    volumes:
+      - questions-db-data:/data/db
+
+  question-service:
+    build:
+      context: backend/question-service
+    environment:
+      MONGODB_URI: mongodb://questions-db:27017
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
+    ports:
+      - 3001:3001
+    depends_on:
+      questions-db:
+        condition: service_healthy
+    command: >
+      bash -c "npm run seed && npm start"
+
+  matching-service:
+    build:
+      context: backend/matching-service
+    environment:
+      QUESTION_SERVICE_URI: http://question-service:3001
+      FRONTEND_URI: ${PUBLIC_FRONTEND_URI}
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
+    ports:
+      - 3002:3002
+    depends_on:
+      - question-service
+
+  collab-service:
+    build:
+      context: backend/collaboration-service
+    environment:
+      FRONTEND_URI: ${PUBLIC_FRONTEND_URI}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      JSON_WEB_TOKEN_SECRET: ${JSON_WEB_TOKEN_SECRET}
+    ports:
+      - 5173:5173
+
+  frontend:
+    build:
+      context: frontend
+      # Customize Docker image at build time
+      args:
+        NEXT_PUBLIC_QUESTION_SERVICE_URI: ${PUBLIC_QUESTION_SERVICE_URI}
+        NEXT_PUBLIC_USER_SERVICE_URI: ${PUBLIC_USER_SERVICE_URI}
+        NEXT_PUBLIC_MATCHING_SERVICE_URI: ${PUBLIC_MATCHING_SERVICE_URI}
+        NEXT_PUBLIC_COLLABORATION_SERVICE_URI: ${PUBLIC_COLLABORATION_SERVICE_URI}
+        NEXT_PUBLIC_AGORA_APP_ID: ${AGORA_APP_ID}
+        NEXT_PUBLIC_AGORA_APP_CERTIFICATE: ${AGORA_APP_CERTIFICATE}
+        NEXT_PUBLIC_CODE_EXECUTION_API_KEY: ${CODE_EXECUTION_API_KEY}
+    ports:
+      - 3000:3000
+    environment:
+      QUESTION_SERVICE_URI: http://question-service:3001
+    depends_on:
+      - user-service
+      - question-service
+      - matching-service
+      - collab-service
+
+volumes:
+  questions-db-data:
+  users-db-data:

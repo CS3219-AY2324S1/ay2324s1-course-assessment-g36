@@ -1,0 +1,10 @@
+.form_container {
+  width: 60%;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 468px) {
+  .form_container {
+    width: 95%;
+  }
+}

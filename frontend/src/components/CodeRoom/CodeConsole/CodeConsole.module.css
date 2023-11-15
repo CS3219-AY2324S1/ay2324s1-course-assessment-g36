@@ -1,0 +1,7 @@
+.console_container {
+  height: 30vh;
+  background-color: #1e1e1e;
+  overflow: auto;
+  padding: 0.8em;
+  box-sizing: border-box;
+}

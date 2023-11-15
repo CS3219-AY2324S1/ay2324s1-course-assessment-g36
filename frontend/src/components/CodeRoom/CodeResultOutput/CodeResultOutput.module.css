@@ -1,0 +1,10 @@
+.stdout_container {
+  background-color: #3a3a3a;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+}
+
+.error {
+  color: #ef4743;
+}
